@@ -5,5 +5,5 @@ Team Members: Tian Runxin, Huang Yu'an, Luo Tianzuo, Lao Guoyin
 
 Slack: https://cs4218-team6.slack.com/
 
-![timeline](/Users/dr.fat/Documents/GitHub/CS4218_Shell_2020/img/timeline.png)
+![timeline](./img/timeline.png)
 
