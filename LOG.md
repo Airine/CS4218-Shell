@@ -5,7 +5,13 @@
     - infinite loop (solved)
     
     - 5 test cases: 3 failed, 2 passed (solved)
+   
+2. Some bugs in `ApplicationRunner` - Runxin
+
+    - switch without breaks
     
+    - 
+ 
 ---
 
 ## 2020-2-?

@@ -55,8 +55,10 @@ public class ApplicationRunner {
                 break;
             case APP_EXIT:
                 application = new ExitApplication();
+                break;
             case APP_GREP:
                 application = new GrepApplication();
+                break;
             case APP_SORT:
                 application = new SortApplication();
                 break;
@@ -65,6 +67,7 @@ public class ApplicationRunner {
                 break;
             case APP_SED:
                 application = new SedApplication();
+                break;
             default:
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
         }

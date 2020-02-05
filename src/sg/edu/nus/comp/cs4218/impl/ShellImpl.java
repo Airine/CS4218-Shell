@@ -25,22 +25,25 @@ public class ShellImpl implements Shell {
     public static void main(String... args) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Shell shell = new ShellImpl();
-
-        try {
-            String currentDirectory = Environment.currentDirectory;
-            String commandString = "echo hello";
+        while (true) {
             try {
-                commandString = reader.readLine();
-                System.err.println("Command String: "+commandString);
-            } catch (IOException e) {
-                return; // Streams are closed, terminate process
-            }
+                String currentDirectory = Environment.currentDirectory;
+                int lastSlash = currentDirectory.lastIndexOf('/'); // TODO: Tempt solution, may not work on Windows
+                String commandString;
+                try {
+                    System.out.print(currentDirectory.substring(lastSlash+1) + "> ");
+                    commandString = reader.readLine();
+                } catch (IOException e) {
+                    break; // Streams are closed, terminate process
+                }
 
-            if (!StringUtils.isBlank(commandString)) {
-                shell.parseAndEvaluate(commandString, System.out);
+                if (!StringUtils.isBlank(commandString)) {
+                    shell.parseAndEvaluate(commandString, System.out);
+                    System.out.println();
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
     }
 
