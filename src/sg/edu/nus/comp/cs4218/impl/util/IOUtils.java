@@ -47,9 +47,13 @@ public final class IOUtils {
     public static OutputStream openOutputStream(String fileName) throws ShellException {
         String resolvedFileName = resolveFilePath(fileName).toString();
 
-        FileOutputStream fileOutputStream;
+        FileOutputStream fileOutputStream = null;
 
-        fileOutputStream = new FileOutputStream(new File(resolvedFileName));
+        try {
+            fileOutputStream = new FileOutputStream(new File(resolvedFileName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return fileOutputStream;
     }

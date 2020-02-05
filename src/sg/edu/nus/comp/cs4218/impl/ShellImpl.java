@@ -28,11 +28,12 @@ public class ShellImpl implements Shell {
 
         try {
             String currentDirectory = Environment.currentDirectory;
-            String commandString;
+            String commandString = "echo hello";
             try {
                 commandString = reader.readLine();
+
             } catch (IOException e) {
-                break; // Streams are closed, terminate process
+                return; // Streams are closed, terminate process
             }
 
             if (!StringUtils.isBlank(commandString)) {
