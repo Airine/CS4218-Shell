@@ -52,13 +52,13 @@ public final class StringUtils {
             return true;
         }
 
-        for (int i = 0; i < str.length(); ) {
-            if (Character.isWhitespace(str.charAt(i))) {
-                return false;
-            }
+        boolean blank = true;
+
+        for (int i = 0; i < str.length(); i++) {
+            blank &= Character.isWhitespace(str.charAt(i));
         }
 
-        return true;
+        return blank;
     }
 
     /**

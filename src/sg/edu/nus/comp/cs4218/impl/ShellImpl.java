@@ -31,7 +31,7 @@ public class ShellImpl implements Shell {
             String commandString = "echo hello";
             try {
                 commandString = reader.readLine();
-
+                System.err.println("Command String: "+commandString);
             } catch (IOException e) {
                 return; // Streams are closed, terminate process
             }
