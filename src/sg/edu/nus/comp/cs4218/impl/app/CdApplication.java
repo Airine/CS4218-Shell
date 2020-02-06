@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.CdInterface;
 import sg.edu.nus.comp.cs4218.exception.CdException;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
@@ -20,7 +20,7 @@ public class CdApplication implements CdInterface {
 
     @Override
     public void changeToDirectory(String path) throws CdException {
-        Environment.currentDirectory = getNormalizedAbsolutePath(path);
+        EnvironmentUtils.currentDirectory = getNormalizedAbsolutePath(path);
     }
 
     /**
@@ -48,7 +48,7 @@ public class CdApplication implements CdInterface {
 
         Path path = new File(pathStr).toPath();
         if (!path.isAbsolute()) {
-            path = Paths.get(Environment.currentDirectory, pathStr);
+            path = Paths.get(EnvironmentUtils.currentDirectory, pathStr);
         }
 
         if (!Files.exists(path)) {

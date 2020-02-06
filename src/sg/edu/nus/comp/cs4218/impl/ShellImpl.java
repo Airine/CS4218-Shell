@@ -1,10 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import sg.edu.nus.comp.cs4218.Command;
-import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.ExitException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
@@ -25,13 +24,13 @@ public class ShellImpl implements Shell {
     public static void main(String... args) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Shell shell = new ShellImpl();
-        while (true) {
-            try {
-                String currentDirectory = Environment.currentDirectory;
-                int lastSlash = currentDirectory.lastIndexOf('/'); // TODO: Tempt solution, may not work on Windows
-                String commandString;
+        try {
+            String currentDirectory = EnvironmentUtils.currentDirectory;
+            int lastSlash = currentDirectory.lastIndexOf('/'); // TODO: Tempt solution, may not work on Windows
+            String commandString;
+            while (true) {
                 try {
-                    System.out.print(currentDirectory.substring(lastSlash+1) + "> ");
+                    System.out.print(currentDirectory.substring(lastSlash + 1) + "> ");
                     commandString = reader.readLine();
                 } catch (IOException e) {
                     break; // Streams are closed, terminate process
@@ -41,8 +40,14 @@ public class ShellImpl implements Shell {
                     shell.parseAndEvaluate(commandString, System.out);
                     System.out.println();
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

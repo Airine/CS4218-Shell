@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.FindInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.FindException;
@@ -224,7 +224,7 @@ public class FindApplication implements FindInterface {
      */
     private String convertToAbsolutePath(String folderName) {
         String home = System.getProperty("user.home").trim();
-        String currentDir = Environment.currentDirectory.trim();
+        String currentDir = EnvironmentUtils.currentDirectory.trim();
         String convertedPath = convertPathToSystemPath(folderName);
 
         String newPath;

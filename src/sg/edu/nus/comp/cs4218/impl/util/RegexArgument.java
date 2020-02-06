@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
-import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_ASTERISK;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 @SuppressWarnings("PMD.AvoidStringBufferField")
 public final class RegexArgument {
@@ -79,7 +78,7 @@ public final class RegexArgument {
                 dir += tokens[i] + File.separator;
             }
 
-            File currentDir = Paths.get(Environment.currentDirectory + File.separator + dir).toFile();
+            File currentDir = Paths.get(EnvironmentUtils.currentDirectory + File.separator + dir).toFile();
 
             for (String candidate : currentDir.list()) {
                 if (regexPattern.matcher(candidate).matches()) {
@@ -119,7 +118,7 @@ public final class RegexArgument {
             File nextNode = new File(node, current);
             String match = isAbsolute
                     ? nextNode.getPath()
-                    : nextNode.getPath().substring(Environment.currentDirectory.length() + 1);
+                    : nextNode.getPath().substring(EnvironmentUtils.currentDirectory.length() + 1);
             // TODO: Find a better way to handle this.
             if (onlyDirectories && nextNode.isDirectory()) {
                 match += File.separator;

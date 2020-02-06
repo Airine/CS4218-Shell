@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
-import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 import java.io.*;
@@ -95,7 +95,7 @@ public final class IOUtils {
     }
 
     public static Path resolveFilePath(String fileName) {
-        Path currentDirectory = Paths.get(Environment.currentDirectory);
+        Path currentDirectory = Paths.get(EnvironmentUtils.currentDirectory);
         return currentDirectory.resolve(fileName);
     }
 
