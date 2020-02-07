@@ -124,13 +124,14 @@ public class SedApplication implements SedInterface {
             StringBuilder builder = new StringBuilder();
             int index = 0;
             while (matcher.find()) {
+                index++;
                 if (index == replacementIndex) {
-                    builder.append(line, index, matcher.start());
+                    builder.append(line, 0, matcher.start());
                     builder.append(replacement);
                     break;
                 }
             }
-            builder.append(line,index,line.length());
+            builder.append(line,matcher.end(),line.length());
             output.append(builder.toString()).append(STRING_NEWLINE);
         }
 
