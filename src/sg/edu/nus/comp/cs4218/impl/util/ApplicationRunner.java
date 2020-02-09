@@ -63,6 +63,9 @@ public class ApplicationRunner {
             case APP_SORT:
                 application = new SortApplication();
                 break;
+            case APP_PASTE:
+                application = new PasteApplication();
+                break;
             case APP_CD:
                 application = new CdApplication();
                 break;
