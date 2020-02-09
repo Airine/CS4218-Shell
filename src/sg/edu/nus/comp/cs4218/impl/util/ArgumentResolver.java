@@ -39,6 +39,13 @@ public class ArgumentResolver {
         for (String arg : argsList) {
             parsedArgsList.addAll(resolveOneArgument(arg));
         }
+
+        System.out.println("parsedArgsList: ");
+        for(String str : parsedArgsList){
+            System.out.println(str);
+        }
+        System.out.println("parsedArgsList END!!");
+
         return parsedArgsList;
     }
 
