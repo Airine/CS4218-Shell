@@ -1,7 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.Test;
-import sg.edu.nus.comp.cs4218.impl.app.SedApplication;
+import sg.edu.nus.comp.cs4218.app.SedInterface;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SedApplicationTest {
 
-    private SedApplication app = new SedApplication();
+    private SedInterface app = new SedApplication();
 
     @Test
     void testReplaceEmptyCharater() throws Exception {
