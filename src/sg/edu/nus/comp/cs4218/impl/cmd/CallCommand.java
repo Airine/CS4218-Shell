@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.cmd;
 
+import com.sun.xml.internal.bind.v2.runtime.output.StAXExStreamWriterOutput;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -41,6 +42,13 @@ public class CallCommand implements Command {
         IORedirectionHandler redirHandler = new IORedirectionHandler(argsList, stdin, stdout, argumentResolver);
         redirHandler.extractRedirOptions();
         List<String> noRedirArgsList = redirHandler.getNoRedirArgsList();
+
+        System.out.println("noRedirArgsList: ");
+        for(String str:noRedirArgsList){
+            System.out.println(str);
+        }
+        System.out.println("noRedirArgsList END!!");
+
         InputStream inputStream = redirHandler.getInputStream();
         OutputStream outputStream = redirHandler.getOutputStream();
 
