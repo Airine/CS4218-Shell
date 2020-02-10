@@ -13,35 +13,35 @@ class ArgumentResolverTest {
     private final ArgumentResolver argumentResolver = new ArgumentResolver();
 
     @Test
-    public void testSingleQuote() throws AbstractApplicationException, ShellException {
+    void testSingleQuote() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("'aaa'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("aaa"), parsedArgsList);
     }
 
     @Test
-    public void testDoubleQuote() throws AbstractApplicationException, ShellException {
+    void testDoubleQuote() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("\"aaa\"");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("aaa"), parsedArgsList);
     }
 
     @Test
-    public void testBackQuote() throws AbstractApplicationException, ShellException {
+    void testBackQuote() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("`echo 'aaa'`");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("aaa"), parsedArgsList);
     }
 
     @Test
-    public void testBackQuoteWithDoubleQuote() throws AbstractApplicationException, ShellException {
+    void testBackQuoteWithDoubleQuote() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("\"`echo 'aaa'`\"");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("aaa"), parsedArgsList);
     }
 
     @Test
-    public void testBackQuoteWithSingleQuote() throws AbstractApplicationException, ShellException {
+    void testBackQuoteWithSingleQuote() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("'`echo 'aaa'`'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("`echo 'aaa'`"), parsedArgsList);
@@ -49,35 +49,35 @@ class ArgumentResolverTest {
 
     // not sure about this case
     @Test
-    public void testSpecialSymbolWithDoubleQuote() throws AbstractApplicationException, ShellException {
+    void testSpecialSymbolWithDoubleQuote() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("\"`|>_<|;\"");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("|>_<|;"), parsedArgsList);
     }
 
     @Test
-    public void testSpecialSymbolWithSingleQuote() throws AbstractApplicationException, ShellException {
+    void testSpecialSymbolWithSingleQuote() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("'`|>_<|;'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("`|>_<|;"), parsedArgsList);
     }
 
     @Test
-    public void testMixThreeQuote1() throws AbstractApplicationException, ShellException {
+    void testMixThreeQuote1() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("\"'aaa `echo \"bbb\"`'\"");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("'aaa bbb'"), parsedArgsList);
     }
 
     @Test
-    public void testMixThreeQuote2() throws AbstractApplicationException, ShellException {
+    void testMixThreeQuote2() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("'\"aaa `echo \"bbb\"`\"'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("\"aaa `echo \"bbb\"`\""), parsedArgsList);
     }
 
     @Test
-    public void testIncorrectQuote1() throws AbstractApplicationException, ShellException {
+    void testIncorrectQuote1() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("\"aaa'bbb\"ccc'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("aaa'bbbccc"), parsedArgsList);
@@ -85,7 +85,7 @@ class ArgumentResolverTest {
 
     // not sure about the output
     @Test
-    public void testIncorrectQuote2() throws AbstractApplicationException, ShellException {
+    void testIncorrectQuote2() throws AbstractApplicationException, ShellException {
         List<String> input = Arrays.asList("\"aaa `echo '\"bbb'`");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
         assertEquals(Arrays.asList("aaa \"bbb"), parsedArgsList);

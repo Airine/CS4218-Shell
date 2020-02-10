@@ -18,60 +18,55 @@ class EchoApplicationTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
+    private final EchoInterface echoApp = new EchoApplication();
 
     @BeforeEach
-    public void setUpStreams() {
+    void setUpStreams() {
         System.setOut(new PrintStream(outContent));
     }
 
     @AfterEach
-    public void restoreStreams() {
+    void restoreStreams() {
         System.setOut(originalOut);
     }
 
     @Test
-    public void testCharInput() throws Exception {
-        EchoInterface echoApp = new EchoApplication();
+    void testCharInput() throws Exception {
         String[] args = {"abcdefghijklmnopqrstuvwxyz"};
         echoApp.run(args, System.in, System.out);
         assertEquals("abcdefghijklmnopqrstuvwxyz", outContent.toString());
     }
 
     @Test
-    public void testNumInput() throws Exception {
-        EchoInterface echoApp = new EchoApplication();
+    void testNumInput() throws Exception {
         String[] args = {"1234567890"};
         echoApp.run(args, System.in, System.out);
         assertEquals("1234567890", outContent.toString());
     }
 
     @Test
-    public void testSpaceInput() throws Exception {
-        EchoInterface echoApp = new EchoApplication();
+    void testSpaceInput() throws Exception {
         String[] args = {"   "};
         echoApp.run(args, System.in, System.out);
         assertEquals("   ", outContent.toString());
     }
 
     @Test
-    public void testMultipleInput() throws Exception {
-        EchoInterface echoApp = new EchoApplication();
+    void testMultipleInput() throws Exception {
         String[] args = {"abc", "123", "  "};
         echoApp.run(args, System.in, System.out);
         assertEquals("abc 123   ", outContent.toString());
     }
 
     @Test
-    public void testNullInput() throws Exception {
-        EchoInterface echoApp = new EchoApplication();
+    void testNullInput() throws Exception {
         String[] args = {};
         echoApp.run(args, System.in, System.out);
         assertEquals(STRING_NEWLINE, outContent.toString());
     }
 
     @Test
-    public void testSymbolInput() throws Exception {
-        EchoInterface echoApp = new EchoApplication();
+    void testSymbolInput() throws Exception {
         String[] args = {"!@#$%^&*()_+-={}[]:\";'|\\<>?,./~`"};
         echoApp.run(args, System.in, System.out);
         assertEquals("!@#$%^&*()_+-={}[]:\";'|\\<>?,./~`", outContent.toString());

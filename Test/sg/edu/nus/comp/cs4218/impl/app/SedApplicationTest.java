@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SedApplicationTest {
 
-    private SedInterface app = new SedApplication();
+    private final SedInterface app = new SedApplication();
 
     @Test
     void testReplaceEmptyCharater() throws Exception {

@@ -40,11 +40,11 @@ public class ArgumentResolver {
             parsedArgsList.addAll(resolveOneArgument(arg));
         }
 
-        System.out.println("parsedArgsList: ");
+        System.err.println("parsedArgsList: ");
         for(String str : parsedArgsList){
-            System.out.println(str);
+            System.err.println(str);
         }
-        System.out.println("parsedArgsList END!!");
+        System.err.println("parsedArgsList END!!");
 
         return parsedArgsList;
     }
