@@ -85,7 +85,8 @@ public class SortApplication implements SortInterface {
             if (!node.canRead()) {
                 throw new Exception(ERR_NO_PERM);
             }
-            InputStream input = IOUtils.openInputStream(file);
+            InputStream input = IOUtils.openInputStream(file);//NOPMD we suppress the close process because we will use
+            // special method to close this source stream:   IOUtils.closeInputStream(input);
             lines.addAll(IOUtils.getLinesFromInputStream(input));
             IOUtils.closeInputStream(input);
         }

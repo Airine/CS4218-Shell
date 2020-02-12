@@ -89,10 +89,17 @@ public class SedApplication implements SedInterface {
         if (!node.canRead()) {
             throw new Exception(ERR_NO_PERM);
         }
-        InputStream input = IOUtils.openInputStream(fileName);
-        String result = replaceSubstringInStdin(regexp, replacement, replacementIndex, input);
-        IOUtils.closeInputStream(input);
-        return result;
+        InputStream input = null;//NOPMD we suppress the close process because we will use
+        // special method to close this source stream:   IOUtils.closeInputStream(input);
+        try {
+            input = IOUtils.openInputStream(fileName);
+            return replaceSubstringInStdin(regexp, replacement, replacementIndex, input);
+        } finally {
+            if (input != null) {
+                IOUtils.closeInputStream(input);
+            }
+        }
+
     }
 
     /**
@@ -131,7 +138,7 @@ public class SedApplication implements SedInterface {
                     break;
                 }
             }
-            builder.append(line,matcher.end(),line.length());
+            builder.append(line, matcher.end(), line.length());
             output.append(builder.toString()).append(STRING_NEWLINE);
         }
 

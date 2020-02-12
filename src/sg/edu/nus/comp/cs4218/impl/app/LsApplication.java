@@ -59,7 +59,7 @@ public class LsApplication implements LsInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new LsException(e.getMessage());
+            throw (LsException) new LsException(e.getMessage()).initCause(e);
         }
 
         Boolean foldersOnly = parser.isFoldersOnly();
@@ -72,7 +72,7 @@ public class LsApplication implements LsInterface {
             stdout.write(result.getBytes());
             stdout.write(StringUtils.STRING_NEWLINE.getBytes());
         } catch (Exception e) {
-            throw new LsException(ERR_WRITE_STREAM);
+            throw (LsException) new LsException(ERR_WRITE_STREAM).initCause(e);
         }
     }
 
@@ -88,7 +88,7 @@ public class LsApplication implements LsInterface {
         try {
             return formatContents(getContents(Paths.get(cwd), isFoldersOnly));
         } catch (InvalidDirectoryException e) {
-            throw new LsException("Unexpected error occurred!");
+            throw (LsException) new LsException("Unexpected error occurred!").initCause(e);
         }
     }
 

@@ -60,14 +60,16 @@ public class PasteApplication implements PasteInterface {
         }
         boolean isSingleFile = (fileName.length == 1);
         for (String f : fileName) {
-            BufferedReader reader = null;
             String path = convertToAbsolutePath(f);
             File file = new File(path);
             if (!file.exists() || file.isDirectory()) {
                 continue;
             }
-            reader = new BufferedReader(new FileReader(path));
-            //TODO
+            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+
+                //TODO
+            }
+
         }
         return null;
     }
@@ -87,8 +89,10 @@ public class PasteApplication implements PasteInterface {
 
 
     /* Duplicate methods, may need to move these methods to Util classes*/
+
     /**
      * Converts path provided by user into path recognised by the system
+     *
      * @param path supplied by user
      * @return a String of the converted path
      */
@@ -107,6 +111,7 @@ public class PasteApplication implements PasteInterface {
 
     /**
      * Converts folderName to absolute path, if initially was relative path
+     *
      * @param folderName supplied by user
      * @return a String of the absolute path of the folderName
      */
@@ -116,7 +121,7 @@ public class PasteApplication implements PasteInterface {
         String convertedPath = convertPathToSystemPath(folderName);
 
         String newPath;
-        if (convertedPath.length()>=home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
+        if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
             newPath = convertedPath;
         } else {
             newPath = currentDir + CHAR_FILE_SEP + convertedPath;
