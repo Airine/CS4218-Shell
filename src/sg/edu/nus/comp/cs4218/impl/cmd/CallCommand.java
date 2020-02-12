@@ -43,12 +43,6 @@ public class CallCommand implements Command {
         redirHandler.extractRedirOptions();
         List<String> noRedirArgsList = redirHandler.getNoRedirArgsList();
 
-        System.err.println("noRedirArgsList: ");
-        for(String str:noRedirArgsList){
-            System.err.println(str);
-        }
-        System.err.println("noRedirArgsList END!!");
-
         InputStream inputStream = redirHandler.getInputStream();
         OutputStream outputStream = redirHandler.getOutputStream();
 
