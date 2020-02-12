@@ -40,12 +40,6 @@ public class ArgumentResolver {
             parsedArgsList.addAll(resolveOneArgument(arg));
         }
 
-        System.err.println("parsedArgsList: ");
-        for(String str : parsedArgsList){
-            System.err.println(str);
-        }
-        System.err.println("parsedArgsList END!!");
-
         return parsedArgsList;
     }
 
