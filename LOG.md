@@ -8,9 +8,7 @@
    
 2. Some bugs in `ApplicationRunner` - Runxin
 
-    - switch without breaks
-    
-    - 
+    - switch without breaks (solved)
  
 ---
 

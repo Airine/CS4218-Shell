@@ -35,7 +35,9 @@ class RmApplicationTest {
         if (file.exists()) {
             throw new Exception("test terminated, this test file already exist!" + tempFileName);
         } else {
-            file.createNewFile();
+            if (!file.createNewFile()) {
+                throw new Exception("create file failed");
+            }
         }
     }
 
