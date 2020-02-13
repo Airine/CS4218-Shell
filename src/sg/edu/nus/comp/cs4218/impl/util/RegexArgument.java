@@ -16,12 +16,12 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_ASTERISK;
 public final class RegexArgument {
     private StringBuilder plaintext;
     private StringBuilder regex;
-    private boolean isRegex;
+    private boolean ifRegex;
 
     public RegexArgument() {
         this.plaintext = new StringBuilder();
         this.regex = new StringBuilder();
-        this.isRegex = false;
+        this.ifRegex = false;
     }
 
     public RegexArgument(String str) {
@@ -34,7 +34,7 @@ public final class RegexArgument {
     public RegexArgument(String str, String text, boolean isRegex) {
         this();
         this.plaintext.append(text);
-        this.isRegex = isRegex;
+        this.ifRegex = isRegex;
         this.regex.append(".*"); // We want to match filenames
         for (char c : str.toCharArray()) {
             if (c == CHAR_ASTERISK) {
@@ -53,13 +53,13 @@ public final class RegexArgument {
     public void appendAsterisk() {
         plaintext.append(CHAR_ASTERISK);
         regex.append("[^" + StringUtils.fileSeparator() + "]*");
-        isRegex = true;
+        ifRegex = true;
     }
 
     public void merge(RegexArgument other) {
         plaintext.append(other.plaintext);
         regex.append(other.regex);
-        isRegex = isRegex || other.isRegex;
+        ifRegex = ifRegex || other.ifRegex;
     }
 
     public void merge(String str) {
@@ -70,7 +70,7 @@ public final class RegexArgument {
     public List<String> globFiles() {
         List<String> globbedFiles = new LinkedList<>();
 
-        if (isRegex) {
+        if (ifRegex) {
             Pattern regexPattern = Pattern.compile(regex.toString());
             String dir = "";
             String tokens[] = plaintext.toString().replaceAll("\\\\", "/").split("/");
@@ -132,7 +132,7 @@ public final class RegexArgument {
     }
 
     public boolean isRegex() {
-        return isRegex;
+        return ifRegex;
     }
 
     public boolean isEmpty() {

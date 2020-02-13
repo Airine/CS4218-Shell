@@ -107,12 +107,12 @@ public final class IOUtils {
      */
     public static List<String> getLinesFromInputStream(InputStream input) throws Exception {
         List<String> output = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            output.add(line);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.add(line);
+            }
         }
-        reader.close();
         return output;
     }
 }
