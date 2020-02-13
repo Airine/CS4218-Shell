@@ -13,12 +13,21 @@
 ---
 ## 2020-2-13
 
-#### Sovle warnings by pmd
+#### Solve warnings by pmd
 
 1. Solve loss exception trace lost, use 
 `(NewException)new NewException().initCause(e)` to solve it.
+
 2. If the warning is un solvable currently, right click and 
 click suppress option
+
+3. Solve wrong null value handler in `IORedirectionHandler`
+
+4. Close BufferedReader stream in `IOUtils`
+
+5. Solve name conflict in `RegexArgument`
+
+
 ---
 
 
