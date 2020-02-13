@@ -11,6 +11,16 @@
     - switch without breaks (solved)
  
 ---
+## 2020-2-13
+
+#### Sovle warnings by pmd
+
+1. Solve loss exception trace lost, use 
+`(NewException)new NewException().initCause(e)` to solve it.
+2. If the warning is un solvable currently, right click and 
+click suppress option
+---
+
 
 ## 2020-2-?
 

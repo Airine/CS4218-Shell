@@ -56,13 +56,14 @@ public class GrepApplication implements GrepInterface {
      * Extract the lines and count number of lines for grep from files and insert them into
      * lineResults and countResults respectively.
      *
-     * @param pattern supplied by user
+     * @param pattern           supplied by user
      * @param isCaseInsensitive supplied by user
-     * @param lineResults a StringJoiner of the grep line results
-     * @param countResults a StringJoiner of the grep line count results
-     * @param fileNames a String Array of file names supplied by user
+     * @param lineResults       a StringJoiner of the grep line results
+     * @param countResults      a StringJoiner of the grep line count results
+     * @param fileNames         a String Array of file names supplied by user
      */
-    private void grepResultsFromFiles(String pattern, Boolean isCaseInsensitive, StringJoiner lineResults, StringJoiner countResults, String... fileNames) throws Exception {
+    private void grepResultsFromFiles(String pattern, Boolean isCaseInsensitive, StringJoiner lineResults, StringJoiner countResults, String... fileNames) throws Exception {//NOPMD
+//       todo this method is too long, try to split it in future
         int count;
         boolean isSingleFile = (fileNames.length == 1);
         for (String f : fileNames) {
@@ -107,7 +108,7 @@ public class GrepApplication implements GrepInterface {
                 }
                 reader.close();
             } catch (PatternSyntaxException pse) {
-                throw new GrepException(ERR_INVALID_REGEX);
+                throw (GrepException) new GrepException(ERR_INVALID_REGEX).initCause(pse);
             } finally {
                 if (reader != null) {
                     reader.close();
@@ -118,6 +119,7 @@ public class GrepApplication implements GrepInterface {
 
     /**
      * Converts filename to absolute path, if initially was relative path
+     *
      * @param fileName supplied by user
      * @return a String of the absolute path of the filename
      */
@@ -127,7 +129,7 @@ public class GrepApplication implements GrepInterface {
         String convertedPath = convertPathToSystemPath(fileName);
 
         String newPath;
-        if (convertedPath.length()>=home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
+        if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
             newPath = convertedPath;
         } else {
             newPath = currentDir + CHAR_FILE_SEP + convertedPath;
@@ -137,6 +139,7 @@ public class GrepApplication implements GrepInterface {
 
     /**
      * Converts path provided by user into path recognised by the system
+     *
      * @param path supplied by user
      * @return a String of the converted path
      */
@@ -158,8 +161,9 @@ public class GrepApplication implements GrepInterface {
         int count = 0;
         StringJoiner stringJoiner = new StringJoiner(STRING_NEWLINE);
 
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stdin));
+            reader = new BufferedReader(new InputStreamReader(stdin));
             String line;
             Pattern compiledPattern;
             if (isCaseInsensitive) {
@@ -174,11 +178,14 @@ public class GrepApplication implements GrepInterface {
                     count++;
                 }
             }
-            reader.close();
         } catch (PatternSyntaxException pse) {
-            throw new GrepException(ERR_INVALID_REGEX);
+            throw (GrepException) new GrepException(ERR_INVALID_REGEX).initCause(pse);
         } catch (NullPointerException npe) {
-            throw new GrepException(ERR_FILE_NOT_FOUND);
+            throw (GrepException) new GrepException(ERR_FILE_NOT_FOUND).initCause(npe);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
         }
 
         String results = "";
@@ -223,14 +230,15 @@ public class GrepApplication implements GrepInterface {
         } catch (GrepException grepException) {
             throw grepException;
         } catch (Exception e) {
-            throw new GrepException(e.getMessage());
+            throw (GrepException) new GrepException(e.getMessage()).initCause(e);
         }
     }
 
     /**
      * Separates the arguments provided by user into the flags, pattern and input files.
-     * @param args supplied by user
-     * @param grepFlags a bool array of possible flags in grep
+     *
+     * @param args       supplied by user
+     * @param grepFlags  a bool array of possible flags in grep
      * @param inputFiles a ArrayList<String> of file names supplied by user
      * @return regex pattern supplied by user. An empty String if not supplied.
      */

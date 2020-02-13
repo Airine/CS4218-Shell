@@ -89,7 +89,8 @@ public class WcApplication implements WcInterface {
                 continue;
             }
 
-            InputStream input = IOUtils.openInputStream(file);
+            InputStream input = IOUtils.openInputStream(file);//NOPMD we suppress the close process because we will use
+            // special method to close this source stream:   IOUtils.closeInputStream(input);
             long[] count = getCountReport(input); // lines words bytes
             IOUtils.closeInputStream(input);
 
