@@ -4,10 +4,7 @@ import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -49,10 +46,16 @@ public class PipeCommand implements Command {
                 if (i != callCommands.size() ) {
                     nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray());
                 }
+
+                nextInputStream.close(); //TODO: close() not recognize by PMD
+                nextOutputStream.close(); //TODO: close() not recognize by PMD
+
             } catch (AbstractApplicationException e) {
                 absAppException = e;
             } catch (ShellException e) {
                 shellException = e;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -62,6 +65,7 @@ public class PipeCommand implements Command {
         if (shellException != null) {
             throw shellException;
         }
+
     }
 
     @Override

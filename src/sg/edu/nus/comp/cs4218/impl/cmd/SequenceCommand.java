@@ -53,7 +53,7 @@ public class SequenceCommand implements Command {
             try {
                 stdout.write(outputLine.getBytes());
             } catch (IOException e) {
-                throw new ShellException(e.getMessage());
+                throw (ShellException) new ShellException(e.getMessage()).initCause(e);
             }
         }
 

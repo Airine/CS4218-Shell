@@ -13,11 +13,12 @@ class StringUtilsTest {
 
     private String str;
     private final Properties props = System.getProperties();
-    private String OSNAME;
+    private String osName;
+    private final static String OSNAMESTR = "os.name";
 
     @BeforeEach
     void storeOSName() {
-        OSNAME = System.getProperty("os.name");
+        osName = System.getProperty(OSNAMESTR);
     }
 
     @Test
@@ -52,30 +53,30 @@ class StringUtilsTest {
 
     @Test
     void normalCheckingSeparator() {
-        System.out.println(System.getProperty("os.name"));
+        System.out.println(System.getProperty(OSNAMESTR));
         assertEquals(System.getProperty("file.separator"), fileSeparator(), "Normal Check");
     }
 
     @Test
     void macSeparator() {
-        props.setProperty("os.name", "Mac OS X");
+        props.setProperty(OSNAMESTR, "Mac OS X");
         assertEquals("/", fileSeparator());
     }
 
     @Test
     void linuxSeparator() {
-        props.setProperty("os.name", "Linux");
+        props.setProperty(OSNAMESTR, "Linux");
         assertEquals("/", fileSeparator());
     }
 
     @Test
     void windowsSeparator() {
-        props.setProperty("os.name", "Windows");
+        props.setProperty(OSNAMESTR, "Windows");
         assertEquals('\\'+"/", fileSeparator());
     }
 
     @AfterEach
     void resetOSName(){
-        props.setProperty("os.name", OSNAME);
+        props.setProperty(OSNAMESTR, osName);
     }
 }
