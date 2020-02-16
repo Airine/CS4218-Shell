@@ -11,6 +11,7 @@
     - switch without breaks (solved)
  
 ---
+
 ## 2020-2-13
 
 #### Solve warnings by pmd
@@ -30,11 +31,16 @@ click suppress option
 6. Solve closeResource warming of pmd in `CallCommand` and `PipeCommand`
 
 7. Extract commonly used string as constant String object in `StringUtilsTest`
+
 ---
 
+## 2020-2-26
 
-## 2020-2-?
+#### Solved all warnings from pmd
 
+1. Solve issue `close() not recognize by PMD #24`
+
+2. Remove redundant if statement
 
 ---
 

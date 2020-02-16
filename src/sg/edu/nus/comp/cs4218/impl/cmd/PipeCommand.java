@@ -27,7 +27,7 @@ public class PipeCommand implements Command {
         ShellException shellException = null;
 
         InputStream nextInputStream = stdin;
-        OutputStream nextOutputStream;
+        OutputStream nextOutputStream = stdout;
 
         for (int i = 0; i < callCommands.size(); i++) {
             CallCommand callCommand = callCommands.get(i);
@@ -39,23 +39,23 @@ public class PipeCommand implements Command {
 
             try {
                 nextOutputStream = new ByteArrayOutputStream();
-                if (i == callCommands.size() ) {
-                    nextOutputStream = stdout;
-                }
+
                 callCommand.evaluate(nextInputStream, nextOutputStream);
                 if (i != callCommands.size() ) {
                     nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray());
                 }
 
-                nextInputStream.close(); //TODO: close() not recognize by PMD
-                nextOutputStream.close(); //TODO: close() not recognize by PMD
-
             } catch (AbstractApplicationException e) {
                 absAppException = e;
             } catch (ShellException e) {
                 shellException = e;
-            } catch (IOException e) {
-                e.printStackTrace();
+            } finally {
+                try {
+                    nextInputStream.close();
+                    nextOutputStream.close();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
             }
         }
 

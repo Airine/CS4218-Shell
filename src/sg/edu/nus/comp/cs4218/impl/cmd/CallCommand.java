@@ -44,24 +44,14 @@ public class CallCommand implements Command {
         redirHandler.extractRedirOptions();
         List<String> noRedirArgsList = redirHandler.getNoRedirArgsList();
 
-        InputStream inputStream = redirHandler.getInputStream();
-        OutputStream outputStream = redirHandler.getOutputStream();
-
-        // Handle quoting + globing + command substitution
-        List<String> parsedArgsList = argumentResolver.parseArguments(noRedirArgsList);
-        if (!parsedArgsList.isEmpty()) {
-            String app = parsedArgsList.remove(0);
-            appRunner.runApp(app, parsedArgsList.toArray(new String[0]), inputStream, outputStream);
-        }
-
-        try {
-            inputStream.close(); //TODO: close() not recognize by PMD
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            outputStream.close(); //TODO: close() not recognize by PMD
+        try (InputStream inputStream = redirHandler.getInputStream();
+             OutputStream outputStream = redirHandler.getOutputStream()) {
+            // Handle quoting + globing + command substitution
+            List<String> parsedArgsList = argumentResolver.parseArguments(noRedirArgsList);
+            if (!parsedArgsList.isEmpty()) {
+                String app = parsedArgsList.remove(0);
+                appRunner.runApp(app, parsedArgsList.toArray(new String[0]), inputStream, outputStream);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
