@@ -17,17 +17,17 @@ class RmApplicationTest {
     String tempFileName1 = joinPath(currTestDir, "test1.txt");
     String tempFileName2 = joinPath(currTestDir, "test2.txt");
     String tempFolderName = joinPath(currTestDir, "test-folder");
-    String tempFolderFileName = joinPath(currTestDir, "test-folder/test.cc");
+    String tempFolderFName = joinPath(currTestDir, "test-folder/test.cc");
     String emptyFolderName = joinPath(currTestDir, "emptyFolder");
 
 
     private static String joinPath(String... fileFolderName) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(fileFolderName[0]);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(fileFolderName[0]);
         for (int i = 1; i < fileFolderName.length; i++) {
-            sb.append(File.separator).append(fileFolderName[i]);
+            stringBuilder.append(File.separator).append(fileFolderName[i]);
         }
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     private void createTestFile(String tempFileName) throws Exception {
@@ -132,7 +132,7 @@ class RmApplicationTest {
         // it is different in linux, linux use rm -rf could deal with, however, in our case, we do not have option -f
         //Boolean isEmptyFolder, Boolean isRecursive, String... fileName
         try {
-            remove.remove(true, true, tempFolderName, tempFolderFileName);
+            remove.remove(true, true, tempFolderName, tempFolderFName);
         } catch (Exception e) {
             return;
         }

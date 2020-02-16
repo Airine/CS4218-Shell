@@ -25,10 +25,10 @@ class SedApplicationTest {
 
     @Test
     void testReplaceWithEmptyCharater() throws Exception {
-        String original = "abcab";
+        String original = "abcabc";
         String pattern = "a";
         String replacement = "";
-        String expected = "bcab";
+        String expected = "bcabc";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
         assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
     }
@@ -45,10 +45,10 @@ class SedApplicationTest {
 
     @Test
     void testReplaceMultipleCharater() throws Exception {
-        String original = "abcab";
+        String original = "abcabd";
         String pattern = "abc";
         String replacement = "d";
-        String expected = "dab";
+        String expected = "dabd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
         assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
     }
