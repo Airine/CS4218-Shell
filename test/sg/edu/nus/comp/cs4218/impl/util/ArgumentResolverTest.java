@@ -21,30 +21,30 @@ class ArgumentResolverTest {
 
     @Test
     void testDoubleQuote() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("\"aaa\"");
+        List<String> input = Arrays.asList("\"bbb\"");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("aaa"), parsedArgsList);
+        assertEquals(Arrays.asList("bbb"), parsedArgsList);
     }
 
     @Test
     void testBackQuote() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("`echo 'aaa'`");
+        List<String> input = Arrays.asList("`echo 'ccc'`");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("aaa"), parsedArgsList);
+        assertEquals(Arrays.asList("ccc"), parsedArgsList);
     }
 
     @Test
     void testBackQuoteWithDoubleQuote() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("\"`echo 'aaa'`\"");
+        List<String> input = Arrays.asList("\"`echo 'ddd'`\"");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("aaa"), parsedArgsList);
+        assertEquals(Arrays.asList("ddd"), parsedArgsList);
     }
 
     @Test
     void testBackQuoteWithSingleQuote() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("'`echo 'aaa'`'");
+        List<String> input = Arrays.asList("'`echo 'eee'`'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("`echo 'aaa'`"), parsedArgsList);
+        assertEquals(Arrays.asList("`echo 'eee'`"), parsedArgsList);
     }
 
     // not sure about this case
@@ -64,30 +64,30 @@ class ArgumentResolverTest {
 
     @Test
     void testMixThreeQuote1() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("\"'aaa `echo \"bbb\"`'\"");
+        List<String> input = Arrays.asList("\"'fff `echo \"ggg\"`'\"");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("'aaa bbb'"), parsedArgsList);
+        assertEquals(Arrays.asList("'fff ggg'"), parsedArgsList);
     }
 
     @Test
     void testMixThreeQuote2() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("'\"aaa `echo \"bbb\"`\"'");
+        List<String> input = Arrays.asList("'\"hhh `echo \"iii\"`\"'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("\"aaa `echo \"bbb\"`\""), parsedArgsList);
+        assertEquals(Arrays.asList("\"hhh `echo \"iii\"`\""), parsedArgsList);
     }
 
     @Test
     void testIncorrectQuote1() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("\"aaa'bbb\"ccc'");
+        List<String> input = Arrays.asList("\"jjj'kkk\"lll'");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("aaa'bbbccc"), parsedArgsList);
+        assertEquals(Arrays.asList("jjj'kkklll"), parsedArgsList);
     }
 
     // not sure about the output
     @Test
     void testIncorrectQuote2() throws AbstractApplicationException, ShellException {
-        List<String> input = Arrays.asList("\"aaa `echo '\"bbb'`");
+        List<String> input = Arrays.asList("\"mmm `echo '\"nnn'`");
         List<String> parsedArgsList = argumentResolver.parseArguments(input);
-        assertEquals(Arrays.asList("aaa \"bbb"), parsedArgsList);
+        assertEquals(Arrays.asList("mmm \"nnn"), parsedArgsList);
     }
 }

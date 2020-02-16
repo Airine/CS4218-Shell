@@ -27,7 +27,9 @@ click suppress option
 
 5. Solve name conflict in `RegexArgument`
 
+6. Solve closeResource warming of pmd in `CallCommand` and `PipeCommand`
 
+7. Extract commonly used string as constant String object in `StringUtilsTest`
 ---
 
 
