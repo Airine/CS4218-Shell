@@ -13,7 +13,7 @@ class RmApplicationTest {
 
     RmInterface remove = new RmApplication();
 
-    String currTestDir = joinPath(EnvironmentUtils.currentDirectory, "Test", "temp");
+    String currTestDir = joinPath(EnvironmentUtils.currentDirectory, "test", "temp");
     String tempFileName1 = joinPath(currTestDir, "test1.txt");
     String tempFileName2 = joinPath(currTestDir, "test2.txt");
     String tempFolderName = joinPath(currTestDir, "test-folder");

@@ -7,3 +7,7 @@ Slack: https://cs4218-team6.slack.com/
 
 ![timeline](./img/timeline.png)
 
+If you want to run this app in the terminal
+execute this command in the root directory:
+>  mvn compile -Pcode-mainclass
+

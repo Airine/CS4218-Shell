@@ -34,13 +34,25 @@ click suppress option
 
 ---
 
-## 2020-2-26
+## 2020-2-16
 
 #### Solved all warnings from pmd
 
 1. Solve issue `close() not recognize by PMD #24`
 
 2. Remove redundant if statement
+
+---
+
+## 2020-2-17
+
+#### Configure pom.xml
+- add configuration for setting src and test directory.
+- add configuration for running test and package.
+
+If you want to run this app in the terminal
+execute this command in the root directory:
+>  mvn compile -Pcode-mainclass
 
 ---
 
