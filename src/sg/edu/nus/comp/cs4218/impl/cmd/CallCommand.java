@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.cmd;
 
 //import com.sun.xml.internal.bind.v2.runtime.output.StAXExStreamWriterOutput;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -44,17 +45,16 @@ public class CallCommand implements Command {
         redirHandler.extractRedirOptions();
         List<String> noRedirArgsList = redirHandler.getNoRedirArgsList();
 
-        try (InputStream inputStream = redirHandler.getInputStream();
-             OutputStream outputStream = redirHandler.getOutputStream()) {
-            // Handle quoting + globing + command substitution
-            List<String> parsedArgsList = argumentResolver.parseArguments(noRedirArgsList);
-            if (!parsedArgsList.isEmpty()) {
-                String app = parsedArgsList.remove(0);
-                appRunner.runApp(app, parsedArgsList.toArray(new String[0]), inputStream, outputStream);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        InputStream inputStream = redirHandler.getInputStream();//NOPMD: Already use IOUtils.closeInputStream to handle
+        OutputStream outputStream = redirHandler.getOutputStream();//NOPMD: Already use IOUtils.closeOutputStream to handle
+        // Handle quoting + globing + command substitution
+        List<String> parsedArgsList = argumentResolver.parseArguments(noRedirArgsList);
+        if (!parsedArgsList.isEmpty()) {
+            String app = parsedArgsList.remove(0);
+            appRunner.runApp(app, parsedArgsList.toArray(new String[0]), inputStream, outputStream);
         }
+        IOUtils.closeInputStream(inputStream);
+        IOUtils.closeOutputStream(outputStream);
     }
 
     @Override

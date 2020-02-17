@@ -54,6 +54,7 @@ If you want to run this app in the terminal
 execute this command in the root directory:
 >  mvn compile -Pcode-mainclass
 
+1. Solved abnormal exit
 ---
 
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 

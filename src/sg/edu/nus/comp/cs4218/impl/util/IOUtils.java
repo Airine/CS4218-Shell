@@ -68,7 +68,6 @@ public final class IOUtils {
         if (inputStream == System.in || inputStream == null) {
             return;
         }
-
         try {
             inputStream.close();
         } catch (IOException e) {

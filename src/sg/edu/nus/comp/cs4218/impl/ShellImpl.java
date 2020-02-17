@@ -46,7 +46,7 @@ public class ShellImpl implements Shell {
         } finally {
             try {
                 reader.close();
-            } catch (IOException e) {
+            } catch (IOException e){
                 e.printStackTrace();
             }
         }
