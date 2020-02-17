@@ -6,9 +6,10 @@ import sg.edu.nus.comp.cs4218.exception.PasteException;
 
 import java.io.*;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_ARGS;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_STREAMS;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_TAB;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class PasteApplication implements PasteInterface {
 
@@ -56,22 +57,55 @@ public class PasteApplication implements PasteInterface {
     @Override
     public String mergeFile(String... fileName) throws Exception {
         if (fileName == null || fileName.length == 0) {
-            throw new Exception(ERR_NULL_ARGS);
+            throw new PasteException(ERR_NULL_ARGS);
         }
-        boolean isSingleFile = (fileName.length == 1);
-        for (String f : fileName) {
-            String path = convertToAbsolutePath(f);
-            File file = new File(path);
-            if (!file.exists() || file.isDirectory()) {
-                continue;
+        StringBuilder output = new StringBuilder();
+        BufferedReader[] readers = new BufferedReader[fileName.length];
+        try {
+            for (int i = 0; i < fileName.length; i++) {
+                String path = convertToAbsolutePath(fileName[i]);
+                File file = new File(path);
+                if (!file.exists()) {
+                    throw new PasteException(ERR_FILE_NOT_FOUND);
+                }
+                if (file.isDirectory()) {
+                    throw new PasteException(ERR_IS_DIR);
+                }
+                BufferedReader reader = new BufferedReader(new FileReader(path));
+                readers[i] = reader;
             }
-            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-
-                //TODO
+            String line;
+            if (fileName.length == 1) { //echo back if only one file specified
+                while ((line = readers[0].readLine()) != null) {
+                    output.append(line).append(STRING_NEWLINE);
+                }
+                readers[0].close();
+                return output.toString();
             }
-
+            int unfinished;
+            do {
+                unfinished = fileName.length;
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < fileName.length; i++) {
+                    line = readers[i].readLine();
+                    if (line == null) {
+                        builder.append(CHAR_TAB);
+                        unfinished--;
+                    } else {
+                        builder.append(line).append(CHAR_TAB);
+                    }
+                }
+                if (unfinished > 0) {
+                    output.append(builder.toString()).append(STRING_NEWLINE);
+                }
+            } while (unfinished > 0);
+            for (BufferedReader reader : readers) {
+                reader.close();
+            }
+        }catch (IOException e) {
+            throw new PasteException(ERR_IO_EXCEPTION);
         }
-        return null;
+        return output.toString();
     }
 
     /**
