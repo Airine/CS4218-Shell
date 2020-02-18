@@ -57,6 +57,16 @@ execute this command in the root directory:
 1. Solved abnormal exit
 ---
 
+## 2020-2-18
+
+#### Complete Implementation and test for Paste
+
+1. Paste can take at most one input stream and arbitrary number of files in our implementation.
+
+2. PMD warnings can be suppressed by adding `\\NOPMD` at the end of the statement.
+
+---
+
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
