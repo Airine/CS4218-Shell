@@ -4,10 +4,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.EchoInterface;
+import sg.edu.nus.comp.cs4218.exception.EchoException;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 
@@ -59,10 +60,17 @@ class EchoApplicationTest {
     }
 
     @Test
-    void testNullInput() throws Exception {
+    void testEmptyInput() throws Exception {
         String[] args = {};
         echoApp.run(args, System.in, System.out);
         assertEquals(STRING_NEWLINE, outContent.toString());
+    }
+
+    @Test
+    void testNullInput() throws Exception {
+        String[] args = null;
+        Throwable thrown = assertThrows(EchoException.class, () -> echoApp.run(args, System.in, System.out));
+        assertEquals("echo: " + ERR_NULL_ARGS, thrown.getMessage());
     }
 
     @Test
@@ -70,5 +78,21 @@ class EchoApplicationTest {
         String[] args = {"!@#$%^&*()_+-={}[]:\";'|\\<>?,./~`"};
         echoApp.run(args, System.in, System.out);
         assertEquals("!@#$%^&*()_+-={}[]:\";'|\\<>?,./~`", outContent.toString());
+    }
+
+    @Test
+    void testNoOutStream(){
+        String[] args = {"aaa"};
+        Throwable thrown = assertThrows(EchoException.class, () -> echoApp.run(args, System.in, null));
+        assertEquals("echo: " + ERR_NO_OSTREAM, thrown.getMessage());
+    }
+
+    @Test
+    void testIOException() throws IOException {
+        String[] args = {"aaa"};
+        OutputStream outputStream = new PipedOutputStream();
+        outputStream.close();
+        Throwable thrown = assertThrows(EchoException.class, () -> echoApp.run(args, System.in, outputStream));
+        assertEquals("echo: " + ERR_IO_EXCEPTION, thrown.getMessage());
     }
 }
