@@ -4,22 +4,27 @@ import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.RmInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RmApplicationTest {
 
-    private RmInterface remove = new RmApplication();
+    private final RmInterface remove = new RmApplication();
 
-    private String currTestDir = joinPath(EnvironmentUtils.currentDirectory, "test", "temp");
-    private String tempFileName1 = joinPath(currTestDir, "test1.txt");
-    private String tempFileName2 = joinPath(currTestDir, "test2.txt");
-    private String tempFolderName = joinPath(currTestDir, "test-folder");
-    private String tempFileInFolder = joinPath(currTestDir, "test-folder/test.cc");
-    private String emptyFolderName = joinPath(currTestDir, "emptyFolder");
+    private final String currTestDir = joinPath(EnvironmentUtils.currentDirectory, "test", "temp");
+    private final String tempFileName1 = joinPath(currTestDir, "test1.txt");
+    private final String tempFileName2 = joinPath(currTestDir, "test2.txt");
+    private final String tempFolderName = joinPath(currTestDir, "test-folder");
+    private final String tempFileInFolder = joinPath(currTestDir, "test-folder/test.cc");
+    private final String emptyFolderName = joinPath(currTestDir, "emptyFolder");
 
 
     private static String joinPath(String... fileFolderName) {
@@ -76,7 +81,7 @@ class RmApplicationTest {
         try {
             remove.remove(false, false, tempFileName1);
         } catch (Exception e) {
-            fail("should not have exception");
+            fail("remove one file should not have exception");
         }
         assertFalse(new File(tempFileName1).exists());
     }
@@ -87,7 +92,7 @@ class RmApplicationTest {
         try {
             remove.remove(false, false, tempFileName1, tempFileName2);
         } catch (Exception e) {
-            fail("should not have exception");
+            fail("remove multiple files should not have exception");
         }
         assertFalse(new File(tempFileName1).exists());
         assertFalse(new File(tempFileName2).exists());
@@ -142,9 +147,31 @@ class RmApplicationTest {
         try {
             remove.remove(false, true, tempFolderName);
         } catch (Exception e) {
-            fail("remove none empty folder with option isEmptyFolder true should not throw exception");
+            fail("remove none empty folder with option isEmptyFolder false should not throw exception");
         }
         assertFalse(new File(tempFolderName).exists());
+    }
+
+    @Test
+    void removeNoneExistFile() {
+        //Boolean isEmptyFolder, Boolean isRecursive, String... fileName
+        try {
+            remove.remove(false, true, tempFolderName + "non_exist");
+        } catch (Exception e) {
+            return;
+        }
+        fail("remove none exist file should throw exception");
+    }
+
+    @Test
+    void removeNoneEmptyFolderWithEmptyOption() {
+        //Boolean isEmptyFolder, Boolean isRecursive, String... fileName
+        try {
+            remove.remove(true, false, tempFolderName);
+        } catch (Exception e) {
+            return;
+        }
+        fail("remove none empty folder with option isEmptyFolder true should throw exception");
     }
 
     @Test
@@ -205,4 +232,66 @@ class RmApplicationTest {
         assertFalse(new File(tempFileName1).exists());
         assertFalse(new File(emptyFolderName).exists());
     }
+
+    @Test
+    void runDeleteWithMultipleOption1() {
+        String[] args = {"-d", emptyFolderName, "-r", tempFolderName};
+        try {
+            remove.run(args, System.in, System.out);
+        } catch (AbstractApplicationException e) {
+            e.printStackTrace();
+        }
+        assertFalse(new File(tempFolderName).exists());
+        assertFalse(new File(emptyFolderName).exists());
+    }
+
+    @Test
+    void runDeleteWithMultipleOption2() {
+        String[] args = {"-r", tempFolderName, "-d", emptyFolderName,};
+        try {
+            remove.run(args, System.in, System.out);
+        } catch (AbstractApplicationException e) {
+            e.printStackTrace();
+        }
+        assertFalse(new File(tempFolderName).exists());
+        assertFalse(new File(emptyFolderName).exists());
+    }
+
+    @Test
+    void runDeleteEmptyFile() {
+        String[] args = {"nonexist"};
+        OutputStream outputStream = null; //NOPMD their are special method to close it
+        InputStream inputStream = null;//NOPMD
+        try {
+            outputStream = IOUtils.openOutputStream(tempFileName1);
+            inputStream = IOUtils.openInputStream(tempFileName1);
+
+            assertTrue(inputStream.read() < 0);
+            remove.run(args, System.in, outputStream);
+            assertTrue(inputStream.read() > 0);
+        } catch (AbstractApplicationException | ShellException | IOException e) {
+            fail("should not have exception" + e.getMessage());
+        } finally {
+            try {
+                IOUtils.closeOutputStream(outputStream);
+                IOUtils.closeInputStream(inputStream);
+            } catch (ShellException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    void runExceptionWriteToClosedStream() {
+        String[] args = {"nonexist"};
+        try {
+            OutputStream outputStream = IOUtils.openOutputStream(tempFileName1); //NOPMD close stream early
+            IOUtils.closeOutputStream(outputStream);
+            remove.run(args, System.in, outputStream);
+        } catch (AbstractApplicationException | ShellException e) {
+            return;
+        }
+        fail("write error message to closed stream should appear exception");
+    }
+
 }

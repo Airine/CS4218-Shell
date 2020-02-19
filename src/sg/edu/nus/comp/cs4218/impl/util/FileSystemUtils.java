@@ -3,7 +3,8 @@ package sg.edu.nus.comp.cs4218.impl.util;
 import java.io.File;
 import java.util.Objects;
 
-public class FileSystemUtils {
+public final class FileSystemUtils {
+    private FileSystemUtils(){}
 
     public static void deleteFileRecursive(File file) {
         if (file.exists()) {
@@ -12,7 +13,7 @@ public class FileSystemUtils {
                     deleteFileRecursive(f);
                 }
             }
-            file.delete();
+            file.delete(); //NOPMD do not need the return value
         }
     }
 

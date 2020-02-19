@@ -71,3 +71,4 @@ project progress.
 ## 2020-2-19
 
 1. update EchoApplicationTest for 100% coverage
+2. Add more test for rmApp and attend to 100% coverage

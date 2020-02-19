@@ -16,16 +16,6 @@ import java.util.Objects;
 
 public class RmApplication implements RmInterface {
 
-
-    /**
-     * Remove the file. (It does not remove folder by default)
-     *
-     * @param isEmptyFolder Boolean option to delete a folder only if it is empty
-     * @param isRecursive   Boolean option to recursively delete the folder contents (traversing
-     *                      through all folders inside the specified folder)
-     * @param fileName      Array of String of file names
-     * @throws Exception
-     */
     @Override
     public void remove(Boolean isEmptyFolder, Boolean isRecursive, String... fileName) throws Exception {
         for (String oneFile : fileName) {
@@ -68,15 +58,15 @@ public class RmApplication implements RmInterface {
         try {
             for (String arg : args) {
                 if ("-r".equals(arg)) {
-                    if (list.size() != 0) {
+                    if (!list.isEmpty()) {
                         remove(isEmptyFolder, isRecursive, listToStringArray(list));
                         isEmptyFolder = false;
                         list = new LinkedList<>();
                     }
                     isRecursive = true;
                 } else if ("-d".equals(arg)) {
-                    if (list.size() != 0) {
-                        remove(isEmptyFolder, isRecursive, (String[]) list.toArray());
+                    if (!list.isEmpty()) {
+                        remove(isEmptyFolder, isRecursive, listToStringArray(list));
                         isRecursive = false;
                         list = new LinkedList<>();
                     }
@@ -85,7 +75,7 @@ public class RmApplication implements RmInterface {
                     list.add(arg);
                 }
             }
-            if (list.size() != 0) {
+            if (!list.isEmpty()) {
                 remove(isEmptyFolder, isRecursive, listToStringArray(list));
             }
         } catch (Exception e) {
