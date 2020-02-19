@@ -60,3 +60,7 @@ execute this command in the root directory:
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
+
+## 2020-2-19
+
+1. update EchoApplicationTest for 100% coverage
