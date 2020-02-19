@@ -2,7 +2,6 @@ package sg.edu.nus.comp.cs4218.impl.util;
 
 import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
