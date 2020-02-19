@@ -69,7 +69,7 @@ public final class StringUtils {
      * @return String result of c * n
      */
     public static String multiplyChar(char character, int num) {
-        int length = num <= 0 ? 0 : num;
+        int length = Math.max(num, 0);
         char[] arr = new char[length];
         Arrays.fill(arr, character);
         return new String(arr);
