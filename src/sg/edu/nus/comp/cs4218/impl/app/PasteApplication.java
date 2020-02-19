@@ -78,6 +78,9 @@ public class PasteApplication implements PasteInterface {
             while ((line = reader.readLine()) != null) {
                 output.append(line).append(STRING_NEWLINE);
             }
+            if (stdin != System.in) {
+                reader.close();
+            }
             return output.toString();
         } catch (IOException e) {
             throw new PasteException(ERR_IO_EXCEPTION);//NOPMD
@@ -156,6 +159,7 @@ public class PasteApplication implements PasteInterface {
         return output.toString();
     }
 
+    /* Algorithm to merge files */
     private void mergeAlgorithm(int fileNumber, BufferedReader[] readers, StringBuilder output) throws IOException {
         String line;
         int unfinished;
@@ -186,17 +190,19 @@ public class PasteApplication implements PasteInterface {
      * @param path supplied by user
      * @return a String of the converted path
      */
-    private String convertPathToSystemPath(String path) {
-        String convertedPath = path;
-        String pathIdentifier = "\\" + Character.toString(CHAR_FILE_SEP);
-        convertedPath = convertedPath.replaceAll("(\\\\)+", pathIdentifier);
-        convertedPath = convertedPath.replaceAll("/+", pathIdentifier);
-
-        if (convertedPath.length() != 0 && convertedPath.charAt(convertedPath.length() - 1) == CHAR_FILE_SEP) {
-            convertedPath = convertedPath.substring(0, convertedPath.length() - 1);
+    private String convertPathToSystemPath(String path) throws PasteException {
+        try {
+            String convertedPath = path;
+            String pathIdentifier = "\\" + Character.toString(CHAR_FILE_SEP);
+            convertedPath = convertedPath.replaceAll("(\\\\)+", pathIdentifier);
+            convertedPath = convertedPath.replaceAll("/+", pathIdentifier);
+            if (convertedPath.length() != 0 && convertedPath.charAt(convertedPath.length() - 1) == CHAR_FILE_SEP) {
+                convertedPath = convertedPath.substring(0, convertedPath.length() - 1);
+            }
+            return convertedPath;
+        } catch (NullPointerException e) {
+            throw new PasteException(ERR_NULL_ARGS);//NOPMD
         }
-
-        return convertedPath;
     }
 
     /**
@@ -205,11 +211,10 @@ public class PasteApplication implements PasteInterface {
      * @param folderName supplied by user
      * @return a String of the absolute path of the folderName
      */
-    private String convertToAbsolutePath(String folderName) {
+    private String convertToAbsolutePath(String folderName) throws PasteException {
         String home = System.getProperty("user.home").trim();
         String currentDir = EnvironmentUtils.currentDirectory.trim();
         String convertedPath = convertPathToSystemPath(folderName);
-
         String newPath;
         if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
             newPath = convertedPath;

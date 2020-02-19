@@ -1,18 +1,14 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.PasteInterface;
 import sg.edu.nus.comp.cs4218.exception.PasteException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_ISTREAM;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_OSTREAM;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NULL_ARGS;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_TAB;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -25,6 +21,38 @@ class PasteApplicationTest {
     private static String fileNameC = "asset/C.txt";
     private static String fileNameEmpty1 = "asset/empty1.txt";
     private static String fileNameEmpty2 = "asset/empty2.txt";
+    private static String dirNameEmpty = "asset/emptyDir";
+    private static String fileNameNotExist = "asset/notExist.txt";
+    private static String pastePrefix = "paste: ";
+
+
+    /* Write contents to files */
+    @BeforeAll
+    static void writeFiles() throws IOException {
+        FileWriter fileWriterA = new FileWriter(fileNameA);
+        FileWriter fileWriterB = new FileWriter(fileNameB);
+        FileWriter fileWriterC = new FileWriter(fileNameC);
+        FileWriter fileWriterEpt1 = new FileWriter(fileNameEmpty1);
+        FileWriter fileWriterEpt2 = new FileWriter(fileNameEmpty2);
+        try {
+            fileWriterA.write("A" + STRING_NEWLINE + "B" + STRING_NEWLINE + "C" + STRING_NEWLINE + "D");
+            fileWriterB.write("1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "3" + STRING_NEWLINE + "4");
+            fileWriterC.write("1" + STRING_NEWLINE + "3" + STRING_NEWLINE + "5" + STRING_NEWLINE + "7" +
+                    STRING_NEWLINE + "9");
+            fileWriterEpt1.write("");
+            fileWriterEpt2.write("");
+        } finally {
+            try {
+                fileWriterA.close();
+                fileWriterB.close();
+                fileWriterC.close();
+                fileWriterEpt1.close();
+                fileWriterEpt2.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Test
     void testMergeStdin() throws Exception {
@@ -153,12 +181,32 @@ class PasteApplicationTest {
     }
 
     @Test
+    void testRunWithDirectoryFileName() {
+        String[] args = {dirNameEmpty, fileNameA};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(PasteException.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_IS_DIR);
+    }
+
+    @Test
+    void testRunWithNotExistFileName() {
+        String[] args = {fileNameNotExist, fileNameA};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(PasteException.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_FILE_NOT_FOUND);
+    }
+
+    @Test
     void testRunWithNullArgs() {
         outputStream = new ByteArrayOutputStream();
         Throwable thrown = assertThrows(PasteException.class, () -> {
             app.run(null, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), "paste: " + ERR_NULL_ARGS);
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_NULL_ARGS);
     }
 
     @Test
@@ -167,7 +215,7 @@ class PasteApplicationTest {
         Throwable thrown = assertThrows(PasteException.class, () -> {
             app.run(args, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), "paste: " + ERR_NO_OSTREAM);
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_NO_OSTREAM);
     }
 
     @Test
@@ -177,7 +225,23 @@ class PasteApplicationTest {
         Throwable thrown = assertThrows(PasteException.class, () -> {
             app.run(args, null, outputStream);
         });
-        assertEquals(thrown.getMessage(), "paste: " + ERR_NO_ISTREAM);
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_NO_ISTREAM);
+    }
+
+    @Test
+    void testMergeWithNullFileName() {
+        Throwable thrown = assertThrows(PasteException.class, () -> {
+            app.mergeFile(null, fileNameA);
+        });
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_NULL_ARGS);
+    }
+
+    @Test
+    void testMergeFileWithNullArgs() {
+        Throwable thrown = assertThrows(PasteException.class, () -> {
+            app.mergeFile(null);
+        });
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_NULL_ARGS);
     }
 
 }
