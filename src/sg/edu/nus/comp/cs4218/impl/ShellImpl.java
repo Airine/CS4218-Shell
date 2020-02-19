@@ -35,10 +35,13 @@ public class ShellImpl implements Shell {
                 } catch (IOException e) {
                     break; // Streams are closed, terminate process
                 }
-
-                if (!StringUtils.isBlank(commandString)) {
-                    shell.parseAndEvaluate(commandString, System.out);
-                    System.out.println();
+                try {
+                    if (!StringUtils.isBlank(commandString)) {
+                        shell.parseAndEvaluate(commandString, System.out);
+                        System.out.println();
+                    }
+                } catch (AbstractApplicationException | ShellException e) {
+                    System.out.println(e.getMessage());
                 }
             }
         } catch (Exception e) {

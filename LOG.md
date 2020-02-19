@@ -47,7 +47,9 @@ click suppress option
 ## 2020-2-17
 
 #### Configure pom.xml
+
 - add configuration for setting src and test directory.
+
 - add configuration for running test and package.
 
 If you want to run this app in the terminal
@@ -55,12 +57,17 @@ execute this command in the root directory:
 >  mvn compile -Pcode-mainclass
 
 1. Solved abnormal exit
+
 ---
+
+## 2020-2-19
+
+1. Complete unit test cases for `StringUtil`.  - 100% coverage
+
+2. Update EchoApplicationTest - 100% coverage
+
+3. Complete unit test cases for `ArgsParser`. -100% coverage
 
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
-
-## 2020-2-19
-
-1. update EchoApplicationTest for 100% coverage

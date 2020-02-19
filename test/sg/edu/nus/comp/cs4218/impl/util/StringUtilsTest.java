@@ -5,8 +5,7 @@ import org.junit.jupiter.api.*;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.fileSeparator;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.isBlank;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 
 
 class StringUtilsTest {
@@ -74,6 +73,65 @@ class StringUtilsTest {
         props.setProperty(OSNAMESTR, "Windows");
         assertEquals('\\'+"/", fileSeparator());
     }
+
+    @Test
+    void tokenizeNormal() {
+        String[] result = {"this", "is", "a", "test"};
+        assertArrayEquals(result, tokenize("this is a test"));
+    }
+
+    @Test
+    void tokenizeEmpty() {
+        String[] result = new String[0];
+        assertArrayEquals(result, tokenize(""));
+    }
+
+    @Test
+    void zeroIsNumber() {
+        assertTrue(isNumber("0"));
+    }
+
+    @Test
+    void negativeNumberIsNumber() {
+        assertTrue(isNumber("-1"));
+    }
+
+    @Test
+    void bigNumberIsNumber() {
+        assertTrue(isNumber("12345686543234566543456654323"));
+    }
+
+    @Test
+    void manyZeroesIsNumber() {
+        assertTrue(isNumber("0000000000000"));
+    }
+
+    @Test
+    void emptyIsNotNumber() {
+        assertFalse(isNumber(""));
+    }
+
+    @Test
+    void textIsNotNumber() {
+        assertFalse(isNumber("test"));
+    }
+
+    @Test
+    void multiplyCharNormal() {
+        assertEquals("aaa", multiplyChar('a', 3));
+    }
+
+    @Test
+    void multiplyCharNormalEmpty() {
+        assertEquals("", multiplyChar('a', 0));
+    }
+
+
+    @Test
+    void multiplyCharNormalNegative() {
+        assertEquals("", multiplyChar('a', -1));
+    }
+
 
     @AfterEach
     void resetOSName(){
