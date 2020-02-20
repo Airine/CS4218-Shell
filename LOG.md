@@ -58,8 +58,6 @@ execute this command in the root directory:
 
 1. Solved abnormal exit
 
----
-
 ## 2020-2-18
 
 #### Complete Implementation and test for Paste
@@ -78,6 +76,13 @@ execute this command in the root directory:
 
 3. Complete unit test cases for `ArgsParser`. -100% coverage
 
+4. Add more test for rmApp and attend to 100% coverage
+
+---
+
+## 2020-2-20
+
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
+
