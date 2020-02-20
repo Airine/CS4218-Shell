@@ -19,12 +19,12 @@ class RmApplicationTest {
 
     private final RmInterface remove = new RmApplication();
 
-    private final String currTestDir = joinPath(EnvironmentUtils.currentDirectory, "test", "temp");
-    private final String tempFileName1 = joinPath(currTestDir, "test1.txt");
-    private final String tempFileName2 = joinPath(currTestDir, "test2.txt");
-    private final String tempFolderName = joinPath(currTestDir, "test-folder");
-    private final String tempFileInFolder = joinPath(currTestDir, "test-folder/test.cc");
-    private final String emptyFolderName = joinPath(currTestDir, "emptyFolder");
+    private final String currTestDir = joinPath("test", "temp");
+    private final String tempFileName1 = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test1.txt"));
+    private final String tempFileName2 = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test2.txt"));
+    private final String tempFolderName = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test-folder"));
+    private final String tempFileInFolder = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test-folder/test.cc"));
+    private final String emptyFolderName = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "emptyFolder"));
 
 
     private static String joinPath(String... fileFolderName) {
@@ -50,7 +50,7 @@ class RmApplicationTest {
 
     @BeforeEach
     void createSomeFiles() throws Exception {
-        File testFolder = new File(currTestDir);
+        File testFolder = new File(FileSystemUtils.getAbsolutePathName(currTestDir));
         if (!testFolder.exists()) {
             testFolder.mkdirs();
         }
@@ -71,7 +71,7 @@ class RmApplicationTest {
 
     @AfterEach
     void rmCreatedFiles() {
-        FileSystemUtils.deleteFileRecursive(new File(currTestDir));
+        FileSystemUtils.deleteFileRecursive(new File(FileSystemUtils.getAbsolutePathName(currTestDir)));
     }
 
 
@@ -231,6 +231,17 @@ class RmApplicationTest {
         }
         assertFalse(new File(tempFileName1).exists());
         assertFalse(new File(emptyFolderName).exists());
+    }
+
+    @Test
+    void runDeleteEmptyFolderFail() {
+        String[] args = {emptyFolderName};
+        try {
+            remove.run(args, System.in, System.out);
+        } catch (AbstractApplicationException e) {
+            return;
+        }
+        assertTrue(new File(emptyFolderName).exists());
     }
 
     @Test
