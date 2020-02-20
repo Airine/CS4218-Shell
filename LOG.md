@@ -58,6 +58,16 @@ execute this command in the root directory:
 
 1. Solved abnormal exit
 
+## 2020-2-18
+
+#### Complete Implementation and test for Paste
+
+1. Paste can take at most one input stream and arbitrary number of files in our implementation.
+
+2. PMD warnings can be suppressed by adding `\\NOPMD` at the end of the statement.
+
+---
+
 ## 2020-2-19
 
 1. Complete unit test cases for `StringUtil`.  - 100% coverage
