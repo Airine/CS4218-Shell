@@ -58,8 +58,6 @@ execute this command in the root directory:
 
 1. Solved abnormal exit
 
----
-
 ## 2020-2-19
 
 1. Complete unit test cases for `StringUtil`.  - 100% coverage
