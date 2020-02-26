@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+
 public final class FileSystemUtils {
     private FileSystemUtils() {
     }
@@ -30,6 +32,8 @@ public final class FileSystemUtils {
         return path.normalize().toString();
     }
 
+
+
     public static String joinPath(String... fileFolderName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(fileFolderName[0]);
@@ -48,5 +52,44 @@ public final class FileSystemUtils {
                 throw new Exception("create file failed");
             }
         }
+    }
+
+    /**
+     * Converts filename to absolute path, if initially was relative path
+     *
+     * @param fileName supplied by user
+     * @return a String of the absolute path of the filename
+     */
+    public static String convertToAbsolutePath(String fileName) {
+        String home = System.getProperty("user.home").trim();
+        String currentDir = EnvironmentUtils.currentDirectory.trim();
+        String convertedPath = convertPathToSystemPath(fileName);
+
+        String newPath;
+        if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
+            newPath = convertedPath;
+        } else {
+            newPath = currentDir + CHAR_FILE_SEP + convertedPath;
+        }
+        return newPath;
+    }
+
+    /**
+     * Converts path provided by user into path recognised by the system
+     *
+     * @param path supplied by user
+     * @return a String of the converted path
+     */
+    public static String convertPathToSystemPath(String path) {
+        String convertedPath = path;
+        String pathIdentifier = "\\" + Character.toString(CHAR_FILE_SEP);
+        convertedPath = convertedPath.replaceAll("(\\\\)+", pathIdentifier);
+        convertedPath = convertedPath.replaceAll("/+", pathIdentifier);
+
+        if (convertedPath.length() != 0 && convertedPath.charAt(convertedPath.length() - 1) == CHAR_FILE_SEP) {
+            convertedPath = convertedPath.substring(0, convertedPath.length() - 1);
+        }
+
+        return convertedPath;
     }
 }
