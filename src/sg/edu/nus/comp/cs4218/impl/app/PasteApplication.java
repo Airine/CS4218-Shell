@@ -1,6 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.PasteInterface;
 import sg.edu.nus.comp.cs4218.exception.PasteException;
 
@@ -8,7 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils.convertToAbsolutePath;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_TAB;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -103,14 +102,15 @@ public class PasteApplication implements PasteInterface {
         BufferedReader[] readers = new BufferedReader[fileName.length];
         try {
             for (int i = 0; i < fileName.length; i++) {
+                if (fileName[i] == null) { throw new PasteException(ERR_NULL_ARGS); }
+
                 String path = convertToAbsolutePath(fileName[i]);
                 File file = new File(path);
-                if (!file.exists()) {
-                    throw new PasteException(ERR_FILE_NOT_FOUND);
-                }
-                if (file.isDirectory()) {
-                    throw new PasteException(ERR_IS_DIR);
-                }
+
+                if (!file.exists()) { throw new PasteException(ERR_FILE_NOT_FOUND); }
+
+                if (file.isDirectory()) { throw new PasteException(ERR_IS_DIR); }
+
                 readers[i] = new BufferedReader(new FileReader(path));
             }
             String line;
@@ -122,9 +122,9 @@ public class PasteApplication implements PasteInterface {
                 return output.toString();
             }
             mergeAlgorithm(fileName.length, readers, output);
-            for (int i = 0; i < readers.length; i++) {
-                readers[i].close();
-            }
+
+            for (BufferedReader reader : readers) reader.close();//NOPMD
+
         }catch (IOException e) {
             throw new PasteException(ERR_IO_EXCEPTION);//NOPMD
         }
@@ -179,48 +179,5 @@ public class PasteApplication implements PasteInterface {
                 output.append(builder.toString()).append(STRING_NEWLINE);
             }
         } while (unfinished > 0);
-    }
-
-
-    /* Duplicate methods, may need to move these methods to Util classes*/
-
-    /**
-     * Converts path provided by user into path recognised by the system
-     *
-     * @param path supplied by user
-     * @return a String of the converted path
-     */
-    private String convertPathToSystemPath(String path) throws PasteException {
-        try {
-            String convertedPath = path;
-            String pathIdentifier = "\\" + Character.toString(CHAR_FILE_SEP);
-            convertedPath = convertedPath.replaceAll("(\\\\)+", pathIdentifier);
-            convertedPath = convertedPath.replaceAll("/+", pathIdentifier);
-            if (convertedPath.length() != 0 && convertedPath.charAt(convertedPath.length() - 1) == CHAR_FILE_SEP) {
-                convertedPath = convertedPath.substring(0, convertedPath.length() - 1);
-            }
-            return convertedPath;
-        } catch (NullPointerException e) {
-            throw new PasteException(ERR_NULL_ARGS);//NOPMD
-        }
-    }
-
-    /**
-     * Converts folderName to absolute path, if initially was relative path
-     *
-     * @param folderName supplied by user
-     * @return a String of the absolute path of the folderName
-     */
-    private String convertToAbsolutePath(String folderName) throws PasteException {
-        String home = System.getProperty("user.home").trim();
-        String currentDir = EnvironmentUtils.currentDirectory.trim();
-        String convertedPath = convertPathToSystemPath(folderName);
-        String newPath;
-        if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
-            newPath = convertedPath;
-        } else {
-            newPath = currentDir + CHAR_FILE_SEP + convertedPath;
-        }
-        return newPath;
     }
 }
