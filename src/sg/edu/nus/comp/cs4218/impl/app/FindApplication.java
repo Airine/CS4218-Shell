@@ -28,6 +28,7 @@ public class FindApplication implements FindInterface {
     public static final String MULTIPLE_FILES = "Only one filename is allowed";
     public static final String PERMISSION_DENIED = "Permission Denied";
     public static final String NULL_POINTER = "Null Pointer Exception";
+    public static final String EMPTY_ARG = "Arguments should not be empty";
 
     /**
      * Runs the find application with the specified arguments.
@@ -58,7 +59,7 @@ public class FindApplication implements FindInterface {
             }
 
             if (stdout == null) {
-                throw new Exception("output stream is null");
+                throw new Exception(ERR_NO_OSTREAM);
             } else {
                 stdout.write(results.getBytes());
             }
@@ -81,7 +82,7 @@ public class FindApplication implements FindInterface {
 
         for (String s : args) {
             if (s.isEmpty()) {
-                throw new FindException("Arguments should not be empty");
+                throw new FindException(EMPTY_ARG);
             }
             if (s.charAt(0) == CHAR_FLAG_PREFIX) {
                 if (s.equals(FILE_IDENT)) { // next arg is filename
