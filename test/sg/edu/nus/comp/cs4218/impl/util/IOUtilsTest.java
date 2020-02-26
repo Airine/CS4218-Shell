@@ -13,18 +13,18 @@ import static sg.edu.nus.comp.cs4218.impl.util.IOUtils.*;
 
 class IOUtilsTest {
 
-    private final String testFileName ="test.txt";
-    private final String notExistFileName1 = "null/null.txt";
-    private final String notExistFileName2 = "null/none.txt";
+    private final static String TEST_TXT ="test.txt";
+    private final static String NULL_TXT = "null/null.txt";
+    private final static String NONE_TXT = "null/none.txt";
 
     @BeforeEach
     void setUp() {
         try {
-            FileSystemUtils.createTestFile(testFileName);
-            OutputStream fileOutputStream = openOutputStream(testFileName);
-            Writer writer = new OutputStreamWriter(fileOutputStream);
-            writer.write("hello\nworld");
-            writer.close();
+            FileSystemUtils.createTestFile(TEST_TXT);
+            try(OutputStream fileOutputStream = openOutputStream(TEST_TXT);
+                Writer writer = new OutputStreamWriter(fileOutputStream)){
+                writer.write("hello\nworld");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -33,22 +33,22 @@ class IOUtilsTest {
 
     @Test
     void openInputStreamFromExistFile() {
-        assertDoesNotThrow(()->{ openInputStream(testFileName); });
+        assertDoesNotThrow(()->{ openInputStream(TEST_TXT); });
     }
 
     @Test
     void openInputStreamFromNotExistFile() {
-        assertThrows(ShellException.class,()->{ openInputStream(notExistFileName1); });
+        assertThrows(ShellException.class,()->{ openInputStream(NULL_TXT); });
     }
 
     @Test
     void openOutputStreamFromExistFile() {
-        assertDoesNotThrow(()->{ openOutputStream(testFileName); });
+        assertDoesNotThrow(()->{ openOutputStream(TEST_TXT); });
     }
 
     @Test
     void openOutputStreamFromNotExistFile() {
-        assertThrows(ShellException.class,()->{ openOutputStream(notExistFileName2); });
+        assertThrows(ShellException.class,()->{ openOutputStream(NONE_TXT); });
     }
 
     @Test
@@ -84,28 +84,28 @@ class IOUtilsTest {
     @Test
     void closeNormalInputStream() {
         assertDoesNotThrow(()-> {
-            closeInputStream(openInputStream(testFileName));
+            closeInputStream(openInputStream(TEST_TXT));
         });
     }
 
     @Test
     void closeNormalOutputStream() {
         assertDoesNotThrow(()-> {
-            closeOutputStream(openOutputStream(testFileName));
+            closeOutputStream(openOutputStream(TEST_TXT));
         });
     }
 
     @Test
     void closeUnClosableInputStream() {
         assertThrows(ShellException.class, ()->{
-            closeInputStream(new unClosableInputStream(testFileName));
+            closeInputStream(new UnClosableInputStream(TEST_TXT));
         });
     }
 
     @Test
     void closeUnClosableOutputStream() {
         assertThrows(ShellException.class, ()->{
-            closeOutputStream(new unClosableOutputStream(testFileName));
+            closeOutputStream(new UnClosableOutputStream(TEST_TXT));
         });
     }
 
@@ -113,7 +113,7 @@ class IOUtilsTest {
     void getLinesFromTestFile() {
         List<String> result = new ArrayList<>(Arrays.asList("hello","world"));
         assertDoesNotThrow(()->{
-            assertIterableEquals(result, getLinesFromInputStream(openInputStream(testFileName)));
+            assertIterableEquals(result, getLinesFromInputStream(openInputStream(TEST_TXT)));
         });
     }
 
@@ -126,14 +126,14 @@ class IOUtilsTest {
 
     @AfterEach
     void tearDown() {
-        FileSystemUtils.deleteFileRecursive(new File(testFileName));
-        FileSystemUtils.deleteFileRecursive(new File(notExistFileName1));
-        FileSystemUtils.deleteFileRecursive(new File(notExistFileName2));
+        FileSystemUtils.deleteFileRecursive(new File(TEST_TXT));
+        FileSystemUtils.deleteFileRecursive(new File(NULL_TXT));
+        FileSystemUtils.deleteFileRecursive(new File(NONE_TXT));
     }
 
-    static class unClosableInputStream extends FileInputStream {
+    static class UnClosableInputStream extends FileInputStream {
 
-        public unClosableInputStream(String name) throws FileNotFoundException {
+        public UnClosableInputStream(String name) throws FileNotFoundException {
             super(name);
         }
 
@@ -143,9 +143,9 @@ class IOUtilsTest {
         }
     }
 
-    static class unClosableOutputStream extends FileOutputStream {
+    static class UnClosableOutputStream extends FileOutputStream {
 
-        public unClosableOutputStream(String name) throws FileNotFoundException {
+        public UnClosableOutputStream(String name) throws FileNotFoundException {
             super(name);
         }
 
