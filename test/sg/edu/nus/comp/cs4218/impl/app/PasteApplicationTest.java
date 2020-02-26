@@ -21,7 +21,7 @@ class PasteApplicationTest {
     private static String fileNameC = "asset/C.txt";
     private static String fileNameEmpty1 = "asset/empty1.txt";
     private static String fileNameEmpty2 = "asset/empty2.txt";
-    private static String dirNameEmpty = "asset/emptyDir";
+    private static String subDirNameEmpty = "asset/subDir";
     private static String fileNameNotExist = "asset/notExist.txt";
     private static String pastePrefix = "paste: ";
 
@@ -182,7 +182,7 @@ class PasteApplicationTest {
 
     @Test
     void testRunWithDirectoryFileName() {
-        String[] args = {dirNameEmpty, fileNameA};
+        String[] args = {subDirNameEmpty, fileNameA};
         outputStream = new ByteArrayOutputStream();
         Throwable thrown = assertThrows(PasteException.class, () -> {
             app.run(args, System.in, outputStream);
