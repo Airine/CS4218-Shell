@@ -88,6 +88,7 @@ execute this command in the root directory:
 
 3. Handle null `InputStream` in `IOUtils.getLinesFromInputStream(InputStream input)`
 
+4. Refactor and solve [issue](https://github.com/nus-cs4218/cs4218-project-ay1920-s2-2020-team6/issues/8) - No PMD warnings
 
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 

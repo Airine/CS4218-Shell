@@ -4,6 +4,7 @@ import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.FindInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.FindException;
+import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -99,7 +100,7 @@ public class FindApplication implements FindInterface {
                     throw new FindException(MULTIPLE_FILES);
                 }
             } else {
-                folderNames.add(convertPathToSystemPath(s));
+                folderNames.add(FileSystemUtils.convertPathToSystemPath(s));
             }
         }
         if (folderNames.isEmpty()) {
@@ -178,7 +179,7 @@ public class FindApplication implements FindInterface {
         Pattern filePattern = Pattern.compile(fileName);
 
         for (String f : folderName) {
-            String path = convertToAbsolutePath(f);
+            String path = FileSystemUtils.convertToAbsolutePath(f);
 
             File folder = new File(path);
 
@@ -218,25 +219,6 @@ public class FindApplication implements FindInterface {
     }
 
     /**
-     * Converts folderName to absolute path, if initially was relative path
-     * @param folderName supplied by user
-     * @return a String of the absolute path of the folderName
-     */
-    private String convertToAbsolutePath(String folderName) {
-        String home = System.getProperty("user.home").trim();
-        String currentDir = EnvironmentUtils.currentDirectory.trim();
-        String convertedPath = convertPathToSystemPath(folderName);
-
-        String newPath;
-        if (convertedPath.length()>=home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {
-            newPath = convertedPath;
-        } else {
-            newPath = currentDir + CHAR_FILE_SEP + convertedPath;
-        }
-        return newPath;
-    }
-
-    /**
      * Sorts the listOfFileNames and listOfFolder Names in alphabetical order and format the files/folders
      * into the required format.
      * @param filePattern regex pattern of specified file, if isFindingFile is true
@@ -267,9 +249,10 @@ public class FindApplication implements FindInterface {
         File[] listOfFiles = currFolder.listFiles();
         ArrayList<String> listOfFileNames = new ArrayList<String>();
 
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                listOfFileNames.add(listOfFiles[i].getName().trim());
+        assert listOfFiles != null;
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                listOfFileNames.add(listOfFile.getName().trim());
             }
         }
         Collections.sort(listOfFileNames);
@@ -285,9 +268,10 @@ public class FindApplication implements FindInterface {
         File[] listOfFiles = currFolder.listFiles();
         ArrayList<String> listOfFolderNames = new ArrayList<String>();
 
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isDirectory()) {
-                listOfFolderNames.add(listOfFiles[i].getName().trim());
+        assert listOfFiles != null;
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isDirectory()) {
+                listOfFolderNames.add(listOfFile.getName().trim());
             }
         }
         Collections.sort(listOfFolderNames);
