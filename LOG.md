@@ -80,7 +80,14 @@ execute this command in the root directory:
 
 ---
 
-## 2020-2-20
+## 2020-2-26
+
+1. Fix 60% coverage of `ExitApplication`, now 100% coverage.
+
+2. Complete unit test cases for `IOUtils`. - 100% coverage.
+
+3. Handle null `InputStream` in `IOUtils.getLinesFromInputStream(InputStream input)`
+
 
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
