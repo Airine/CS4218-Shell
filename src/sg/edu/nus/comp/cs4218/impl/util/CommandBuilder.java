@@ -109,6 +109,7 @@ public final class CommandBuilder {
                         cmdsForSequence.add(new PipeCommand(callCmdsForPipe));
                         callCmdsForPipe = new LinkedList<>();
                     }
+                    tokens = new LinkedList<>();
                     break;
 
                 default:
