@@ -30,4 +30,23 @@ public final class FileSystemUtils {
         return path.normalize().toString();
     }
 
+    public static String joinPath(String... fileFolderName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(fileFolderName[0]);
+        for (int i = 1; i < fileFolderName.length; i++) {
+            stringBuilder.append(File.separator).append(fileFolderName[i]);
+        }
+        return stringBuilder.toString();
+    }
+
+    public static void createTestFile(String tempFileName) throws Exception {
+        File file = new File(tempFileName);
+        if (file.exists()) {
+            throw new Exception("test terminated, this test file already exist!" + tempFileName);
+        } else {
+            if (!file.createNewFile()) {
+                throw new Exception("create file failed");
+            }
+        }
+    }
 }

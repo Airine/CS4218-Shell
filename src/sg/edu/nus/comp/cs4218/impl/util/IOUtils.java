@@ -47,12 +47,12 @@ public final class IOUtils {
     public static OutputStream openOutputStream(String fileName) throws ShellException {
         String resolvedFileName = resolveFilePath(fileName).toString();
 
-        FileOutputStream fileOutputStream = null;
+        FileOutputStream fileOutputStream;
 
         try {
             fileOutputStream = new FileOutputStream(new File(resolvedFileName));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new ShellException(ERR_FILE_NOT_FOUND);
         }
 
         return fileOutputStream;
@@ -102,9 +102,12 @@ public final class IOUtils {
      * Returns a list of lines based on the given InputStream.
      *
      * @param input InputStream containing arguments from System.in or FileInputStream
-     * @throws Exception
+     * @throws Exception If something wrong with the InputStream input
      */
     public static List<String> getLinesFromInputStream(InputStream input) throws Exception {
+        if (input == null) {
+            return null;
+        }
         List<String> output = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
             String line;

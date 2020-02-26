@@ -1,7 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.*;
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.RmInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -19,33 +18,12 @@ class RmApplicationTest {
 
     private final RmInterface remove = new RmApplication();
 
-    private final String currTestDir = joinPath("test", "temp");
-    private final String tempFileName1 = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test1.txt"));
-    private final String tempFileName2 = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test2.txt"));
-    private final String tempFolderName = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test-folder"));
-    private final String tempFileInFolder = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "test-folder/test.cc"));
-    private final String emptyFolderName = FileSystemUtils.getAbsolutePathName(joinPath(currTestDir, "emptyFolder"));
-
-
-    private static String joinPath(String... fileFolderName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(fileFolderName[0]);
-        for (int i = 1; i < fileFolderName.length; i++) {
-            stringBuilder.append(File.separator).append(fileFolderName[i]);
-        }
-        return stringBuilder.toString();
-    }
-
-    private void createTestFile(String tempFileName) throws Exception {
-        File file = new File(tempFileName);
-        if (file.exists()) {
-            throw new Exception("test terminated, this test file already exist!" + tempFileName);
-        } else {
-            if (!file.createNewFile()) {
-                throw new Exception("create file failed");
-            }
-        }
-    }
+    private final String currTestDir = FileSystemUtils.joinPath("test", "temp");
+    private final String tempFileName1 = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test1.txt"));
+    private final String tempFileName2 = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test2.txt"));
+    private final String tempFolderName = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test-folder"));
+    private final String tempFileInFolder = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test-folder/test.cc"));
+    private final String emptyFolderName = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "emptyFolder"));
 
 
     @BeforeEach
@@ -54,8 +32,8 @@ class RmApplicationTest {
         if (!testFolder.exists()) {
             testFolder.mkdirs();
         }
-        createTestFile(tempFileName1);
-        createTestFile(tempFileName2);
+        FileSystemUtils.createTestFile(tempFileName1);
+        FileSystemUtils.createTestFile(tempFileName2);
         File emptyDir = new File(emptyFolderName);
         if (!emptyDir.exists()) {
             emptyDir.mkdirs();
@@ -65,7 +43,7 @@ class RmApplicationTest {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        createTestFile(tempFileInFolder);
+        FileSystemUtils.createTestFile(tempFileInFolder);
     }
 
 
