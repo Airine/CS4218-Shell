@@ -20,7 +20,7 @@ class IOUtilsTest {
     @BeforeEach
     void setUp() {
         try {
-            FileSystemUtils.createTestFile(TEST_TXT);
+            FileSystemUtils.createFile(TEST_TXT);
             try(OutputStream fileOutputStream = openOutputStream(TEST_TXT);
                 Writer writer = new OutputStreamWriter(fileOutputStream)){
                 writer.write("hello\nworld");

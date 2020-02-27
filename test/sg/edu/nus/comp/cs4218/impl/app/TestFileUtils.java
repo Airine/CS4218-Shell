@@ -19,8 +19,8 @@ final public class TestFileUtils {
         if (!testFolder.exists()) {
             testFolder.mkdirs();
         }
-        FileSystemUtils.createTestFile(tempFileName1);
-        FileSystemUtils.createTestFile(tempFileName2);
+        FileSystemUtils.createFile(tempFileName1);
+        FileSystemUtils.createFile(tempFileName2);
         File emptyDir = new File(emptyFolderName);
         if (!emptyDir.exists()) {
             emptyDir.mkdirs();
@@ -30,7 +30,7 @@ final public class TestFileUtils {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        FileSystemUtils.createTestFile(tempFileInFolder);
+        FileSystemUtils.createFile(tempFileInFolder);
     }
 
 

@@ -12,7 +12,6 @@ import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class LsApplicationTest {
 
@@ -24,7 +23,7 @@ class LsApplicationTest {
     static void setUp(){
         try {
             FileSystemUtils.deleteFileRecursive(new File(TEMPT_TXT));
-            FileSystemUtils.createTestFile(TEMPT_TXT);
+            FileSystemUtils.createFile(TEMPT_TXT);
         } catch (Exception e) {
             e.printStackTrace();
         }
