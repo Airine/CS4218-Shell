@@ -18,7 +18,7 @@ class LsApplicationTest {
 
     private final LsInterface lsApplication = new LsApplication();
     private final static String TEMPT_TXT ="tempt.txt";
-    private OutputStream outputStream = new ByteArrayOutputStream();
+    private final OutputStream outputStream = new ByteArrayOutputStream();
 
     @BeforeAll
     static void setUp(){
@@ -65,11 +65,14 @@ class LsApplicationTest {
     void runWithWrongOutputStream() {
         String[] args = {};
         try {
-            OutputStream outputStreamTest = IOUtils.openOutputStream(TEMPT_TXT);
-            IOUtils.closeOutputStream(outputStreamTest);
-            assertThrows(LsException.class, ()->{
-                lsApplication.run(args, System.in, outputStreamTest);
-            });
+            try(OutputStream outputStreamTest = IOUtils.openOutputStream(TEMPT_TXT)) {
+                IOUtils.closeOutputStream(outputStreamTest);
+                assertThrows(LsException.class, () -> {
+                    lsApplication.run(args, System.in, outputStreamTest);
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (ShellException e) {
             e.printStackTrace();
         }
