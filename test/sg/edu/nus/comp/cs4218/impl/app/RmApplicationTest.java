@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.app.RmInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
-import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.File;
@@ -18,38 +17,22 @@ class RmApplicationTest {
 
     private final RmInterface remove = new RmApplication();
 
-    private final String currTestDir = FileSystemUtils.joinPath("test", "temp");
-    private final String tempFileName1 = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test1.txt"));
-    private final String tempFileName2 = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test2.txt"));
-    private final String tempFolderName = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test-folder"));
-    private final String tempFileInFolder = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test-folder/test.cc"));
-    private final String emptyFolderName = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "emptyFolder"));
+    private final String tempFileName1 = TestFileUtils.tempFileName1;
+    private final String tempFileName2 = TestFileUtils.tempFileName2;
+    private final String tempFolderName = TestFileUtils.tempFolderName;
+    private final String tempFileInFolder = TestFileUtils.tempFileInFolder;
+    private final String emptyFolderName = TestFileUtils.emptyFolderName;
 
 
     @BeforeEach
     void createSomeFiles() throws Exception {
-        File testFolder = new File(FileSystemUtils.getAbsolutePathName(currTestDir));
-        if (!testFolder.exists()) {
-            testFolder.mkdirs();
-        }
-        FileSystemUtils.createTestFile(tempFileName1);
-        FileSystemUtils.createTestFile(tempFileName2);
-        File emptyDir = new File(emptyFolderName);
-        if (!emptyDir.exists()) {
-            emptyDir.mkdirs();
-        }
-
-        File folder = new File(tempFolderName);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        FileSystemUtils.createTestFile(tempFileInFolder);
+        TestFileUtils.createSomeFiles();
     }
 
 
     @AfterEach
     void rmCreatedFiles() {
-        FileSystemUtils.deleteFileRecursive(new File(FileSystemUtils.getAbsolutePathName(currTestDir)));
+        TestFileUtils.rmCreatedFiles();
     }
 
 
