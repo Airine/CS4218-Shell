@@ -41,8 +41,6 @@ public class SortArguments {
                         if (c == CHAR_FLAG_PREFIX || c == CHAR_FIRST_W_NUM || c == CHAR_REV_ORDER || c == CHAR_CASE_IGNORE) {
                             continue;
                         }
-                        parsingFlag = false;
-                        this.files.add(arg.trim());
                         skip = true;
                         break;//NOPMD
                     }
