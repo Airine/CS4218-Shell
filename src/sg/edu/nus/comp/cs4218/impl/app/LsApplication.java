@@ -33,7 +33,7 @@ public class LsApplication implements LsInterface {
         }
 
         List<Path> paths;
-        if (folderName.length == 0 && isRecursive) {
+        if (folderName.length == 0) {
             String[] directories = new String[1];
             directories[0] = EnvironmentUtils.currentDirectory;
             paths = resolvePaths(directories);
@@ -65,7 +65,7 @@ public class LsApplication implements LsInterface {
         Boolean foldersOnly = parser.isFoldersOnly();
         Boolean recursive = parser.isRecursive();
         String[] directories = parser.getDirectories()
-                .toArray(new String[parser.getDirectories().size()]);
+                .toArray(new String[0]);
         String result = listFolderContent(foldersOnly, recursive, directories);
 
         try {
