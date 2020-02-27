@@ -2,17 +2,16 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.FindInterface;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.FindException;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.app.FindApplication.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_OSTREAM;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class FindApplicationTest {
@@ -29,52 +28,64 @@ class FindApplicationTest {
     private static String folderNotExist = "notExist";
     private static String fileNameEmpty3 = "empty3.txt";
     private static String findPrefix = "find: ";
-    private static String suffix = "find: ";
+    private static String suffix = "-name";
 
     @Test
-    void run() throws AbstractApplicationException {
+    void testSimpleRun(){
         String[] args = {folderName, suffix, fileNameB};
-        String expectResult = folderName+"\\"+fileNameB+STRING_NEWLINE;
+        String expectResult = folderName+CHAR_FILE_SEP+fileNameB+STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
-        app.run(args, System.in, outputStream);
-        assertEquals(expectResult, outputStream.toString());
+        assertDoesNotThrow(() -> {
+            app.run(args, System.in, outputStream);
+            assertEquals(expectResult, outputStream.toString());
+        });
     }
 
     @Test
-    void testFindSingleMatchedFile() throws Exception {
-        String expectResult = folderName+"\\"+fileNameA;
-        String realResult = app.findFolderContent(fileNameA, folderName);
-        assertEquals(expectResult, realResult);
+    void testFindSingleMatchedFile(){
+        String expectResult = folderName+CHAR_FILE_SEP+fileNameA;
+        assertDoesNotThrow(() -> {
+            String realResult = app.findFolderContent(fileNameA, folderName);
+            assertEquals(expectResult, realResult);
+        });
     }
 
     @Test
-    void testFindSingleMatchedFolder() throws Exception {
-        String expectResult = folderName+"\\"+subFolderName;
-        String realResult = app.findFolderContent(subFolderName, folderName);
-        assertEquals(expectResult, realResult);
+    void testFindSingleMatchedFolder(){
+        String expectResult = folderName+CHAR_FILE_SEP+subFolderName;
+        assertDoesNotThrow(() -> {
+            String realResult = app.findFolderContent(subFolderName, folderName);
+            assertEquals(expectResult, realResult);
+        });
     }
 
     @Test
-    void testFindMultipleMatchedFiles() throws Exception {
-        String expectResult = folderName+"\\"+subFolderName+"\\"+fileNameEmpty3+STRING_NEWLINE+
-                folderName+"\\"+fileNameEmpty1+STRING_NEWLINE+
-                folderName+"\\"+fileNameEmpty2;
-        String realResult = app.findFolderContent("empty*", folderName);
-        assertEquals(expectResult, realResult);
+    void testFindMultipleMatchedFiles(){
+        String expectResult = folderName+CHAR_FILE_SEP+subFolderName+CHAR_FILE_SEP+fileNameEmpty3+STRING_NEWLINE+
+                folderName+CHAR_FILE_SEP+fileNameEmpty1+STRING_NEWLINE+
+                folderName+CHAR_FILE_SEP+fileNameEmpty2;
+        assertDoesNotThrow(() -> {
+            String realResult = app.findFolderContent("empty*", folderName);
+            assertEquals(expectResult, realResult);
+        });
     }
 
     @Test
-    void testFindNoMatchedFile() throws Exception {
+    void testFindNoMatchedFile(){
         String expectResult = "";
-        String realResult = app.findFolderContent(fileNameNotExist, folderName);
-        assertEquals(expectResult, realResult);
+        assertDoesNotThrow(() -> {
+            String realResult = app.findFolderContent(fileNameNotExist, folderName);
+            assertEquals(expectResult, realResult);
+        });
     }
 
     @Test
-    void testFindInNotExistFolder() throws Exception {
+    void testFindInNotExistFolder(){
         String expectResult = findPrefix + folderNotExist + ": " + ERR_FILE_NOT_FOUND;
-        String realResult = app.findFolderContent(fileNameA, folderNotExist);
-        assertEquals(expectResult, realResult);
+        assertDoesNotThrow(() -> {
+            String realResult = app.findFolderContent(fileNameA, folderNotExist);
+            assertEquals(expectResult, realResult);
+        });
     }
 
     @Test

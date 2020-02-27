@@ -43,7 +43,7 @@ public final class FileSystemUtils {
         return stringBuilder.toString();
     }
 
-    public static void createTestFile(String tempFileName) throws Exception {
+    public static void createFile(String tempFileName) throws Exception {
         File file = new File(tempFileName);
         if (file.exists()) {
             throw new Exception("test terminated, this test file already exist!" + tempFileName);

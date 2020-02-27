@@ -94,9 +94,10 @@ class EchoApplicationTest {
     @Test
     void testRunIOException() throws IOException {
         String[] args = {"aaa"};
-        OutputStream outputStream = new PipedOutputStream();//NOPMD
-        outputStream.close();
-        Throwable thrown = assertThrows(EchoException.class, () -> echoApp.run(args, System.in, outputStream));
-        assertEquals("echo: " + ERR_IO_EXCEPTION, thrown.getMessage());
+        try(OutputStream outputStream = new PipedOutputStream()) {
+            outputStream.close();
+            Throwable thrown = assertThrows(EchoException.class, () -> echoApp.run(args, System.in, outputStream));
+            assertEquals("echo: " + ERR_IO_EXCEPTION, thrown.getMessage());
+        }
     }
 }
