@@ -4,7 +4,6 @@ import sg.edu.nus.comp.cs4218.app.MvInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.MvException;
-import sg.edu.nus.comp.cs4218.exception.RmException;
 import sg.edu.nus.comp.cs4218.impl.parser.MvArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
@@ -52,6 +51,9 @@ public class MvApplication implements MvInterface {
             } else {
                 if (toMoveFiles.length != 1) {
                     throw new InvalidArgsException(ErrorConstants.ERR_MISSING_ARG);
+                }
+                if(mvArgsParser.isOverwrite()){
+                    new File(destPath).delete();//todo
                 }
                 mvSrcFileToDestFile(toMoveFiles[0], destPath);
             }
