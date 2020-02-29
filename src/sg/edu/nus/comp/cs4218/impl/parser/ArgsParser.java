@@ -29,7 +29,7 @@ public class ArgsParser {
     /**
      * Separates command flags from non-flag arguments given a tokenized command.
      *
-     * @param args
+     * @param args input arguments
      */
     public void parse(String... args) throws InvalidArgsException {
         for (String arg : args) {

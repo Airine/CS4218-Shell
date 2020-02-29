@@ -169,7 +169,7 @@ public class WcApplication implements WcInterface {
      * Returns array containing the number of lines, words, and bytes based on data in InputStream.
      *
      * @param input An InputStream
-     * @throws IOException
+     * @throws Exception IOException
      */
     public long[] getCountReport(InputStream input) throws Exception {
         if (input == null) {
