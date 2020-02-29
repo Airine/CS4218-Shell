@@ -94,7 +94,24 @@ execute this command in the root directory:
 
 1. Solve PMD warnings in test folder.
 
+## 2020-2-29
+
+1. Complete unit test cases for `LsApplication`. - 100% coverage.
+
+2. Make an assumption to the NOTE in `buildResult`:
+    
+    Assume that `ls <text file> <directory>` will return:
+    ```
+   <text file>
+   
+   <directory>:
+   <content in directory>
+   ```
+
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
 
+## 2020-2-29
+
+1. Create unit test cases for `IORedirectionHandler` -93% coverage, need information about `RegexArgument` to cover the rest.

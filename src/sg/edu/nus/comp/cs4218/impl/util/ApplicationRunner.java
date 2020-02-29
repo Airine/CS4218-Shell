@@ -24,6 +24,8 @@ public class ApplicationRunner {
     public final static String APP_CD = "cd";
     public final static String APP_SED = "sed";
     public final static String APP_RM = "rm";
+    public final static String APP_MV = "mv";
+
     /**
      * Run the application as specified by the application command keyword and arguments.
      *
@@ -74,6 +76,9 @@ public class ApplicationRunner {
                 break;
             case APP_RM:
                 application = new RmApplication();
+                break;
+            case APP_MV:
+                application = new MvApplication();
                 break;
             default:
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
