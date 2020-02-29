@@ -1,32 +1,35 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
-import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class LsApplicationTest {
 
     private final LsInterface lsApplication = new LsApplication();
     private final OutputStream outputStream = new ByteArrayOutputStream();
-    private final String pwd = EnvironmentUtils.currentDirectory;
+    private final String cwd = EnvironmentUtils.currentDirectory;
+
+    @BeforeEach
+    void setCurrentDirectory() {
+        //noinspection NonAtomicOperationOnVolatileField
+        EnvironmentUtils.currentDirectory += CHAR_FILE_SEP + "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "ls";
+    }
+
 
     @AfterEach
     void resetCurrentDirectory() {
-        EnvironmentUtils.currentDirectory = pwd;
+        EnvironmentUtils.currentDirectory = cwd;
     }
 
     @Test
@@ -62,11 +65,11 @@ class LsApplicationTest {
 
     @Test
     void runWithMultiArgs() {
-        String[] args = {"README.md", "img"};
-        String result = "README.md\n" +
+        String[] args = {"test.txt", "subDir"};
+        String result = "test.txt\n" +
                         "\n" +
-                        "img:\n" +
-                        "timeline.png\n";
+                        "subDir:\n" +
+                        "subSubDir\n";
         assertDoesNotThrow(()->{
             lsApplication.run(args, System.in, outputStream);
             assertEquals(result,outputStream.toString());
@@ -77,13 +80,13 @@ class LsApplicationTest {
 
     @Test
     void runWithNonExistFile() {
-        String[] args = {"README.md", "img", "none.txt"};
-        String result = "README.md\n" +
-                "\n" +
-                "img:\n" +
-                "timeline.png\n" +
-                "\n" +
-                "ls: cannot access 'none.txt': No such file or directory\n";
+        String[] args = {"test.txt", "subDir", "none.txt"};
+        String result = "test.txt\n" +
+                        "\n" +
+                        "subDir:\n" +
+                        "subSubDir\n" +
+                        "\n" +
+                        "ls: cannot access 'none.txt': No such file or directory\n";
         assertDoesNotThrow(()->{
             lsApplication.run(args, System.in, outputStream);
             assertEquals(result,outputStream.toString());
@@ -109,18 +112,12 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithEmptyFolderName() {
-        String cwd = EnvironmentUtils.currentDirectory;
-        //noinspection NonAtomicOperationOnVolatileField
-        EnvironmentUtils.currentDirectory += "/asset/";
-        String result = "A.txt\n" +
-                "B.txt\n" +
-                "C.txt\n" +
-                "D.txt\n" +
-                "E.txt\n" +
-                "empty1.txt\n" +
-                "empty2.txt\n" +
-                "subDir\n" +
-                "test.txt";
+        String result = "subDir\n" +
+                "subDir1\n" +
+                "subDir2\n" +
+                "test.txt\n" +
+                "test1.txt\n" +
+                "test2.txt";
         assertDoesNotThrow(()->{
             assertEquals(result,lsApplication.listFolderContent(false,false));
         });
@@ -129,35 +126,22 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithOnlyFolderFlag() {
-        String result = "asset:\nsubDir";
+        String result = "subDir:\nsubSubDir";
         assertDoesNotThrow(()->{
-            assertEquals(result, lsApplication.listFolderContent(true, false, "asset"));
+            assertEquals(result, lsApplication.listFolderContent(true, false, "subDir"));
         });
     }
 
     @Test
     void listFolderContentWithRecursionFlag() {
-        String result = "asset:\n" +
-                "A.txt\n" +
-                "B.txt\n" +
-                "C.txt\n" +
-                "D.txt\n" +
-                "E.txt\n" +
-                "empty1.txt\n" +
-                "empty2.txt\n" +
-                "subDir\n" +
-                "test.txt\n" +
-                "\n" +
-                "asset/subDir:\n" +
-                "empty3.txt";
+        String result = "";
         assertDoesNotThrow(()->{
-            assertEquals(result, lsApplication.listFolderContent(false, true, "asset"));
+            assertEquals(result, lsApplication.listFolderContent(false, true, "subDir"));
         });
     }
 
     @Test
     void listCwdContentWithWrongCwd() {
-        String cwd = EnvironmentUtils.currentDirectory;
         //noinspection NonAtomicOperationOnVolatileField
         EnvironmentUtils.currentDirectory += "/none/";
         assertThrows(LsException.class, ()->{
