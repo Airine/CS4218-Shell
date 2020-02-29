@@ -9,7 +9,10 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,6 +78,68 @@ class LsApplicationTest {
         } catch (ShellException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void listFolderContentWithEmptyFolderName() {
+        String result = "LOG.md\n" +
+                "PMD.Rules.xml\n" +
+                "README.md\n" +
+                "asset\n" +
+                "img\n" +
+                "lib\n" +
+                "pom.xml\n" +
+                "results\n" +
+                "src\n" +
+                "target\n" +
+                "tempt.txt\n" +
+                "test";
+        assertDoesNotThrow(()->{
+            assertEquals(result,lsApplication.listFolderContent(false,false));
+        });
+    }
+
+    @Test
+    void listFolderContentWithOnlyFolderFlag() {
+        String result = "asset\n" +
+                "img\n" +
+                "lib\n" +
+                "results\n" +
+                "src\n" +
+                "target\n" +
+                "test";
+        assertDoesNotThrow(()->{
+            assertEquals(result, lsApplication.listFolderContent(true, false));
+        });
+    }
+
+    @Test
+    void listFolderContentWithRecursionFlag() {
+        String result = "asset:\n" +
+                "A.txt\n" +
+                "B.txt\n" +
+                "C.txt\n" +
+                "D.txt\n" +
+                "E.txt\n" +
+                "empty1.txt\n" +
+                "empty2.txt\n" +
+                "subDir\n" +
+                "\n" +
+                "asset/subDir:\n" +
+                "empty3.txt";
+        assertDoesNotThrow(()->{
+            assertEquals(result, lsApplication.listFolderContent(false, true, "asset"));
+        });
+    }
+
+    @Test
+    void listCwdContentWithWrongCwd() {
+        String cwd = System.getProperty("user.dir");
+        System.setProperty("user.dir", cwd+"/none/");
+        assertThrows(LsException.class, ()->{
+            lsApplication.listFolderContent(false,false);
+        });
+        System.setProperty("user.dir", cwd);
     }
 
     @AfterAll

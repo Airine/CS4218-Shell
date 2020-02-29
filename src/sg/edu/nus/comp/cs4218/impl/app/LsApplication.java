@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
+import sg.edu.nus.comp.cs4218.exception.InvalidDirectoryException;
 import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.impl.parser.LsArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
@@ -88,7 +89,7 @@ public class LsApplication implements LsInterface {
         try {
             return formatContents(getContents(Paths.get(cwd), isFoldersOnly));
         } catch (InvalidDirectoryException e) {
-            throw (LsException) new LsException("Unexpected error occurred!").initCause(e);
+            throw new LsException("Unexpected error occurred!");
         }
     }
 
@@ -144,7 +145,7 @@ public class LsApplication implements LsInterface {
      * Formats the contents of a directory into a single string.
      *
      * @param contents - list of items in a directory
-     * @return
+     * @return formatted contents
      */
     private String formatContents(List<Path> contents) {
         List<String> fileNames = new ArrayList<>();
@@ -228,21 +229,11 @@ public class LsApplication implements LsInterface {
     /**
      * Converts a path to a relative path to the current directory.
      *
-     * @param path
-     * @return
+     * @param path input absolute path
+     * @return the converted relative path
      */
     private Path getRelativeToCwd(Path path) {
         return Paths.get(EnvironmentUtils.currentDirectory).relativize(path);
     }
 
-    private class InvalidDirectoryException extends Exception {
-        InvalidDirectoryException(String directory) {
-            super(String.format("ls: cannot access '%s': No such file or directory", directory));
-        }
-
-        InvalidDirectoryException(String directory, Throwable cause) {
-            super(String.format("ls: cannot access '%s': No such file or directory", directory),
-                    cause);
-        }
-    }
 }
