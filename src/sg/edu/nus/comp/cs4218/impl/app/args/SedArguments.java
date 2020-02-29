@@ -43,9 +43,6 @@ public class SedArguments {
      * @throws Exception
      */
     public void parse(String... args) throws Exception {
-        if (args == null) {
-            throw new Exception(ERR_NULL_ARGS);
-        }
         if (args.length < 1) {
             throw new Exception(ERR_NO_REP_RULE);
         }
