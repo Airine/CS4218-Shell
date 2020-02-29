@@ -30,157 +30,190 @@ class SedApplicationTest {
         String replacement = "";
         String expected = "abcab";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
+
     }
 
     @Test
-    void testReplaceWithEmptyCharater() throws Exception {
+    void testReplaceWithEmptyCharater() {
         String original = "abcabc";
         String pattern = "a";
         String replacement = "";
         String expected = "bcabc";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceSingleCharater() throws Exception {
+    void testReplaceSingleCharater() {
         String original = "abcab";
         String pattern = "a";
         String replacement = "d";
         String expected = "dbcab";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceMultipleCharater() throws Exception {
+    void testReplaceMultipleCharater() {
         String original = "abcabd";
         String pattern = "abc";
         String replacement = "d";
         String expected = "dabd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceSecondMatchCharater() throws Exception {
+    void testReplaceSecondMatchCharater() {
         String original = "abcab";
         String pattern = "a";
         String replacement = "d";
         String expected = "abcdb";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 2, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 2, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceDotCharater() throws Exception {
+    void testReplaceDotCharater() {
         String original = "aabca";
         String pattern = "a.c";
         String replacement = "d";
         String expected = "ada";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceCaretCharater() throws Exception {
+    void testReplaceCaretCharater() {
         String original = "abcdabc";
         String pattern = "^abc";
         String replacement = "d";
         String expected = "ddabc";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceDollarCharater() throws Exception {
+    void testReplaceDollarCharater() {
         String original = "abcdabc";
         String pattern = "abc$";
         String replacement = "d";
         String expected = "abcdd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceStarCharater() throws Exception {
+    void testReplaceStarCharater() {
         String original = "abbbbbcd";
         String pattern = "ab*";
         String replacement = "c";
         String expected = "ccd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplacePlusCharater() throws Exception {
+    void testReplacePlusCharater() {
         String original = "abbcd";
         String pattern = "ab+";
         String replacement = "c";
         String expected = "ccd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceQuestionCharater() throws Exception {
+    void testReplaceQuestionCharater() {
         String original = "abbcd";
         String pattern = "ac?";
         String replacement = "c";
         String expected = "cbbcd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceSpecialCharater() throws Exception {
+    void testReplaceSpecialCharater() {
         String original = "ab?cd";
         String pattern = "\\?";
         String replacement = "*";
         String expected = "ab*cd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceBraceCharater() throws Exception {
+    void testReplaceBraceCharater() {
         String original = "abbbbcd";
         String pattern = "ab{2}";
         String replacement = "c";
         String expected = "cbbcd";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceBracketCharater() throws Exception {
+    void testReplaceBracketCharater() {
         String original = "abcde";
         String pattern = "[b-d]+";
         String replacement = "a";
         String expected = "aae";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceParenthesesCharater() throws Exception {
+    void testReplaceParenthesesCharater(){
         String original = "abcabcde";
         String pattern = "(abc)+";
         String replacement = "a";
         String expected = "ade";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
-    void testReplaceBarCharater() throws Exception {
+    void testReplaceBarCharater() {
         String original = "abcde";
         String pattern = "d|f";
         String replacement = "a";
         String expected = "abcae";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        assertDoesNotThrow(() -> {
+            assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+        });
     }
 
     @Test
