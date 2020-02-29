@@ -2,16 +2,26 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.SedInterface;
+import sg.edu.nus.comp.cs4218.exception.SedException;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 
 class SedApplicationTest {
 
     private final SedInterface app = new SedApplication();
+    private OutputStream outputStream = null;
+    private static String fileNameA = "asset/A.txt";
+    private static String subDirName = "asset/subDir";
+    private static String fileNameNotExist = "asset/notExist.txt";
+    private static String sedPrefix = "sed: ";
 
     @Test
     void testReplaceEmptyCharater() throws Exception {
@@ -171,5 +181,139 @@ class SedApplicationTest {
         String expected = "abcae";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
         assertEquals(expected, app.replaceSubstringInStdin(pattern, replacement, 1, stdin).trim());
+    }
+
+    @Test
+    void testRunWithoutSpecifiedFile() {
+        String[] args = {"s/a/b/"};
+        String original = "abcd";
+        String expectResult = "bbcd"+STRING_NEWLINE;
+        InputStream stdin = new ByteArrayInputStream(original.getBytes());
+        outputStream = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> {
+            app.run(args, stdin, outputStream);
+            assertEquals(expectResult, outputStream.toString());
+        });
+    }
+
+    @Test
+    void testRunWithFiles() {
+        String[] args = {"s/A/a/", fileNameA};
+        String expectResult = "a"+STRING_NEWLINE+"B"+STRING_NEWLINE+"C"+STRING_NEWLINE+"D"+STRING_NEWLINE;
+        outputStream = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> {
+            app.run(args, System.in, outputStream);
+            assertEquals(expectResult, outputStream.toString());
+        });
+    }
+
+    @Test
+    void testRunEmptyArgs() {
+        String[] args = {};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix+ERR_NO_REP_RULE);
+    }
+
+    @Test
+    void testRunWithTooShortReplacementRule() {
+        String[] args = {"s//"};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REP_RULE);
+    }
+
+    @Test
+    void testRunWithReplacementRuleInWrongFormat() {
+        String[] args = {"abcde"};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REP_RULE);
+    }
+
+    @Test
+    void testRunWithInvalidReplacementIndex() {
+        String[] args = {"s/a/b/0"};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REP_X);
+    }
+
+    @Test
+    void testRunWithEmptyRegularExpression() {
+        String[] args = {"s//b/"};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix+ERR_EMPTY_REGEX);
+    }
+
+    @Test
+    void testRunWithInvalidRegularExpression() {
+        String[] args = {"s/{]/b/"};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REGEX);
+    }
+
+    @Test
+    void testReplaceInNullIStream() {
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.replaceSubstringInStdin("", "", 1, null);
+        });
+        assertEquals(thrown.getMessage(), ERR_NULL_STREAMS);
+    }
+
+    @Test
+    void testReplaceInNotExistFileName() {
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.replaceSubstringInFile("", "", 1, fileNameNotExist);
+        });
+        assertEquals(thrown.getMessage(), ERR_FILE_NOT_FOUND);
+    }
+
+    @Test
+    void testReplaceInNullFileName() {
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.replaceSubstringInFile("", "", 1,  null);
+        });
+        assertEquals(thrown.getMessage(), ERR_NULL_ARGS);
+    }
+
+    @Test
+    void testReplaceInDirectory() {
+        Throwable thrown = assertThrows(Exception.class, () -> {
+            app.replaceSubstringInFile("", "", 1, subDirName);
+        });
+        assertEquals(thrown.getMessage(), ERR_IS_DIR);
+    }
+
+    @Test
+    void testRunWithNullArg() {
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(SedException.class, () -> {
+            app.run(null, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_NULL_ARGS);
+    }
+
+    @Test
+    void testRunWithNullOStream() {
+        String[] args = {""};
+        Throwable thrown = assertThrows(SedException.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_NULL_STREAMS);
     }
 }

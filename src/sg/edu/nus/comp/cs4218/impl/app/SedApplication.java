@@ -130,15 +130,17 @@ public class SedApplication implements SedInterface {
             Matcher matcher = pattern.matcher(line);
             StringBuilder builder = new StringBuilder();
             int index = 0;
+            int count = 0;
             while (matcher.find()) {
-                index++;
-                if (index == replacementIndex) {
-                    builder.append(line, 0, matcher.start());
+                count++;
+                if (count == replacementIndex) {
+                    builder.append(line, index, matcher.start());
                     builder.append(replacement);
+                    index = matcher.end();
                     break;
                 }
             }
-            builder.append(line, matcher.end(), line.length());
+            builder.append(line, index, line.length());
             output.append(builder.toString()).append(STRING_NEWLINE);
         }
 
