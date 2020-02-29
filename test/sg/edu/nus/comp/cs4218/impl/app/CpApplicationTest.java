@@ -46,7 +46,7 @@ class CpApplicationTest {
     @Test
     public void testCpNotExistFileToFile() {
         String destFilePath = FileSystemUtils.joinPath(TestFileUtils.emptyFolderName, "new-file");
-        Throwable throwable = assertThrows(Exception.class, () -> cpInterface.cpSrcFileToDestFile(destFilePath, "not-exist"));
+        Throwable throwable = assertThrows(Exception.class, () -> cpInterface.cpSrcFileToDestFile("not-exist", destFilePath));
         assertNotEquals(NullPointerException.class, throwable.getClass());
     }
 
