@@ -83,7 +83,6 @@ class IORedirectionHandlerTest {
 
 
     @Test
-   //todo
     void testFirstNotRedir(){
         List<String> args = Arrays.asList("g", "<", TestFileUtils.tempFileName1);
         ArgumentResolver resolver = new ArgumentResolver();
@@ -103,7 +102,6 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    //todo
     void testRedirInput(){
         List<String> args = Arrays.asList("<", TestFileUtils.tempFileName1);
         ArgumentResolver resolver = new ArgumentResolver();
@@ -147,6 +145,7 @@ class IORedirectionHandlerTest {
     }
 
     @Test
+    //TODO
     void testSeveralFileSegment() throws AbstractApplicationException, ShellException {
         List<String> args = Arrays.asList("<", "\"" + TestFileUtils.tempFileName1  + "\"\"" + TestFileUtils.tempFileName2 + "\"");
         ArgumentResolver resolver = new ArgumentResolver();
