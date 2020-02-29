@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
@@ -20,17 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class LsApplicationTest {
 
     private final LsInterface lsApplication = new LsApplication();
-    private final static String TEMPT_TXT ="tempt.txt";
     private final OutputStream outputStream = new ByteArrayOutputStream();
+    private final String pwd = EnvironmentUtils.currentDirectory;
 
-    @BeforeAll
-    static void setUp(){
-        try {
-            FileSystemUtils.deleteFileRecursive(new File(TEMPT_TXT));
-            FileSystemUtils.createFile(TEMPT_TXT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @AfterEach
+    void resetCurrentDirectory() {
+        EnvironmentUtils.currentDirectory = pwd;
     }
 
     @Test
@@ -98,7 +94,7 @@ class LsApplicationTest {
     void runWithWrongOutputStream() {
         String[] args = {};
         try {
-            try(OutputStream outputStreamTest = IOUtils.openOutputStream(TEMPT_TXT)) {
+            try(OutputStream outputStreamTest = IOUtils.openOutputStream("asset/test.txt")) {
                 IOUtils.closeOutputStream(outputStreamTest);
                 assertThrows(LsException.class, () -> {
                     lsApplication.run(args, System.in, outputStreamTest);
@@ -113,32 +109,29 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithEmptyFolderName() {
-        String result = "LOG.md\n" +
-                "PMD.Rules.xml\n" +
-                "README.md\n" +
-                "asset\n" +
-                "img\n" +
-                "pom.xml\n" +
-                "results\n" +
-                "src\n" +
-                "target\n" +
-                "tempt.txt\n" +
-                "test";
+        String cwd = EnvironmentUtils.currentDirectory;
+        //noinspection NonAtomicOperationOnVolatileField
+        EnvironmentUtils.currentDirectory += "/asset/";
+        String result = "A.txt\n" +
+                "B.txt\n" +
+                "C.txt\n" +
+                "D.txt\n" +
+                "E.txt\n" +
+                "empty1.txt\n" +
+                "empty2.txt\n" +
+                "subDir\n" +
+                "test.txt";
         assertDoesNotThrow(()->{
             assertEquals(result,lsApplication.listFolderContent(false,false));
         });
+        EnvironmentUtils.currentDirectory = cwd;
     }
 
     @Test
     void listFolderContentWithOnlyFolderFlag() {
-        String result = "asset\n" +
-                "img\n" +
-                "results\n" +
-                "src\n" +
-                "target\n" +
-                "test";
+        String result = "asset:\nsubDir";
         assertDoesNotThrow(()->{
-            assertEquals(result, lsApplication.listFolderContent(true, false));
+            assertEquals(result, lsApplication.listFolderContent(true, false, "asset"));
         });
     }
 
@@ -153,6 +146,7 @@ class LsApplicationTest {
                 "empty1.txt\n" +
                 "empty2.txt\n" +
                 "subDir\n" +
+                "test.txt\n" +
                 "\n" +
                 "asset/subDir:\n" +
                 "empty3.txt";
@@ -172,8 +166,4 @@ class LsApplicationTest {
         EnvironmentUtils.currentDirectory = cwd;
     }
 
-    @AfterAll
-    static void tearDown() {
-        FileSystemUtils.deleteFileRecursive(new File(TEMPT_TXT));
-    }
 }

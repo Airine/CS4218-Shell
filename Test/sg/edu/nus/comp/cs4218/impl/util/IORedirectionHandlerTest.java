@@ -147,13 +147,12 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testSeveralFileSegment() throws AbstractApplicationException, ShellException {
+    void testSeveralFileSegment() {
         List<String> args = Arrays.asList("<", "\"" + TestFileUtils.tempFileName1  + "\"\"" + TestFileUtils.tempFileName2 + "\"");
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-//        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
-        handler.extractRedirOptions();
-//        assertEquals("shell: Invalid syntax", thrown.getMessage());
+        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
+        assertEquals("shell: No such file or directory", thrown.getMessage());
     }
 
     @Test
