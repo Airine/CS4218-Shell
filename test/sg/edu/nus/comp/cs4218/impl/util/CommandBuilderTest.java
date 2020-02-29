@@ -1,6 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
-import com.sun.org.apache.xpath.internal.operations.String;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -9,7 +8,6 @@ import sg.edu.nus.comp.cs4218.impl.cmd.PipeCommand;
 import sg.edu.nus.comp.cs4218.impl.cmd.SequenceCommand;
 
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 

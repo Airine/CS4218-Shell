@@ -90,6 +90,10 @@ execute this command in the root directory:
 
 4. Refactor and solve [issue](https://github.com/nus-cs4218/cs4218-project-ay1920-s2-2020-team6/issues/8) - No PMD warnings
 
+## 2020-2-27
+
+1. Solve PMD warnings in test folder.
+
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
