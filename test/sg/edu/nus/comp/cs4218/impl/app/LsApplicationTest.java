@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -64,6 +65,36 @@ class LsApplicationTest {
     }
 
     @Test
+    void runWithMultiArgs() {
+        String[] args = {"README.md", "img"};
+        String result = "README.md\n" +
+                        "\n" +
+                        "img:\n" +
+                        "timeline.png\n";
+        assertDoesNotThrow(()->{
+            lsApplication.run(args, System.in, outputStream);
+            assertEquals(result,outputStream.toString());
+
+        });
+    }
+
+
+    @Test
+    void runWithNonExistFile() {
+        String[] args = {"README.md", "img", "none.txt"};
+        String result = "README.md\n" +
+                "\n" +
+                "img:\n" +
+                "timeline.png\n" +
+                "\n" +
+                "ls: cannot access 'none.txt': No such file or directory\n";
+        assertDoesNotThrow(()->{
+            lsApplication.run(args, System.in, outputStream);
+            assertEquals(result,outputStream.toString());
+        });
+    }
+
+    @Test
     void runWithWrongOutputStream() {
         String[] args = {};
         try {
@@ -87,7 +118,6 @@ class LsApplicationTest {
                 "README.md\n" +
                 "asset\n" +
                 "img\n" +
-                "lib\n" +
                 "pom.xml\n" +
                 "results\n" +
                 "src\n" +
@@ -103,7 +133,6 @@ class LsApplicationTest {
     void listFolderContentWithOnlyFolderFlag() {
         String result = "asset\n" +
                 "img\n" +
-                "lib\n" +
                 "results\n" +
                 "src\n" +
                 "target\n" +
@@ -134,12 +163,13 @@ class LsApplicationTest {
 
     @Test
     void listCwdContentWithWrongCwd() {
-        String cwd = System.getProperty("user.dir");
-        System.setProperty("user.dir", cwd+"/none/");
+        String cwd = EnvironmentUtils.currentDirectory;
+        //noinspection NonAtomicOperationOnVolatileField
+        EnvironmentUtils.currentDirectory += "/none/";
         assertThrows(LsException.class, ()->{
             lsApplication.listFolderContent(false,false);
         });
-        System.setProperty("user.dir", cwd);
+        EnvironmentUtils.currentDirectory = cwd;
     }
 
     @AfterAll

@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
@@ -81,8 +82,8 @@ public class LsApplication implements LsInterface {
      * Lists only the current directory's content and RETURNS. This does not account for recursive
      * mode in cwd.
      *
-     * @param isFoldersOnly
-     * @return
+     * @param isFoldersOnly isFoldersOnly flag
+     * @return the result
      */
     private String listCwdContent(Boolean isFoldersOnly) throws LsException {
         String cwd = EnvironmentUtils.currentDirectory;
@@ -132,8 +133,13 @@ public class LsApplication implements LsInterface {
                 // However the user might have written a command like `ls invalid1 valid1 -R`, what
                 // do we do then?
                 if (!isRecursive) {
-                    result.append(e.getMessage());
-                    result.append('\n');
+                    if (path.toFile().exists()) {
+                        result.append(getRelativeToCwd(path).toString());
+                        result.append("\n\n");
+                    } else {
+                        result.append(e.getMessage());
+                        result.append('\n');
+                    }
                 }
             }
         }
@@ -165,7 +171,7 @@ public class LsApplication implements LsInterface {
     /**
      * Gets the contents in a single specified directory.
      *
-     * @param directory
+     * @param directory input directory (Path object)
      * @return List of files + directories in the passed directory.
      */
     private List<Path> getContents(Path directory, Boolean isFoldersOnly)
@@ -180,7 +186,7 @@ public class LsApplication implements LsInterface {
 
         List<Path> result = new ArrayList<>();
         File pwd = directory.toFile();
-        for (File f : pwd.listFiles()) {
+        for (File f : Objects.requireNonNull(pwd.listFiles())) {
             if (isFoldersOnly && !f.isDirectory()) {
                 continue;
             }
@@ -198,7 +204,7 @@ public class LsApplication implements LsInterface {
     /**
      * Resolve all paths given as arguments into a list of Path objects for easy path management.
      *
-     * @param directories
+     * @param directories input directories needed to be
      * @return List of java.nio.Path objects
      */
     private List<Path> resolvePaths(String... directories) {
