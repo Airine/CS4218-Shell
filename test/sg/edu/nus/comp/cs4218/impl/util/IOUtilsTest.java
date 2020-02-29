@@ -55,7 +55,7 @@ class IOUtilsTest {
     void closeSystemIn() {
         assertDoesNotThrow(()->{
             closeInputStream(System.in);
-            assertEquals(0, System.in.available());
+            return System.in.available();
         });
     }
 
