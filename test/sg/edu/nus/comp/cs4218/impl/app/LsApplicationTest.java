@@ -134,7 +134,11 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithRecursionFlag() {
-        String result = "";
+        String result = "subDir:\n" +
+                        "subSubDir\n" +
+                        "\n" +
+                        "subDir/subSubDir:\n" +
+                        "test.txt";
         assertDoesNotThrow(()->{
             assertEquals(result, lsApplication.listFolderContent(false, true, "subDir"));
         });
