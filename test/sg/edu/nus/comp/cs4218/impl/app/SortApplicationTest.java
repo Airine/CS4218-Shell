@@ -11,22 +11,24 @@ import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class SortApplicationTest {
 
     private final SortInterface app = new SortApplication();
     private OutputStream outputStream = null;
-    private static String fileNameD = "asset/D.txt";
-    private static String fileNameE = "asset/E.txt";
-    private static String subDirName = "asset/subDir";
-    private static String fileNameEmpty1 = "asset/empty1.txt";
-    private static String fileNameNotExist = "asset/notExist.txt";
+    private static String folderName = "asset"+CHAR_FILE_SEP+"app"+CHAR_FILE_SEP+"common";
+    private static String fileNameD = "D.txt";
+    private static String fileNameE = "E.txt";
+    private static String subDirName = "subDir";
+    private static String fileNameEmpty1 = "empty1.txt";
+    private static String fileNameNotExist = "notExist.txt";
     private static String sortPrefix = "sort: ";
 
     @Test
     void testRunWithFiles() {
-        String[] args = {fileNameD, fileNameE};
+        String[] args = {folderName+CHAR_FILE_SEP+fileNameD, folderName+CHAR_FILE_SEP+fileNameE};
         String expectResult = "1"+STRING_NEWLINE+"10"+STRING_NEWLINE+"2"
                 +STRING_NEWLINE+"A"+STRING_NEWLINE+"b"+STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
@@ -79,7 +81,7 @@ class SortApplicationTest {
     void testSortFromEmptyFile(){
         String expectResult = "";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(false, false, false, fileNameEmpty1);
+            String realResult = app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+fileNameEmpty1);
             assertEquals(expectResult, realResult);
         });
     }
@@ -88,7 +90,7 @@ class SortApplicationTest {
     void testSortNumberByCharacterFromFile(){
         String expectResult = "1"+STRING_NEWLINE+"10"+STRING_NEWLINE+"2";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(false, false, false, fileNameD);
+            String realResult = app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+fileNameD);
             assertEquals(expectResult, realResult);
         });
     }
@@ -97,7 +99,7 @@ class SortApplicationTest {
     void testSortNumberByWordFromFile(){
         String expectResult = "1"+STRING_NEWLINE+"2"+STRING_NEWLINE+"10";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(true, false, false, fileNameD);
+            String realResult = app.sortFromFiles(true, false, false, folderName+CHAR_FILE_SEP+fileNameD);
             assertEquals(expectResult, realResult);
         });
     }
@@ -106,7 +108,7 @@ class SortApplicationTest {
     void testSortNumbersInReverseOrderFromFile(){
         String expectResult = "2"+STRING_NEWLINE+"10"+STRING_NEWLINE+"1";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(false, true, false, fileNameD);
+            String realResult = app.sortFromFiles(false, true, false, folderName+CHAR_FILE_SEP+fileNameD);
             assertEquals(expectResult, realResult);
         });
     }
@@ -155,7 +157,7 @@ class SortApplicationTest {
     @Test
     void testSortWithNotExistFileName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.sortFromFiles(false, false, false, fileNameNotExist);
+            app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+fileNameNotExist);
         });
         assertEquals(thrown.getMessage(), ERR_FILE_NOT_FOUND);
     }
@@ -171,7 +173,7 @@ class SortApplicationTest {
     @Test
     void testSortWithDirectoryName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.sortFromFiles(false, false, false, subDirName);
+            app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+subDirName);
         });
         assertEquals(thrown.getMessage(), ERR_IS_DIR);
     }
@@ -187,7 +189,7 @@ class SortApplicationTest {
 
     @Test
     void testRunWithNullOStream() {
-        String[] args = {fileNameD, fileNameE};
+        String[] args = {folderName+CHAR_FILE_SEP+fileNameD, folderName+CHAR_FILE_SEP+fileNameE};
         Throwable thrown = assertThrows(SortException.class, () -> {
             app.run(args, System.in, outputStream);
         });

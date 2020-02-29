@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.IOUtils.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class IOUtilsTest {
 
@@ -129,6 +130,7 @@ class IOUtilsTest {
         FileSystemUtils.deleteFileRecursive(new File(TEST_TXT));
         FileSystemUtils.deleteFileRecursive(new File(NULL_TXT));
         FileSystemUtils.deleteFileRecursive(new File(NONE_TXT));
+        FileSystemUtils.deleteFileRecursive(new File("asset"+CHAR_FILE_SEP+TEST_TXT));
     }
 
     static class UnClosableInputStream extends FileInputStream {

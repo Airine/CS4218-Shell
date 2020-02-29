@@ -53,6 +53,10 @@ public class ErrorConstants {
     public static final String ERR_FILE_EXISTS = "File or directory already exists";
     public static final String ERR_TOP_LEVEL_MISSING = "Top level folders do not exist";
 
+    // `cut` related
+    public static final String ERR_INVALID_RANGE = "Invalid range";
+    public static final String ERR_OUT_RANGE = "Out of range";
+
     // General constants
     public static final String ERR_INVALID_APP = "Invalid app";
     public static final String ERR_NOT_SUPPORTED = "Not supported yet";

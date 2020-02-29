@@ -18,7 +18,7 @@ class FindApplicationTest {
 
     private final FindInterface app = new FindApplication();
     private OutputStream outputStream = null;
-    private static String folderName = "asset";
+    private static String folderName = "asset"+CHAR_FILE_SEP+"app"+CHAR_FILE_SEP+"common";
     private static String fileNameA = "A.txt";
     private static String fileNameB = "B.txt";
     private static String fileNameEmpty1 = "empty1.txt";
