@@ -12,6 +12,7 @@ final public class TestFileUtils {
     public static String tempFolderName = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test-folder"));
     public static String tempFileInFolder = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "test-folder/test.cc"));
     public static String emptyFolderName = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "emptyFolder"));
+    public static String notExistFile = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath(currTestDir, "not-exist"));
     private TestFileUtils(){}
 
     public static void createSomeFiles() throws Exception {
