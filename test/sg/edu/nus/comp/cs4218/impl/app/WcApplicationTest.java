@@ -3,19 +3,24 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.WcInterface;
 import sg.edu.nus.comp.cs4218.exception.WcException;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class WcApplicationTest {
 
     private final WcApplication wcApplication = new WcApplication();
-    private final static String wcFolder = "asset" + CHAR_FILE_SEP + "WcApplication" + CHAR_FILE_SEP;
+    private final static String wcFolder = "asset" + CHAR_FILE_SEP+ "app" +CHAR_FILE_SEP + "wc" + CHAR_FILE_SEP;
     private final static String TEST_FILE = wcFolder + "test.txt";
     private final static String TEST_FILE_1 = wcFolder + "test1.txt";
     private final static String TEST_FILE_2 = wcFolder + "test2.txt";
+    private final static String NONE_FILE = wcFolder + "none.txt";
+    private final static String SUB_DIR = wcFolder + "subDir";
+    private final static String NO_PERMISSION = SUB_DIR + CHAR_FILE_SEP + "NO_PERMISSION.txt";
     private InputStream inputStream = System.in;;
     private OutputStream outputStream = new ByteArrayOutputStream();
 
@@ -25,7 +30,7 @@ class WcApplicationTest {
         Throwable throwable = assertThrows(WcException.class, ()->{
             wcApplication.run(args, System.in, null);
         });
-        assertEquals("wc: Null Pointer Exception", throwable.getMessage());
+        assertEquals("wc: " + ERR_NULL_STREAMS, throwable.getMessage());
     }
 
     @Test
@@ -67,22 +72,65 @@ class WcApplicationTest {
     @Test
     void runWithClosedOutputStream() {
         String[] args = {};
-        assertThrows(IOException.class, ()->{
+        assertThrows(WcException.class, ()->{
             inputStream = new FileInputStream(new File(TEST_FILE));
-            outputStream.close();
+            outputStream = new FileOutputStream(new File(TEST_FILE_1));
+            IOUtils.closeOutputStream(outputStream);
             wcApplication.run(args, inputStream, outputStream);
+            IOUtils.closeInputStream(inputStream);
         });
     }
 
     @Test
-    void countFromFiles() {
+    void countFromNullFile() {
+        assertThrows(Exception.class, ()->{
+           wcApplication.countFromFiles(true, true, true, null);
+        });
     }
 
     @Test
-    void countFromStdin() {
+    void countFromNonExistFile() {
+        String result = "wc: " + ERR_FILE_NOT_FOUND;
+        assertDoesNotThrow(()->{
+            assertEquals(result, wcApplication.countFromFiles(true, true, true, NONE_FILE));
+        });
     }
 
     @Test
-    void getCountReport() {
+    void countFromDirectory() {
+        String result = "wc: " + ERR_IS_DIR;
+        assertDoesNotThrow(()->{
+            assertEquals(result, wcApplication.countFromFiles(true, true, true, SUB_DIR));
+        });
     }
+
+    @Test
+    void countFromNoPermission() {
+        String result = "wc: " + ERR_NO_PERM;
+        assertDoesNotThrow(()->{
+            assertEquals(result, wcApplication.countFromFiles(true, true, true, NO_PERMISSION));
+        });
+    }
+
+    @Test
+    void countFromNullStdIn() {
+        assertThrows(WcException.class, ()->{
+           wcApplication.countFromStdin(true, true, true, null);
+        });
+    }
+
+    @Test
+    void countFromClosedInputStream() {
+        assertThrows(WcException.class, ()->{
+
+        });
+    }
+
+    @Test
+    void getCountReportFromNullInputStream() {
+        Throwable throwable = assertThrows(Exception.class, ()->{
+            wcApplication.getCountReport(null);
+        });
+    }
+
 }
