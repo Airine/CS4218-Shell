@@ -98,3 +98,6 @@ Notice: Please kindly do logs while finding and fixing bugs and follow the forma
 Which I think would be very helpful for writing or presenting 
 project progress.
 
+## 2020-2-29
+
+1. Create unit test cases for `IORedirectionHandler` -93% coverage, need information about `RegexArgument` to cover the rest.
