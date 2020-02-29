@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
 import java.io.File;
@@ -65,15 +66,6 @@ class CpApplicationTest {
     }
 
     @Test
-    public void runCpNull() {
-        String[] args = {};
-        Throwable throwable1 = assertThrows(Exception.class, () -> cpInterface.run(args, System.in, System.out));
-        assertNotEquals(NullPointerException.class, throwable1.getClass());
-        Throwable throwable2 = assertThrows(Exception.class, () -> cpInterface.run(null, System.in, System.out));
-        assertNotEquals(NullPointerException.class, throwable2.getClass());
-    }
-
-    @Test
     public void runCpToFolder() {
         String[] args = {TestFileUtils.tempFileName1, TestFileUtils.emptyFolderName};
         assertDoesNotThrow(() -> cpInterface.run(args, System.in, System.out));
@@ -93,8 +85,12 @@ class CpApplicationTest {
     @Test
     public void runCpFolderToFile() {
         String[] args = {TestFileUtils.emptyFolderName, TestFileUtils.tempFileName1};
-        Throwable throwable = assertThrows(Exception.class, () -> cpInterface.run(args, System.in, System.out));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        try {
+            cpInterface.run(args, System.in, System.out);
+        } catch (AbstractApplicationException e) {
+            e.printStackTrace();
+        }
+        assertFalse(new File(TestFileUtils.tempFileName1).isDirectory());
     }
 
     @Test
