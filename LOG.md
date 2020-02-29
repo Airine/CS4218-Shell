@@ -115,3 +115,5 @@ project progress.
 ## 2020-2-29
 
 1. Create unit test cases for `IORedirectionHandler` -93% coverage, need information about `RegexArgument` to cover the rest.
+
+2. Create unit test cases for `GrepApplication` -100% coverage

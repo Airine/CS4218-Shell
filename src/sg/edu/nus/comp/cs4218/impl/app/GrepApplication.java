@@ -68,7 +68,7 @@ public class GrepApplication implements GrepInterface {
         for (String f : fileNames) {
             BufferedReader reader = null;
             try {
-                String path = FileSystemUtils.convertToAbsolutePath(f);
+                String path = FileSystemUtils.getAbsolutePathName(f);
                 File file = new File(path);
                 if (!file.exists()) {
                     lineResults.add(f + ": " + ERR_FILE_NOT_FOUND);
