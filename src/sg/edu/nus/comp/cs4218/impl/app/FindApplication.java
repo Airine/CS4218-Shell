@@ -113,24 +113,6 @@ public class FindApplication implements FindInterface {
     }
 
     /**
-     * Converts path provided by user into path recognised by the system
-     * @param path supplied by user
-     * @return a String of the converted path
-     */
-    private String convertPathToSystemPath(String path) {
-        String convertedPath = path;
-        String pathIdentifier = "\\" + Character.toString(CHAR_FILE_SEP);
-        convertedPath = convertedPath.replaceAll("(\\\\)+", pathIdentifier);
-        convertedPath = convertedPath.replaceAll("/+", pathIdentifier);
-
-        if (convertedPath.length() != 0 && convertedPath.charAt(convertedPath.length() - 1) == CHAR_FILE_SEP) {
-            convertedPath = convertedPath.substring(0, convertedPath.length() - 1);
-        }
-
-        return convertedPath;
-    }
-
-    /**
      * Converts file name provided by user into regular expression format.
      * @param fileName supplied by user
      * @return a String the fileName in regular expression format
