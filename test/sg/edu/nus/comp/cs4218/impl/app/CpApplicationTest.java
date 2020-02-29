@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
 import java.io.File;
@@ -46,7 +47,7 @@ class CpApplicationTest {
     @Test
     public void testCpNotExistFileToFile() {
         String destFilePath = FileSystemUtils.joinPath(TestFileUtils.emptyFolderName, "new-file");
-        Throwable throwable = assertThrows(Exception.class, () -> cpInterface.cpSrcFileToDestFile(destFilePath, "not-exist"));
+        Throwable throwable = assertThrows(Exception.class, () -> cpInterface.cpSrcFileToDestFile("not-exist", destFilePath));
         assertNotEquals(NullPointerException.class, throwable.getClass());
     }
 
@@ -62,15 +63,6 @@ class CpApplicationTest {
         Throwable throwable = assertThrows(Exception.class,
                 () -> cpInterface.cpFilesToFolder(destFolder, TestFileUtils.tempFileName1));
         assertNotEquals(NullPointerException.class, throwable.getClass());
-    }
-
-    @Test
-    public void runCpNull() {
-        String[] args = {};
-        Throwable throwable1 = assertThrows(Exception.class, () -> cpInterface.run(args, System.in, System.out));
-        assertNotEquals(NullPointerException.class, throwable1.getClass());
-        Throwable throwable2 = assertThrows(Exception.class, () -> cpInterface.run(null, System.in, System.out));
-        assertNotEquals(NullPointerException.class, throwable2.getClass());
     }
 
     @Test
@@ -93,8 +85,12 @@ class CpApplicationTest {
     @Test
     public void runCpFolderToFile() {
         String[] args = {TestFileUtils.emptyFolderName, TestFileUtils.tempFileName1};
-        Throwable throwable = assertThrows(Exception.class, () -> cpInterface.run(args, System.in, System.out));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        try {
+            cpInterface.run(args, System.in, System.out);
+        } catch (AbstractApplicationException e) {
+            e.printStackTrace();
+        }
+        assertFalse(new File(TestFileUtils.tempFileName1).isDirectory());
     }
 
     @Test
