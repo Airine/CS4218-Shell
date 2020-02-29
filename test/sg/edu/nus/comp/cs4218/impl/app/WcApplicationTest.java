@@ -7,11 +7,16 @@ import sg.edu.nus.comp.cs4218.exception.WcException;
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class WcApplicationTest {
 
     private final WcApplication wcApplication = new WcApplication();
-    private InputStream inputStream;
+    private final static String wcFolder = "asset" + CHAR_FILE_SEP + "WcApplication" + CHAR_FILE_SEP;
+    private final static String TEST_FILE = wcFolder + "test.txt";
+    private final static String TEST_FILE_1 = wcFolder + "test1.txt";
+    private final static String TEST_FILE_2 = wcFolder + "test2.txt";
+    private InputStream inputStream = System.in;;
     private OutputStream outputStream = new ByteArrayOutputStream();
 
     @Test
@@ -25,18 +30,18 @@ class WcApplicationTest {
 
     @Test
     void runWithOneFile() {
-        String[] args = {"asset/test.txt"};
+        String[] args = {TEST_FILE};
         assertDoesNotThrow(()->{
-            wcApplication.run(args, System.in, outputStream);
+            wcApplication.run(args, inputStream, outputStream);
             System.out.println(outputStream.toString()); //TODO: change to assertEquals
         });
     }
 
     @Test
     void runWithFiles() {
-        String[] args = {"asset/A.txt", "asset/B.txt", "asset/C.txt", "asset/test.txt"};
+        String[] args = {TEST_FILE, TEST_FILE_1, TEST_FILE_2};
         assertDoesNotThrow(()->{
-            wcApplication.run(args, System.in, outputStream);
+            wcApplication.run(args, inputStream, outputStream);
             System.out.println(outputStream.toString()); //TODO: change to assertEquals
         });
     }
@@ -45,7 +50,7 @@ class WcApplicationTest {
     void runWithStdIn() {
         String[] args = {"-c", "-l"};
         assertDoesNotThrow(()->{
-            inputStream = new FileInputStream(new File("asset/test.txt"));
+            inputStream = new FileInputStream(new File(TEST_FILE));
             wcApplication.run(args, inputStream, outputStream);
             System.out.println(outputStream.toString()); //TODO: change to assertEquals
         });
@@ -62,6 +67,11 @@ class WcApplicationTest {
     @Test
     void runWithClosedOutputStream() {
         String[] args = {};
+        assertThrows(IOException.class, ()->{
+            inputStream = new FileInputStream(new File(TEST_FILE));
+            outputStream.close();
+            wcApplication.run(args, inputStream, outputStream);
+        });
     }
 
     @Test
