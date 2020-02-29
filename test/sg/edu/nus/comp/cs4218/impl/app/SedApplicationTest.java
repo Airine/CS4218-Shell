@@ -11,6 +11,7 @@ import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 
@@ -18,9 +19,10 @@ class SedApplicationTest {
 
     private final SedInterface app = new SedApplication();
     private OutputStream outputStream = null;
-    private static String fileNameA = "asset/A.txt";
-    private static String subDirName = "asset/subDir";
-    private static String fileNameNotExist = "asset/notExist.txt";
+    private static String folderName = "asset"+CHAR_FILE_SEP+"app"+CHAR_FILE_SEP+"common";
+    private static String fileNameA = "A.txt";
+    private static String subDirName = "subDir";
+    private static String fileNameNotExist = "notExist.txt";
     private static String sedPrefix = "sed: ";
 
     @Test
@@ -231,7 +233,7 @@ class SedApplicationTest {
 
     @Test
     void testRunWithFiles() {
-        String[] args = {"s/A/a/", fileNameA};
+        String[] args = {"s/A/a/", folderName+CHAR_FILE_SEP+fileNameA};
         String expectResult = "a"+STRING_NEWLINE+"B"+STRING_NEWLINE+"C"+STRING_NEWLINE+"D"+STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
@@ -311,7 +313,7 @@ class SedApplicationTest {
     @Test
     void testReplaceInNotExistFileName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.replaceSubstringInFile("", "", 1, fileNameNotExist);
+            app.replaceSubstringInFile("", "", 1, folderName+CHAR_FILE_SEP+fileNameNotExist);
         });
         assertEquals(thrown.getMessage(), ERR_FILE_NOT_FOUND);
     }
@@ -327,7 +329,7 @@ class SedApplicationTest {
     @Test
     void testReplaceInDirectory() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.replaceSubstringInFile("", "", 1, subDirName);
+            app.replaceSubstringInFile("", "", 1, folderName+CHAR_FILE_SEP+subDirName);
         });
         assertEquals(thrown.getMessage(), ERR_IS_DIR);
     }

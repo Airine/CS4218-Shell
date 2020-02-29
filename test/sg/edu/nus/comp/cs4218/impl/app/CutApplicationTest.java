@@ -11,23 +11,25 @@ import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class CutApplicationTest {
 
     private final CutInterface app = new CutApplication();
     private OutputStream outputStream = null;
-    private static String fileNameTest = "asset/test.txt";
-    private static String fileNameNames = "asset/names.txt";
-    private static String subDirName = "asset/subDir";
-    private static String fileNameNotExist = "asset/notExist.txt";
+    private static String folderName = "asset"+CHAR_FILE_SEP+"app"+CHAR_FILE_SEP+"common";
+    private static String fileNameTest = "test.txt";
+    private static String fileNameNames = "names.txt";
+    private static String subDirName = "subDir";
+    private static String fileNameNotExist = "notExist.txt";
     private static String cutPrefix = "cut: ";
 
     @Test
     void testCutTwoCharactersFromFile() {
         String expectResult = "Ts";
         assertDoesNotThrow(() -> {
-            String realResult = app.cutFromFiles(true,false,false,1,8,fileNameTest);
+            String realResult = app.cutFromFiles(true,false,false,1,8,folderName+CHAR_FILE_SEP+fileNameTest);
             assertEquals(expectResult, realResult);
         });
     }
@@ -36,7 +38,7 @@ class CutApplicationTest {
     void testCutRangeOfCharactersFromFile() {
         String expectResult = "Today is";
         assertDoesNotThrow(() -> {
-            String realResult = app.cutFromFiles(true,false,true,1,8,fileNameTest);
+            String realResult = app.cutFromFiles(true,false,true,1,8,folderName+CHAR_FILE_SEP+fileNameTest);
             assertEquals(expectResult, realResult);
         });
     }
@@ -45,7 +47,7 @@ class CutApplicationTest {
     void testCutSingleCharactersFromFile() {
         String expectResult = "s";
         assertDoesNotThrow(() -> {
-            String realResult = app.cutFromFiles(true,false,false,8,0,fileNameTest);
+            String realResult = app.cutFromFiles(true,false,false,8,0,folderName+CHAR_FILE_SEP+fileNameTest);
             assertEquals(expectResult, realResult);
         });
     }
@@ -86,7 +88,7 @@ class CutApplicationTest {
     @Test
     void testRunWithOneFile() {
         String expectResult = "Ts"+STRING_NEWLINE;
-        String[] args = {"-c","1,8", fileNameTest};
+        String[] args = {"-c","1,8", folderName+CHAR_FILE_SEP+fileNameTest};
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, System.in, outputStream);
@@ -98,7 +100,7 @@ class CutApplicationTest {
     void testRunWithTwoFile() {
         String expectResult = "Today is"+STRING_NEWLINE+"Cristina"+STRING_NEWLINE+"Tian Run"+STRING_NEWLINE+
                 "Huang Yu"+STRING_NEWLINE+"Lao Guoy"+STRING_NEWLINE+"Luo Tian"+STRING_NEWLINE;
-        String[] args = {"-c","1-8", fileNameTest, fileNameNames};
+        String[] args = {"-c","1-8", folderName+CHAR_FILE_SEP+fileNameTest, folderName+CHAR_FILE_SEP+fileNameNames};
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, System.in, outputStream);
@@ -111,7 +113,7 @@ class CutApplicationTest {
         String original = "bazzz";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
         String expectResult = "od"+STRING_NEWLINE+"az"+STRING_NEWLINE;
-        String[] args = {"-c","2-3", fileNameTest, "-"};
+        String[] args = {"-c","2-3", folderName+CHAR_FILE_SEP+fileNameTest, "-"};
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, stdin, outputStream);
@@ -135,7 +137,7 @@ class CutApplicationTest {
     @Test
     void testRunWithSingleIndex() {
         String expectResult = "o"+STRING_NEWLINE;
-        String[] args = {"-c","2", fileNameTest};
+        String[] args = {"-c","2", folderName+CHAR_FILE_SEP+fileNameTest};
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, System.in, outputStream);
@@ -157,7 +159,7 @@ class CutApplicationTest {
 
     @Test
     void testRunByteIndexOutOfRange() {
-        String[] args = {"-b","1-20", fileNameTest};
+        String[] args = {"-b","1-20", folderName+CHAR_FILE_SEP+fileNameTest};
         outputStream = new ByteArrayOutputStream();
         Throwable thrown = assertThrows(CutException.class, () -> {
             app.run(args, System.in, outputStream);
@@ -176,7 +178,7 @@ class CutApplicationTest {
     @Test
     void testSortWithNotExistFileName() {
         Throwable thrown = assertThrows(CutException.class, () -> {
-            app.cutFromFiles(false, false, false, 1, 8, fileNameNotExist);
+            app.cutFromFiles(false, false, false, 1, 8, folderName+CHAR_FILE_SEP+fileNameNotExist);
         });
         assertEquals(thrown.getMessage(), cutPrefix+ERR_FILE_NOT_FOUND);
     }
@@ -192,7 +194,7 @@ class CutApplicationTest {
     @Test
     void testSortWithDirectoryName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.cutFromFiles(false, false, false, 1, 8, subDirName);
+            app.cutFromFiles(false, false, false, 1, 8, folderName+CHAR_FILE_SEP+subDirName);
         });
         assertEquals(thrown.getMessage(), cutPrefix+ERR_IS_DIR);
     }
@@ -208,7 +210,7 @@ class CutApplicationTest {
 
     @Test
     void testRunWithNullOStream() {
-        String[] args = {fileNameTest};
+        String[] args = {folderName+CHAR_FILE_SEP+fileNameTest};
         Throwable thrown = assertThrows(CutException.class, () -> {
             app.run(args, System.in, outputStream);
         });
