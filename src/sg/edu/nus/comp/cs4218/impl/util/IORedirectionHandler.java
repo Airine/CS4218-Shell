@@ -55,6 +55,7 @@ public class IORedirectionHandler {
             String file = argsIterator.next();
 
             if (isRedirOperator(file)) {
+                throw new ShellException(ERR_SYNTAX);
             }
 
             // handle quoting + globing + command substitution in file arg
@@ -82,6 +83,11 @@ public class IORedirectionHandler {
         }
     }
 
+    public void close() throws ShellException {
+        IOUtils.closeInputStream(inputStream);
+        IOUtils.closeOutputStream(outputStream);
+    }
+
     public List<String> getNoRedirArgsList() {
         return noRedirArgsList;
     }
@@ -95,6 +101,6 @@ public class IORedirectionHandler {
     }
 
     private boolean isRedirOperator(String str) {
-        return str.equals(String.valueOf(CHAR_REDIR_INPUT));
+        return str.equals(String.valueOf(CHAR_REDIR_INPUT)) || str.equals(String.valueOf(CHAR_REDIR_OUTPUT));
     }
 }
