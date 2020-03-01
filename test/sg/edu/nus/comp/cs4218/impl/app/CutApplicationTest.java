@@ -18,7 +18,7 @@ class CutApplicationTest {
 
     private static String folderName = "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "common";
     private static String fileNameTest = "test.txt";
-    private static String fileNameNames = "names.txt";
+    private static String fileNameNames = "course.txt";
     private static String subDirName = "subDir";
     private static String fileNameNotExist = "notExist.txt";
     private static String cutPrefix = "cut: ";
@@ -107,8 +107,7 @@ class CutApplicationTest {
 
     @Test
     void testRunWithTwoFile() {
-        String expectResult = "Today is" + STRING_NEWLINE + "Cristina" + STRING_NEWLINE + "Tian Run" + STRING_NEWLINE +
-                "Huang Yu" + STRING_NEWLINE + "Lao Guoy" + STRING_NEWLINE + "Luo Tian" + STRING_NEWLINE;
+        String expectResult = "Today is" + STRING_NEWLINE + "Cristina" + STRING_NEWLINE + "Software" + STRING_NEWLINE;
         String[] args = {"-c", "1-8", folderName + CHAR_FILE_SEP + fileNameTest, folderName + CHAR_FILE_SEP + fileNameNames};
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
