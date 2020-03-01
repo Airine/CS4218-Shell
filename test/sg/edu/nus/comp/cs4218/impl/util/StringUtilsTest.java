@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,27 +54,21 @@ class StringUtilsTest {
     }
 
     @Test
-    void normalCheckingSeparator() {
-        System.out.println(System.getProperty(OSNAMESTR));
-        assertEquals(System.getProperty("file.separator"), fileSeparator(), "Normal Check");
-    }
-
-    @Test
     void macSeparator() {
         props.setProperty(OSNAMESTR, "Mac OS X");
-        assertEquals("/", fileSeparator());
+        assertEquals(String.valueOf(CHAR_FILE_SEP), fileSeparator());
     }
 
     @Test
     void linuxSeparator() {
         props.setProperty(OSNAMESTR, "Linux");
-        assertEquals("/", fileSeparator());
+        assertEquals(String.valueOf(CHAR_FILE_SEP), fileSeparator());
     }
 
     @Test
     void windowsSeparator() {
         props.setProperty(OSNAMESTR, "Windows");
-        assertEquals('\\' + "/", fileSeparator());
+        assertEquals(String.valueOf('\\') + CHAR_FILE_SEP, fileSeparator());
     }
 
     @Test
