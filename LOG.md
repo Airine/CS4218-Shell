@@ -112,13 +112,20 @@ execute this command in the root directory:
 
 4. Create unit test cases for `GrepApplication` -100% coverage
 
+Bug:
 5. InCommandBuilder, when parse args with ";", it do not reinstate token `token = new LinkedList<>();`,
 this is a bug of original code. 
 
 ## 2020-3-1
 
-In CommandBuilder, the redirect operation doest not contains <.
+Bug:
+- In CommandBuilder, the redirect operation doest not contains <.
+- In pipeCommand, the nextOutputStream finally should resume to stdout
 
+
+Assumption:
+- echo will push new line
+- when command substitution new line will change to white space 
 
 ---
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
+import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.*;
 
@@ -44,13 +45,13 @@ public class IORedirectIntegrationTest extends AbstractIntegrationTest {
 
         assertTrue(outputStream
                 .toString()
-                .contains(String.valueOf("helloworld".length()))
+                .contains(String.valueOf("helloworld".length() + StringUtils.STRING_NEWLINE.length()))
         );
         try (FileInputStream reader = new FileInputStream(
                 FileSystemUtils.joinPath(EnvironmentUtils.currentDirectory, "hello.txt"))) {
             byte[] buf = new byte[16];
             int len = reader.read(buf);
-            assertEquals("helloworld", new String(buf, 0, len));
+            assertEquals("helloworld" + StringUtils.STRING_NEWLINE, new String(buf, 0, len));
             assertEquals(-1, reader.read(), "this stand output exceed bytes");
         }
 

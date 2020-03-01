@@ -53,6 +53,7 @@ public class EchoApplication implements EchoInterface {
         String result = constructResult(args);
         try {
             stdout.write(result.getBytes());
+            stdout.write(STRING_NEWLINE.getBytes());
         } catch (IOException e) {
             throw (EchoException) new EchoException(ERR_IO_EXCEPTION).initCause(e);
         }
