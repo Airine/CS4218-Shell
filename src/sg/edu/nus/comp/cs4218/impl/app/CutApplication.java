@@ -30,10 +30,10 @@ public class CutApplication implements CutInterface {
      * @param endIdx   index to end cut
      * @param fileName Array of String of file names
      * @return The expected result
-     * @throws CutException Throw exception caused by CutApplication
+     * @throws Exception Throw exception caused by CutApplication
      */
     @Override
-    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, String... fileName) throws CutException {
+    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, String... fileName) throws Exception {
         if (fileName == null) {
             throw new CutException(ERR_NULL_ARGS);
         }
@@ -56,11 +56,7 @@ public class CutApplication implements CutInterface {
                 throw (CutException) new CutException(e.getMessage()).initCause(e);
             }
         }
-        try {
-            cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
-        } catch (Exception e) {
-            throw (CutException) new CutException(e.getMessage()).initCause(e);
-        }
+        cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
         return String.join(STRING_NEWLINE, lines);
     }
 
@@ -74,20 +70,16 @@ public class CutApplication implements CutInterface {
      * @param endIdx   index to end cut
      * @param stdin    InputStream containing arguments from Stdin
      * @return The expected result
-     * @throws CutException The exception from CutApplication
+     * @throws Exception The exception from CutApplication
      */
     @Override
-    public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, InputStream stdin) throws CutException {
+    public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, InputStream stdin) throws Exception {
         if (stdin == null) {
             throw new CutException(ERR_NULL_STREAMS);
         }
         List<String> lines;
-        try {
-            lines = IOUtils.getLinesFromInputStream(stdin);
-            cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
-        } catch (Exception e) {
-            throw (CutException) new CutException(e.getMessage()).initCause(e);
-        }
+        lines = IOUtils.getLinesFromInputStream(stdin);
+        cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
         return String.join(STRING_NEWLINE, lines);
     }
 
@@ -153,15 +145,15 @@ public class CutApplication implements CutInterface {
      * @param lines    lines to be cut
      * @throws CutException The exception from CutApplication.
      */
-    private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws CutException {
+    private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws Exception {
         if (startIdx == 0) {
-            throw new CutException(ERR_OUT_RANGE);
+            throw new Exception(ERR_OUT_RANGE);
         }
         if (isCharPo) {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 if (startIdx > line.length() || endIdx > line.length()) {
-                    throw new CutException(ERR_OUT_RANGE);
+                    throw new Exception(ERR_OUT_RANGE);
                 }
                 if (isRange) {
                     lines.set(i, line.substring(startIdx - 1, endIdx));
@@ -178,7 +170,7 @@ public class CutApplication implements CutInterface {
                 String line = lines.get(i);
                 byte[] byteArray = line.getBytes();
                 if (startIdx > byteArray.length || endIdx > byteArray.length) {
-                    throw new CutException(ERR_OUT_RANGE);
+                    throw new Exception(ERR_OUT_RANGE);
                 }
                 if (isRange) {
                     byte[] byteArrayNew = Arrays.copyOfRange(byteArray, startIdx - 1, endIdx);
