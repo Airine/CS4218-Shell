@@ -1,0 +1,2 @@
+sort sort_test.txt
+echo "hello world" | wc
