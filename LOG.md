@@ -117,6 +117,7 @@ this is a bug of original code.
 
 ## 2020-3-1
 
+In CommandBuilder, the redirect operation doest not contains <.
 
 
 ---

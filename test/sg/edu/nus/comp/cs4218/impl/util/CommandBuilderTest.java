@@ -75,7 +75,6 @@ class CommandBuilderTest {
             command[0] = CommandBuilder.parseCommand("echo > hello", new ApplicationRunner());
         });
         assertEquals(command[0].getClass(), CallCommand.class);
-        // todo redirect related test
     }
 
     @Test
@@ -85,7 +84,6 @@ class CommandBuilderTest {
             command[0] = CommandBuilder.parseCommand("echo < hello", new ApplicationRunner());
         });
         assertEquals(command[0].getClass(), CallCommand.class);
-        // todo redirect related test
     }
 
     @Test

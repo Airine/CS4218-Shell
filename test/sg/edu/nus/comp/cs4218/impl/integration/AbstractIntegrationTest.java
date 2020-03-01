@@ -102,7 +102,7 @@ public abstract class AbstractIntegrationTest {
      * should be in a same folder.
      */
     @Test
-    void testSimpleRedirect() {
+    void testAndValidateStdOut() {
         File[] files = new File(EnvironmentUtils.currentDirectory).listFiles();
         Object[] testFileIn = Arrays.stream(Objects.requireNonNull(files))
                 .filter(file -> file.getName().endsWith(".in"))

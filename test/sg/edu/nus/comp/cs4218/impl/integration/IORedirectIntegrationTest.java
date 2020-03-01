@@ -24,16 +24,17 @@ public class IORedirectIntegrationTest extends AbstractIntegrationTest {
         try (FileOutputStream fileOutputStream = new FileOutputStream(
                 FileSystemUtils.joinPath(EnvironmentUtils.currentDirectory, "simple.in")
         )) {
-            fileOutputStream.write("echo helloworld > hello.txt".getBytes());
+            fileOutputStream.write("echo helloworld > hello.txt\n".getBytes());
+            fileOutputStream.write("wc < hello.txt".getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @AfterEach
-    void clearFiles(){
-        File file = new File( FileSystemUtils.joinPath(EnvironmentUtils.currentDirectory, "hello.txt"));
-        if(file.exists()){
+    void clearFiles() {
+        File file = new File(FileSystemUtils.joinPath(EnvironmentUtils.currentDirectory, "hello.txt"));
+        if (file.exists()) {
             file.delete();
         }
     }
@@ -41,12 +42,15 @@ public class IORedirectIntegrationTest extends AbstractIntegrationTest {
     @Override
     protected void validResult(String stdOutPath, OutputStream outputStream) throws IOException {
 
-        assertEquals("", outputStream.toString());
+        assertTrue(outputStream
+                .toString()
+                .contains(String.valueOf("helloworld".length()))
+        );
         try (FileInputStream reader = new FileInputStream(
                 FileSystemUtils.joinPath(EnvironmentUtils.currentDirectory, "hello.txt"))) {
             byte[] buf = new byte[16];
             int len = reader.read(buf);
-            assertEquals(new String(buf, 0, len), "helloworld");
+            assertEquals("helloworld", new String(buf, 0, len));
             assertEquals(-1, reader.read(), "this stand output exceed bytes");
         }
 
