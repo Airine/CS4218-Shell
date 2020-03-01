@@ -19,6 +19,7 @@ class LsApplicationTest {
 
     private final LsInterface lsApplication = new LsApplication();
     private final OutputStream outputStream = new ByteArrayOutputStream();
+    private static final String SUB_DIR = "subDir";
     private final String cwd = EnvironmentUtils.currentDirectory;
 
     @BeforeEach
@@ -66,10 +67,10 @@ class LsApplicationTest {
 
     @Test
     void runWithMultiArgs() {
-        String[] args = {"test.txt", "subDir"};
+        String[] args = {"test.txt", SUB_DIR};
         String result = "test.txt" + STRING_NEWLINE +
                 STRING_NEWLINE +
-                "subDir:" + STRING_NEWLINE +
+                SUB_DIR+":" + STRING_NEWLINE +
                 "subSubDir" + STRING_NEWLINE;
         assertDoesNotThrow(()->{
             lsApplication.run(args, System.in, outputStream);
@@ -82,10 +83,10 @@ class LsApplicationTest {
 
     @Test
     void runWithNonExistFile() {
-        String[] args = {"test.txt", "subDir", "none.txt"};
+        String[] args = {"test.txt", SUB_DIR, "none.txt"};
         String result = "test.txt" + STRING_NEWLINE +
                 STRING_NEWLINE +
-                "subDir:" + STRING_NEWLINE +
+                SUB_DIR + ":" + STRING_NEWLINE +
                 "subSubDir" + STRING_NEWLINE +
                 STRING_NEWLINE +
                 "ls: cannot access 'none.txt': No such file or directory" + STRING_NEWLINE;
@@ -114,7 +115,7 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithEmptyFolderName() {
-        String result = "subDir" + STRING_NEWLINE +
+        String result = SUB_DIR + STRING_NEWLINE +
                 "subDir1" + STRING_NEWLINE +
                 "subDir2" + STRING_NEWLINE +
                 "test.txt" + STRING_NEWLINE +
@@ -136,7 +137,7 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithRecursionFlag() {
-        String result = "subDir:" + STRING_NEWLINE +
+        String result = SUB_DIR+":" + STRING_NEWLINE +
                 "subSubDir" + STRING_NEWLINE +
                 STRING_NEWLINE +
                 "subDir"+CHAR_FILE_SEP+"subSubDir:" + STRING_NEWLINE +
