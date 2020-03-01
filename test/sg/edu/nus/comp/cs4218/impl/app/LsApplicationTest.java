@@ -1,6 +1,8 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.LsException;
@@ -17,11 +19,11 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class LsApplicationTest {
 
-    private final LsInterface lsApplication = new LsApplication();
-    private final OutputStream outputStream = new ByteArrayOutputStream();
     private static final String SUB_DIR = "subDir";
     private static final String TEST_TXT = "test.txt";
     private static final String SUB_SUB_DIR = "subSubDir";
+    private final LsInterface lsApplication = new LsApplication();
+    private final OutputStream outputStream = new ByteArrayOutputStream();
     private final String cwd = EnvironmentUtils.currentDirectory;
 
     @BeforeEach
@@ -38,15 +40,15 @@ class LsApplicationTest {
 
     @Test
     void runWithNullArgs() {
-        assertThrows(LsException.class, ()->{
-           lsApplication.run(null, System.in, outputStream);
+        assertThrows(LsException.class, () -> {
+            lsApplication.run(null, System.in, outputStream);
         });
     }
 
     @Test
     void runWithNullOutputStream() {
         String[] args = {};
-        assertThrows(LsException.class, ()->{
+        assertThrows(LsException.class, () -> {
             lsApplication.run(args, System.in, null);
         });
     }
@@ -54,7 +56,7 @@ class LsApplicationTest {
     @Test
     void runWithInvalidArgs() {
         String[] args = {"-a"};
-        assertThrows(LsException.class, ()->{
+        assertThrows(LsException.class, () -> {
             lsApplication.run(args, System.in, outputStream);
         });
     }
@@ -62,7 +64,7 @@ class LsApplicationTest {
     @Test
     void runWithValidArgs() {
         String[] args = {"-R", "-d"};
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             lsApplication.run(args, System.in, outputStream);
         });
     }
@@ -72,11 +74,11 @@ class LsApplicationTest {
         String[] args = {TEST_TXT, SUB_DIR};
         String result = TEST_TXT + STRING_NEWLINE +
                 STRING_NEWLINE +
-                SUB_DIR+":" + STRING_NEWLINE +
+                SUB_DIR + ":" + STRING_NEWLINE +
                 SUB_SUB_DIR + STRING_NEWLINE;
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             lsApplication.run(args, System.in, outputStream);
-            assertEquals(result,outputStream.toString());
+            assertEquals(result, outputStream.toString());
 
         });
     }
@@ -91,9 +93,9 @@ class LsApplicationTest {
                 SUB_SUB_DIR + STRING_NEWLINE +
                 STRING_NEWLINE +
                 "ls: cannot access 'none.txt': No such file or directory" + STRING_NEWLINE;
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             lsApplication.run(args, System.in, outputStream);
-            assertEquals(result,outputStream.toString());
+            assertEquals(result, outputStream.toString());
         });
     }
 
@@ -101,7 +103,7 @@ class LsApplicationTest {
     void runWithWrongOutputStream() {
         String[] args = {};
         try {
-            try(OutputStream outputStreamTest = IOUtils.openOutputStream("asset/test.txt")) {
+            try (OutputStream outputStreamTest = IOUtils.openOutputStream("asset/test.txt")) {
                 IOUtils.closeOutputStream(outputStreamTest);
                 assertThrows(LsException.class, () -> {
                     lsApplication.run(args, System.in, outputStreamTest);
@@ -122,8 +124,8 @@ class LsApplicationTest {
                 TEST_TXT + STRING_NEWLINE +
                 "test1.txt" + STRING_NEWLINE +
                 "test2.txt";
-        assertDoesNotThrow(()->{
-            assertEquals(result,lsApplication.listFolderContent(false,false));
+        assertDoesNotThrow(() -> {
+            assertEquals(result, lsApplication.listFolderContent(false, false));
         });
         EnvironmentUtils.currentDirectory = cwd;
     }
@@ -131,7 +133,7 @@ class LsApplicationTest {
     @Test
     void listFolderContentWithOnlyFolderFlag() {
         String result = SUB_DIR + ":" + STRING_NEWLINE + SUB_SUB_DIR;
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             assertEquals(result, lsApplication.listFolderContent(true, false, SUB_DIR));
         });
     }
@@ -141,9 +143,9 @@ class LsApplicationTest {
         String result = SUB_DIR + ":" + STRING_NEWLINE +
                 SUB_SUB_DIR + STRING_NEWLINE +
                 STRING_NEWLINE +
-                SUB_DIR+CHAR_FILE_SEP+"subSubDir:" + STRING_NEWLINE +
+                SUB_DIR + CHAR_FILE_SEP + "subSubDir:" + STRING_NEWLINE +
                 TEST_TXT;
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             assertEquals(result, lsApplication.listFolderContent(false, true, SUB_DIR));
         });
     }
@@ -151,9 +153,9 @@ class LsApplicationTest {
     @Test
     void listCwdContentWithWrongCwd() {
         //noinspection NonAtomicOperationOnVolatileField
-        EnvironmentUtils.currentDirectory += CHAR_FILE_SEP+ "none" + CHAR_FILE_SEP;
-        assertThrows(LsException.class, ()->{
-            lsApplication.listFolderContent(false,false);
+        EnvironmentUtils.currentDirectory += CHAR_FILE_SEP + "none" + CHAR_FILE_SEP;
+        assertThrows(LsException.class, () -> {
+            lsApplication.listFolderContent(false, false);
         });
         EnvironmentUtils.currentDirectory = cwd;
     }

@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CdApplicationTest {
 
-    CdInterface cdInterface = new CdApplication();
     private final static String NOT_EXIST = "Not_exist";
+    CdInterface cdInterface = new CdApplication();
     private String currDir;
 
     @BeforeAll

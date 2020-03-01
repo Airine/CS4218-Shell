@@ -41,7 +41,7 @@ public class PipeCommand implements Command {
                 nextOutputStream = new ByteArrayOutputStream();
 
                 callCommand.evaluate(nextInputStream, nextOutputStream);
-                if (i != callCommands.size() ) {
+                if (i != callCommands.size()) {
                     nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray());
                 }
 
@@ -53,7 +53,7 @@ public class PipeCommand implements Command {
                 try {
                     nextInputStream.close();
                     nextOutputStream.close();
-                } catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

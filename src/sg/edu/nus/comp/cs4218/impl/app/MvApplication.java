@@ -52,7 +52,7 @@ public class MvApplication implements MvInterface {
                 if (toMoveFiles.length != 1) {
                     throw new InvalidArgsException(ErrorConstants.ERR_MISSING_ARG);
                 }
-                if(mvArgsParser.isOverwrite()){
+                if (mvArgsParser.isOverwrite()) {
                     new File(destPath).delete();//todo
                 }
                 mvSrcFileToDestFile(toMoveFiles[0], destPath);

@@ -17,7 +17,9 @@ public class ExitApplication implements ExitInterface {
      * @throws ExitException An ExitException
      */
     @Override
-    public void run(String[] args, InputStream stdin, OutputStream stdout) throws ExitException { terminateExecution(); }
+    public void run(String[] args, InputStream stdin, OutputStream stdout) throws ExitException {
+        terminateExecution();
+    }
 
     /**
      * Terminate shell.
@@ -25,5 +27,7 @@ public class ExitApplication implements ExitInterface {
      * @throws ExitException An ExitException
      */
     @Override
-    public void terminateExecution() throws ExitException { System.exit(0); }
+    public void terminateExecution() throws ExitException {
+        System.exit(0);
+    }
 }

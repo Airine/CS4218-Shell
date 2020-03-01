@@ -36,18 +36,18 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testGetNoRedirArgsList(){
+    void testGetNoRedirArgsList() {
         List<String> args = Arrays.asList("a", "b");
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             handler.extractRedirOptions();
             assertEquals(Arrays.asList("a", "b"), handler.getNoRedirArgsList());
         });
     }
 
     @Test
-    void testGetInputStream(){
+    void testGetInputStream() {
         List<String> args = Arrays.asList("c", "d");
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
@@ -55,7 +55,7 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testGetOutputStream(){
+    void testGetOutputStream() {
         List<String> args = Arrays.asList("e", "f");
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
@@ -63,30 +63,34 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testNullArgsList(){
+    void testNullArgsList() {
         List<String> args = null;
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
+        Throwable thrown = assertThrows(ShellException.class, () -> {
+            handler.extractRedirOptions();
+        });
         assertEquals("shell: Invalid syntax", thrown.getMessage());
     }
 
     @Test
-    void testEmptyArgsList(){
+    void testEmptyArgsList() {
         List<String> args = Arrays.asList();
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
+        Throwable thrown = assertThrows(ShellException.class, () -> {
+            handler.extractRedirOptions();
+        });
         assertEquals("shell: Invalid syntax", thrown.getMessage());
     }
 
 
     @Test
-    void testFirstNotRedir(){
+    void testFirstNotRedir() {
         List<String> args = Arrays.asList("g", "<", TestFileUtils.tempFileName1);
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             handler.extractRedirOptions();
             assertEquals(Arrays.asList("g"), handler.getNoRedirArgsList());
 
@@ -101,11 +105,11 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testRedirInput(){
+    void testRedirInput() {
         List<String> args = Arrays.asList("<", TestFileUtils.tempFileName1);
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             handler.extractRedirOptions();
             OutputStream outstream = new FileOutputStream(TestFileUtils.tempFileName1);
             outstream.write(TEST_STRING.getBytes());
@@ -118,11 +122,11 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testRedirOutput(){
+    void testRedirOutput() {
         List<String> args = Arrays.asList(">", TestFileUtils.tempFileName1);
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             handler.extractRedirOptions();
             handler.getOutputStream().write(TEST_STRING.getBytes());
             InputStream instream = new FileInputStream(TestFileUtils.tempFileName1);
@@ -135,38 +139,46 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testTwoRedir(){
+    void testTwoRedir() {
         List<String> args = Arrays.asList("<", "<");
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
+        Throwable thrown = assertThrows(ShellException.class, () -> {
+            handler.extractRedirOptions();
+        });
         assertEquals("shell: Invalid syntax", thrown.getMessage());
     }
 
     @Test
     void testSeveralFileSegment() {
-        List<String> args = Arrays.asList("<", "\"" + TestFileUtils.tempFileName1  + "\"\"" + TestFileUtils.tempFileName2 + "\"");
+        List<String> args = Arrays.asList("<", "\"" + TestFileUtils.tempFileName1 + "\"\"" + TestFileUtils.tempFileName2 + "\"");
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
+        Throwable thrown = assertThrows(ShellException.class, () -> {
+            handler.extractRedirOptions();
+        });
         assertEquals("shell: No such file or directory", thrown.getMessage());
     }
 
     @Test
-    void testMultipleInputStream(){
+    void testMultipleInputStream() {
         List<String> args = Arrays.asList("<", TestFileUtils.tempFileName1, "<", TestFileUtils.tempFileName2);
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
+        Throwable thrown = assertThrows(ShellException.class, () -> {
+            handler.extractRedirOptions();
+        });
         assertEquals("shell: Multiple streams provided", thrown.getMessage());
     }
 
     @Test
-    void testMultipleOutputStream(){
+    void testMultipleOutputStream() {
         List<String> args = Arrays.asList(">", TestFileUtils.tempFileName1, ">", TestFileUtils.tempFileName2);
         ArgumentResolver resolver = new ArgumentResolver();
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        Throwable thrown = assertThrows(ShellException.class, ()->{handler.extractRedirOptions();});
+        Throwable thrown = assertThrows(ShellException.class, () -> {
+            handler.extractRedirOptions();
+        });
         assertEquals("shell: Multiple streams provided", thrown.getMessage());
     }
 }

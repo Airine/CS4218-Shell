@@ -8,7 +8,7 @@ import sg.edu.nus.comp.cs4218.impl.app.*;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_INVALID_APP;
 
 
 public class ApplicationRunner {

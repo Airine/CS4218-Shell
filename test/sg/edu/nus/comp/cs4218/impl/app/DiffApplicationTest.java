@@ -14,10 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DiffApplicationTest {
 
-    DiffInterface diffInterface;
-
     private static String testText1 = "are you ok?";
     private static String testText2 = "are you ook?";
+    DiffInterface diffInterface;
 
     @BeforeAll
     static void startUp() {

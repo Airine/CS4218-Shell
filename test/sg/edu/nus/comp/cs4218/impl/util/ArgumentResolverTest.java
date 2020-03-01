@@ -7,7 +7,8 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ArgumentResolverTest {
     private final ArgumentResolver argumentResolver = new ArgumentResolver();
