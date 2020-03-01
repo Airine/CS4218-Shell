@@ -13,6 +13,7 @@ import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class LsApplicationTest {
 
@@ -67,12 +68,13 @@ class LsApplicationTest {
     @Test
     void runWithMultiArgs() {
         String[] args = {"test.txt", SUB_DIR};
-        String result = "test.txt\n" +
-                        "\n" +
-                        SUB_DIR+":\n" +
-                        "subSubDir\n";
+        String result = "test.txt" + STRING_NEWLINE +
+                STRING_NEWLINE +
+                SUB_DIR+":" + STRING_NEWLINE +
+                "subSubDir" + STRING_NEWLINE;
         assertDoesNotThrow(()->{
             lsApplication.run(args, System.in, outputStream);
+            String a = outputStream.toString();
             assertEquals(result,outputStream.toString());
 
         });
@@ -82,12 +84,12 @@ class LsApplicationTest {
     @Test
     void runWithNonExistFile() {
         String[] args = {"test.txt", SUB_DIR, "none.txt"};
-        String result = "test.txt\n" +
-                        "\n" +
-                        "subDir:\n" +
-                        "subSubDir\n" +
-                        "\n" +
-                        "ls: cannot access 'none.txt': No such file or directory\n";
+        String result = "test.txt" + STRING_NEWLINE +
+                STRING_NEWLINE +
+                SUB_DIR + ":" + STRING_NEWLINE +
+                "subSubDir" + STRING_NEWLINE +
+                STRING_NEWLINE +
+                "ls: cannot access 'none.txt': No such file or directory" + STRING_NEWLINE;
         assertDoesNotThrow(()->{
             lsApplication.run(args, System.in, outputStream);
             assertEquals(result,outputStream.toString());
@@ -113,11 +115,11 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithEmptyFolderName() {
-        String result = "subDir\n" +
-                "subDir1\n" +
-                "subDir2\n" +
-                "test.txt\n" +
-                "test1.txt\n" +
+        String result = SUB_DIR + STRING_NEWLINE +
+                "subDir1" + STRING_NEWLINE +
+                "subDir2" + STRING_NEWLINE +
+                "test.txt" + STRING_NEWLINE +
+                "test1.txt" + STRING_NEWLINE +
                 "test2.txt";
         assertDoesNotThrow(()->{
             assertEquals(result,lsApplication.listFolderContent(false,false));
@@ -127,7 +129,7 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithOnlyFolderFlag() {
-        String result = "subDir:\nsubSubDir";
+        String result = "subDir:" + STRING_NEWLINE+ "subSubDir";
         assertDoesNotThrow(()->{
             assertEquals(result, lsApplication.listFolderContent(true, false, "subDir"));
         });
@@ -135,11 +137,11 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithRecursionFlag() {
-        String result = SUB_DIR+":\n" +
-                        "subSubDir\n" +
-                        "\n" +
-                        "subDir/subSubDir:\n" +
-                        "test.txt";
+        String result = SUB_DIR+":" + STRING_NEWLINE +
+                "subSubDir" + STRING_NEWLINE +
+                STRING_NEWLINE +
+                "subDir"+CHAR_FILE_SEP+"subSubDir:" + STRING_NEWLINE +
+                "test.txt";
         assertDoesNotThrow(()->{
             assertEquals(result, lsApplication.listFolderContent(false, true, "subDir"));
         });
