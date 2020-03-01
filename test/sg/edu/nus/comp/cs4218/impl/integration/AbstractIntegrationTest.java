@@ -42,7 +42,9 @@ public abstract class AbstractIntegrationTest {
         TestFileUtils.rmCreatedFiles();
     }
 
-    /** App will change directory to this path and run relative test
+    /**
+     * App will change directory to this path and run relative test
+     *
      * @return the integration test path
      */
     abstract String getIntegrationDir();
@@ -59,7 +61,7 @@ public abstract class AbstractIntegrationTest {
             e.printStackTrace();
         }
         shell = new ShellImpl();
-        originalCwd = EnvironmentUtils.currentDirectory;;
+        originalCwd = EnvironmentUtils.currentDirectory;
         EnvironmentUtils.currentDirectory = FileSystemUtils.getAbsolutePathName(getIntegrationDir());
     }
 
@@ -74,13 +76,6 @@ public abstract class AbstractIntegrationTest {
             e.printStackTrace();
         }
         EnvironmentUtils.currentDirectory = originalCwd;
-    }
-
-    @Test
-    void testSimpleCommand() {
-        String command = "echo pwd";
-        Assertions.assertDoesNotThrow(() -> shell.parseAndEvaluate(command, ioStream.outputStream));
-        assertEquals("pwd", ioStream.outputStream.toString());
     }
 
     /**
@@ -120,6 +115,7 @@ public abstract class AbstractIntegrationTest {
             }
             File testStd = map.get(outFileName);
             try (NewIOStream ioStream = new NewIOStream(testFile.getAbsolutePath())) {
+                this.outputStream.println("Start testing:" + testFile.getName());
                 buildTestSuit(ioStream.inputStream, ioStream.outputStream);
                 validResult(testStd.getAbsolutePath(), ioStream.outputStream);
             } catch (IOException e) {
@@ -142,7 +138,8 @@ public abstract class AbstractIntegrationTest {
 
             char[] buf = new char[1024];
             int len = reader.read(buf);
-            assertEquals(new String(buf, 0, len), outputStream.toString(), "for test:" + stdOutPath);
+            String expect = len < 0 ? "" : new String(buf, 0, len);
+            assertEquals(expect, outputStream.toString(), "for test:" + stdOutPath);
             assertEquals(-1, reader.read(), "this stand output exceed 1024 bytes");
         }
     }
