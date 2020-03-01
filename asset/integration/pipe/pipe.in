@@ -1,2 +1,2 @@
 sort sort_test.txt
-echo "hello world" | wc
+echo "hello world" | cut -c 1-8
