@@ -51,8 +51,8 @@ class RegexArgumentTest {
 
     @Test
     void testMergeRegex() {
-        RegexArgument regexArgumentTarget = new RegexArgument();
-        regexArgument.merge(regexArgumentTarget);
+        RegexArgument argument = new RegexArgument();
+        regexArgument.merge(argument);
         assertEquals(HELLO, regexArgument.toString());
         assertEquals(Pattern.quote(HELLO), regexArgument.getRegex());
     }
