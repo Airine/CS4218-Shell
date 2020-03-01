@@ -112,7 +112,7 @@ execute this command in the root directory:
 
 4. Create unit test cases for `GrepApplication` -100% coverage
 
-5. InCommandBuilder, when parse args with ";", it do not reinstate tocken `token = new LinkedList<>();`,
+5. InCommandBuilder, when parse args with ";", it do not reinstate token `token = new LinkedList<>();`,
 this is a bug of original code. 
 
 ## 2020-3-1
