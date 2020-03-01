@@ -33,7 +33,6 @@ public final class FileSystemUtils {
     }
 
 
-
     public static String joinPath(String... fileFolderName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(fileFolderName[0]);
@@ -46,7 +45,7 @@ public final class FileSystemUtils {
     public static void createFile(String tempFileName) throws Exception {
         File file = new File(tempFileName);
         if (file.exists()) {
-            throw new Exception("test terminated, this test file already exist!" + tempFileName);
+            throw new Exception("This test file already exist!" + tempFileName);
         } else {
             if (!file.createNewFile()) {
                 throw new Exception("create file failed");
@@ -64,6 +63,10 @@ public final class FileSystemUtils {
         String home = System.getProperty("user.home").trim();
         String currentDir = EnvironmentUtils.currentDirectory.trim();
         String convertedPath = convertPathToSystemPath(fileName);
+// check whether is has been absolute path
+        if (Paths.get(convertedPath).isAbsolute()) {
+            return convertedPath;
+        }
 
         String newPath;
         if (convertedPath.length() >= home.length() && convertedPath.substring(0, home.length()).trim().equals(home)) {

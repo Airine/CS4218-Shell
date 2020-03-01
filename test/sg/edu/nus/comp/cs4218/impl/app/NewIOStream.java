@@ -10,13 +10,13 @@ import java.io.OutputStream;
 
 public class NewIOStream implements Closeable {
 
-    public final InputStream in;
-    public final OutputStream out;
+    public final InputStream inputStream;
+    public final OutputStream outputStream;
 
     public NewIOStream(String fileIn, String fileOut) throws IOException {
         try {
-            in = IOUtils.openInputStream(fileIn);
-            out = IOUtils.openOutputStream(fileOut);
+            inputStream = IOUtils.openInputStream(fileIn);
+            outputStream = IOUtils.openOutputStream(fileOut);
         } catch (ShellException e) {
             throw (IOException) new IOException(e.getMessage()).initCause(e);
         }
@@ -25,8 +25,8 @@ public class NewIOStream implements Closeable {
     @Override
     public void close() throws IOException {
         try {
-            IOUtils.closeInputStream(in);
-            IOUtils.closeOutputStream(out);
+            IOUtils.closeInputStream(inputStream);
+            IOUtils.closeOutputStream(outputStream);
         } catch (ShellException e) {
             e.printStackTrace();
         }

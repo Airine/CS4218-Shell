@@ -128,47 +128,48 @@ public class CutApplication implements CutInterface {
         try {
             stdout.write(output.toString().getBytes());
         } catch (IOException e) {
-            throw new CutException(ERR_WRITE_STREAM);//NOPMD
+            throw (CutException) new CutException(ERR_WRITE_STREAM).initCause(e);
         }
     }
 
+
     private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws Exception {
-        if (isCharPo){
-            for (int i=0; i<lines.size(); i++){
+        if (isCharPo) {
+            for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
-                if (endIdx>line.length()){
+                if (endIdx > line.length()) {
                     throw new Exception(ERR_OUT_RANGE);
                 }
-                if (isRange){
-                    lines.set(i, line.substring(startIdx-1, endIdx));
+                if (isRange) {
+                    lines.set(i, line.substring(startIdx - 1, endIdx));
                     continue;
                 }
-                if (endIdx == 0){
-                    lines.set(i, line.substring(startIdx-1, startIdx));
+                if (endIdx == 0) {
+                    lines.set(i, line.substring(startIdx - 1, startIdx));
                     continue;
                 }
-                lines.set(i, line.substring(startIdx-1, startIdx)+line.substring(endIdx-1, endIdx));
+                lines.set(i, line.substring(startIdx - 1, startIdx) + line.substring(endIdx - 1, endIdx));
             }
-        } else if (isBytePo){
-            for (int i=0; i<lines.size(); i++){
+        } else if (isBytePo) {
+            for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 byte[] byteArray = line.getBytes();
-                if (endIdx>byteArray.length){
+                if (endIdx > byteArray.length) {
                     throw new Exception(ERR_OUT_RANGE);
                 }
-                if (isRange){
-                    byte[] byteArrayNew = Arrays.copyOfRange(byteArray, startIdx-1, endIdx);
+                if (isRange) {
+                    byte[] byteArrayNew = Arrays.copyOfRange(byteArray, startIdx - 1, endIdx);
                     lines.set(i, new String(byteArrayNew));
                     continue;
                 }
-                if (endIdx == 0){
-                    byte[] byteArrayNew = Arrays.copyOfRange(byteArray, startIdx-1, startIdx);
+                if (endIdx == 0) {
+                    byte[] byteArrayNew = Arrays.copyOfRange(byteArray, startIdx - 1, startIdx);
                     lines.set(i, new String(byteArrayNew));
                     continue;
                 }
-                byte[] byteArrayNew1 = Arrays.copyOfRange(byteArray, startIdx-1, startIdx);
-                byte[] byteArrayNew2 = Arrays.copyOfRange(byteArray, endIdx-1, endIdx);
-                lines.set(i, new String(byteArrayNew1)+new String(byteArrayNew2));
+                byte[] byteArrayNew1 = Arrays.copyOfRange(byteArray, startIdx - 1, startIdx);
+                byte[] byteArrayNew2 = Arrays.copyOfRange(byteArray, endIdx - 1, endIdx);
+                lines.set(i, new String(byteArrayNew1) + new String(byteArrayNew2));
             }
         }
     }

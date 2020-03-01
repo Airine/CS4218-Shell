@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MvApplicationTest {
 
-    private MvInterface mvInterface = new MvApplication();
+    private final MvInterface mvInterface = new MvApplication();
 
     @BeforeEach
     void setUp() {
@@ -72,9 +72,9 @@ class MvApplicationTest {
     void runMvNotArgument() {
         String[] args = {};
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName1, TestFileUtils.tempFileName1)) {
-            assertTrue(ioStream.in.read() < 0);
-            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.out));
-            assertTrue(ioStream.in.read() > 0);
+            assertTrue(ioStream.inputStream.read() < 0);
+            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.outputStream));
+            assertTrue(ioStream.inputStream.read() > 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,9 +84,9 @@ class MvApplicationTest {
     void runMvWithOneArgument() {
         String[] args = {TestFileUtils.tempFolderName};
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName1, TestFileUtils.tempFileName1)) {
-            assertTrue(ioStream.in.read() < 0);
-            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.out));
-            assertTrue(ioStream.in.read() > 0);
+            assertTrue(ioStream.inputStream.read() < 0);
+            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.outputStream));
+            assertTrue(ioStream.inputStream.read() > 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,9 +96,9 @@ class MvApplicationTest {
     void runMvMultipleFileToFile() {
         String[] args = {TestFileUtils.tempFolderName, TestFileUtils.tempFileName1, TestFileUtils.tempFileName2};
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName1, TestFileUtils.tempFileName1)) {
-            assertTrue(ioStream.in.read() < 0);
-            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.out));
-            assertTrue(ioStream.in.read() > 0);
+            assertTrue(ioStream.inputStream.read() < 0);
+            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.outputStream));
+            assertTrue(ioStream.inputStream.read() > 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,8 +109,8 @@ class MvApplicationTest {
     void runMvWriteCloseStream() {
         String[] args = {TestFileUtils.tempFolderName};
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName1, TestFileUtils.tempFileName1)) {
-            ioStream.out.close();
-            assertThrows(MvException.class, () -> mvInterface.run(args, System.in, ioStream.out));
+            ioStream.outputStream.close();
+            assertThrows(MvException.class, () -> mvInterface.run(args, System.in, ioStream.outputStream));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,9 +141,9 @@ class MvApplicationTest {
         String[] args = {TestFileUtils.emptyFolderName, destPathName};
 
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName1, TestFileUtils.tempFileName1)) {
-            assertTrue(ioStream.in.read() < 0);
-            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.out));
-            assertTrue(ioStream.in.read() > 0);
+            assertTrue(ioStream.inputStream.read() < 0);
+            assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.outputStream));
+            assertTrue(ioStream.inputStream.read() > 0);
         } catch (IOException e) {
             e.printStackTrace();
         }

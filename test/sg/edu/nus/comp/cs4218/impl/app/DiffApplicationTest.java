@@ -27,7 +27,7 @@ public class DiffApplicationTest {
             writeSomethingToFile(TestFileUtils.tempFileName2, testText2);
 
             writeSomethingToFile(TestFileUtils.tempFileInFolder, testText1);
-            writeSomethingToFile(TestFileUtils.tempFileInBackFolder, testText1);
+            writeSomethingToFile(TestFileUtils.tempFileInFolder2, testText1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,7 +35,8 @@ public class DiffApplicationTest {
 
     private static void writeSomethingToFile(String fileName, String strs) throws IOException {
         try {
-            OutputStream outputStream = IOUtils.openOutputStream(TestFileUtils.tempFileName1);
+//            specific method to close this output stream
+            OutputStream outputStream = IOUtils.openOutputStream(TestFileUtils.tempFileName1);//NOPMD
             outputStream.write(strs.getBytes());
             IOUtils.closeOutputStream(outputStream);
         } catch (ShellException e) {
@@ -79,7 +80,7 @@ public class DiffApplicationTest {
         assertThrows(Exception.class, () -> diffInterface.diffTwoDir(TestFileUtils.tempFolderName, TestFileUtils.notExistFile,
                 false, false, false));
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName2, TestFileUtils.tempFileName2)) {
-            assertThrows(Exception.class, () -> diffInterface.diffFileAndStdin(TestFileUtils.notExistFile, ioStream.in,
+            assertThrows(Exception.class, () -> diffInterface.diffFileAndStdin(TestFileUtils.notExistFile, ioStream.inputStream,
                     false, false, false));
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,7 +99,7 @@ public class DiffApplicationTest {
     @Test
     void testIdentityFolder() {
         final String[] diff = new String[1];
-        assertDoesNotThrow(() -> diff[0] = diffInterface.diffTwoDir(TestFileUtils.tempFolderName, TestFileUtils.tempBackFolderName,
+        assertDoesNotThrow(() -> diff[0] = diffInterface.diffTwoDir(TestFileUtils.tempFolderName, TestFileUtils.tempFolderName2,
                 false, false, false));
         assertTrue(StringUtils.isBlank(diff[0]));
     }
@@ -162,7 +163,7 @@ public class DiffApplicationTest {
     @Test
     void testRunWithStdin() {
         String[] args = {TestFileUtils.tempFileName1, "-"};
-        InputStream inputStream = new ByteArrayInputStream((testText1+ "\n     ").getBytes());
+        InputStream inputStream = new ByteArrayInputStream((testText1 + "\n     ").getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> diffInterface.run(args, inputStream, outputStream));
         assertFalse(StringUtils.isBlank(outputStream.toString()));
@@ -176,7 +177,7 @@ public class DiffApplicationTest {
     @Test
     void testRunWithStdinAndFlag() {
         String[] args = {"-B", TestFileUtils.tempFileName1, "-"};
-        InputStream inputStream = new ByteArrayInputStream((testText1+ "\n     ").getBytes());
+        InputStream inputStream = new ByteArrayInputStream((testText1 + "\n     ").getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> diffInterface.run(args, inputStream, outputStream));
         assertTrue(StringUtils.isBlank(outputStream.toString()));

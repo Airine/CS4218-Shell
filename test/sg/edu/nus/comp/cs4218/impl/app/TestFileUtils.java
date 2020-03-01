@@ -13,8 +13,8 @@ final public class TestFileUtils {
     public static String tempFolderName = FileSystemUtils.joinPath(currTestDir, "test-folder");
     public static String tempFileInFolder = FileSystemUtils.joinPath(currTestDir, "test-folder/test.cc");
 
-    public static String tempBackFolderName = FileSystemUtils.joinPath(currTestDir, "test-folder2");
-    public static String tempFileInBackFolder = FileSystemUtils.joinPath(currTestDir, "test-folder2/test2.cc");
+    public static String tempFolderName2 = FileSystemUtils.joinPath(currTestDir, "test-folder2");
+    public static String tempFileInFolder2 = FileSystemUtils.joinPath(currTestDir, "test-folder2/test2.cc");
 
     public static String emptyFolderName = FileSystemUtils.joinPath(currTestDir, "emptyFolder");
     public static String notExistFile = FileSystemUtils.joinPath(currTestDir, "not-exist");
@@ -40,11 +40,11 @@ final public class TestFileUtils {
         }
         FileSystemUtils.createFile(tempFileInFolder);
 
-        File folder2 = new File(tempBackFolderName);
+        File folder2 = new File(tempFolderName2);
         if (!folder2.exists()) {
             folder2.mkdirs();
         }
-        FileSystemUtils.createFile(tempFileInBackFolder);
+        FileSystemUtils.createFile(tempFileInFolder2);
     }
 
 

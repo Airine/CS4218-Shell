@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
 import java.io.File;
@@ -85,11 +84,7 @@ class CpApplicationTest {
     @Test
     public void runCpFolderToFile() {
         String[] args = {TestFileUtils.emptyFolderName, TestFileUtils.tempFileName1};
-        try {
-            cpInterface.run(args, System.in, System.out);
-        } catch (AbstractApplicationException e) {
-            e.printStackTrace();
-        }
+        assertDoesNotThrow(() -> cpInterface.run(args, System.in, System.out));
         assertFalse(new File(TestFileUtils.tempFileName1).isDirectory());
     }
 
