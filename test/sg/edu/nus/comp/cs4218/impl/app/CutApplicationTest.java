@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.CutInterface;
 import sg.edu.nus.comp.cs4218.exception.CutException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
@@ -168,7 +165,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testSortWithNullIStream() {
+    void testCutWithNullIStream() {
         Throwable thrown = assertThrows(CutException.class, () -> {
             app.cutFromStdin(false, false, false, 1, 8, null);
         });
@@ -176,7 +173,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testSortWithNotExistFileName() {
+    void testCutWithNotExistFileName() {
         Throwable thrown = assertThrows(CutException.class, () -> {
             app.cutFromFiles(false, false, false, 1, 8, folderName+CHAR_FILE_SEP+fileNameNotExist);
         });
@@ -184,7 +181,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testSortWithNullFileName() {
+    void testCutWithNullFileName() {
         Throwable thrown = assertThrows(CutException.class, () -> {
             app.cutFromFiles(false, false, false, 1, 8, null);
         });
@@ -192,7 +189,7 @@ class CutApplicationTest {
     }
 
     @Test
-    void testSortWithDirectoryName() {
+    void testCutWithDirectoryName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.cutFromFiles(false, false, false, 1, 8, folderName+CHAR_FILE_SEP+subDirName);
         });

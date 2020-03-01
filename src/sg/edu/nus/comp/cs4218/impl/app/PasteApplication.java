@@ -111,6 +111,8 @@ public class PasteApplication implements PasteInterface {
 
                 if (file.isDirectory()) { throw new PasteException(ERR_IS_DIR); }
 
+                if (!file.canRead()) { throw new PasteException(ERR_NO_PERM); }
+
                 readers[i] = new BufferedReader(new FileReader(path));
             }
             String line;

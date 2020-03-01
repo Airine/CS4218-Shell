@@ -108,11 +108,12 @@ class WcApplicationTest {
     void countFromNoPermission() {
         String result = "wc: " + ERR_NO_PERM;
         File no_perm_file = new File(NO_PERMISSION);
-        assertTrue(no_perm_file.setReadable(false));
-        assertDoesNotThrow(()->{
-            assertEquals(result, wcApplication.countFromFiles(true, true, true, NO_PERMISSION));
-        });
-        assertTrue(no_perm_file.setReadable(true));
+        if(no_perm_file.setReadable(false)){
+            assertDoesNotThrow(()->{
+                assertEquals(result, wcApplication.countFromFiles(true, true, true, NO_PERMISSION));
+            });
+            assertTrue(no_perm_file.setReadable(true));
+        }
     }
 
     @Test
