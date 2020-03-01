@@ -5,11 +5,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.ExitInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 
 import java.security.Permission;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExitApplicationTest {
 
@@ -35,6 +35,15 @@ class ExitApplicationTest {
         } catch (AbstractApplicationException e) {
             fail(e);
         }
+    }
+
+    @Test
+    void testExitUseRunApp() {
+        ApplicationRunner applicationRunner = new ApplicationRunner();
+        TestExitException exitException = assertThrows(TestExitException.class ,() -> {
+            applicationRunner.runApp("exit", (String[]) null, System.in, System.out);
+        });
+        assertEquals(0, exitException.status, "Exit status");
     }
 
     protected static class TestExitException extends SecurityException {
