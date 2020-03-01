@@ -117,3 +117,6 @@ project progress.
 1. Create unit test cases for `IORedirectionHandler` -93% coverage, need information about `RegexArgument` to cover the rest.
 
 2. Create unit test cases for `GrepApplication` -100% coverage
+
+3. InCommandBuilder, when parse args with ";", it do not reinstate tocken `token = new LinkedList<>();`,
+this is a bug of original code. 
