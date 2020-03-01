@@ -38,7 +38,11 @@ public class PipeCommand implements Command {
             }
 
             try {
-                nextOutputStream = new ByteArrayOutputStream();
+                if (i < callCommands.size() - 1) {
+                    nextOutputStream = new ByteArrayOutputStream();
+                } else {
+                    nextOutputStream = stdout;
+                }
 
                 callCommand.evaluate(nextInputStream, nextOutputStream);
                 if (i != callCommands.size()) {

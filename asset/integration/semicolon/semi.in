@@ -1,0 +1,2 @@
+echo "pwd"; echo "test"
+ls
