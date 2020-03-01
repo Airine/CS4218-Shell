@@ -1,4 +1,4 @@
-package sg.edu.nus.comp.cs4218.impl.app;
+package ef1;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.DiffInterface;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.app.NewIOStream;
+import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
@@ -16,10 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @Disabled
 public class DiffApplicationTest {
 
-    DiffInterface diffInterface;
-
     private static String testText1 = "are you ok?";
     private static String testText2 = "are you ook?";
+    DiffInterface diffInterface;
 
     @BeforeAll
     static void startUp() {

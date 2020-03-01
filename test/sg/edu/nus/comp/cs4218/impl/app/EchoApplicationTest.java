@@ -6,12 +6,9 @@ import sg.edu.nus.comp.cs4218.exception.EchoException;
 
 import java.io.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
-
-
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class EchoApplicationTest {
 
@@ -23,7 +20,7 @@ class EchoApplicationTest {
     @Test
     void testConstructResultCharInput() {
         String[] args = {"abcdefghijklmnopqrstuvwxyz"};
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             String result = echoApp.constructResult(args);
             assertEquals("abcdefghijklmnopqrstuvwxyz", result);
         });
@@ -33,7 +30,7 @@ class EchoApplicationTest {
     @Test
     void testConstructResultNumInput() {
         String[] args = {"1234567890"};
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             String result = echoApp.constructResult(args);
             assertEquals("1234567890", result);
         });
@@ -42,7 +39,7 @@ class EchoApplicationTest {
     @Test
     void testConstructResultSpaceInput() {
         String[] args = {"   "};
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             String result = echoApp.constructResult(args);
             assertEquals("   ", result);
         });
@@ -51,7 +48,7 @@ class EchoApplicationTest {
     @Test
     void testConstructResultMultipleInput() {
         String[] args = {"abc", "123", "  "};
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             String result = echoApp.constructResult(args);
             assertEquals("abc 123   ", result);
         });
@@ -60,7 +57,7 @@ class EchoApplicationTest {
     @Test
     void testConstructResultEmptyInput() {
         String[] args = {};
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             String result = echoApp.constructResult(args);
             assertEquals(STRING_NEWLINE, result);
         });
@@ -69,7 +66,7 @@ class EchoApplicationTest {
     @Test
     void testConstructResultSymbolInput() {
         String[] args = {"!@#$%^&*()_+-={}[]:\";'|\\<>?,./~`"};
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             String result = echoApp.constructResult(args);
             assertEquals("!@#$%^&*()_+-={}[]:\";'|\\<>?,./~`", result);
         });
@@ -78,14 +75,14 @@ class EchoApplicationTest {
     @Test
     void testConstructResultNullInput() {
         String[] args = null;
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             Throwable thrown = assertThrows(EchoException.class, () -> echoApp.constructResult(args));
             assertEquals("echo: " + ERR_NULL_ARGS, thrown.getMessage());
         });
     }
 
     @Test
-    void testRunNoOutStream(){
+    void testRunNoOutStream() {
         String[] args = {"aaa"};
         Throwable thrown = assertThrows(EchoException.class, () -> echoApp.run(args, System.in, null));
         assertEquals("echo: " + ERR_NO_OSTREAM, thrown.getMessage());
@@ -94,7 +91,7 @@ class EchoApplicationTest {
     @Test
     void testRunIOException() throws IOException {
         String[] args = {"aaa"};
-        try(OutputStream outputStream = new PipedOutputStream()) {
+        try (OutputStream outputStream = new PipedOutputStream()) {
             outputStream.close();
             Throwable thrown = assertThrows(EchoException.class, () -> echoApp.run(args, System.in, outputStream));
             assertEquals("echo: " + ERR_IO_EXCEPTION, thrown.getMessage());

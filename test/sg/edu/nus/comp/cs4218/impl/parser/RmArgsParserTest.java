@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class RmArgsParserTest {
-    private RmArgsParser parser;
     private final String[] recursiveArgs = {"-r", "test1", "test2.txt"};//NOPMD
     private final String[] emptyFolderArgs = {"-d", "test1", "test2.txt"};
+    private RmArgsParser parser;
 
     @BeforeEach
     public void setUp() {

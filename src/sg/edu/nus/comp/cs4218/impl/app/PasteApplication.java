@@ -102,14 +102,24 @@ public class PasteApplication implements PasteInterface {
         BufferedReader[] readers = new BufferedReader[fileName.length];
         try {
             for (int i = 0; i < fileName.length; i++) {
-                if (fileName[i] == null) { throw new PasteException(ERR_NULL_ARGS); }
+                if (fileName[i] == null) {
+                    throw new PasteException(ERR_NULL_ARGS);
+                }
 
                 String path = convertToAbsolutePath(fileName[i]);
                 File file = new File(path);
 
-                if (!file.exists()) { throw new PasteException(ERR_FILE_NOT_FOUND); }
+                if (!file.exists()) {
+                    throw new PasteException(ERR_FILE_NOT_FOUND);
+                }
 
-                if (file.isDirectory()) { throw new PasteException(ERR_IS_DIR); }
+                if (file.isDirectory()) {
+                    throw new PasteException(ERR_IS_DIR);
+                }
+
+                if (!file.canRead()) {
+                    throw new PasteException(ERR_NO_PERM);
+                }
 
                 readers[i] = new BufferedReader(new FileReader(path));
             }
@@ -125,7 +135,7 @@ public class PasteApplication implements PasteInterface {
 
             for (BufferedReader reader : readers) reader.close();//NOPMD
 
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new PasteException(ERR_IO_EXCEPTION);//NOPMD
         }
         return output.toString();
@@ -146,7 +156,7 @@ public class PasteApplication implements PasteInterface {
         String[] fileLines = mergeFileResult.split(STRING_NEWLINE);
         int numResultLines = Math.max(stdinLines.length, fileLines.length);
         StringBuilder output = new StringBuilder();
-        for(int i = 0; i < numResultLines; i++) {
+        for (int i = 0; i < numResultLines; i++) {
             if (i < stdinLines.length) {
                 output.append(stdinLines[i].trim());
             }
@@ -159,7 +169,13 @@ public class PasteApplication implements PasteInterface {
         return output.toString();
     }
 
-    /* Algorithm to merge files */
+
+    /**
+     * @param fileNumber    number of files to merge
+     * @param readers       BufferReader list of all files
+     * @param output        result of merge
+     * @throws IOException
+     */
     private void mergeAlgorithm(int fileNumber, BufferedReader[] readers, StringBuilder output) throws IOException {
         String line;
         int unfinished;

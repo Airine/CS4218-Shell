@@ -1,16 +1,18 @@
-package sg.edu.nus.comp.cs4218.impl.app;
+package ef1;
 
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.CdInterface;
 import sg.edu.nus.comp.cs4218.exception.CdException;
+import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
+import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CdApplicationTest {
 
-    CdInterface cdInterface = new CdApplication();
     private final static String NOT_EXIST = "Not_exist";
+    CdInterface cdInterface = new CdApplication();
     private String currDir;
 
     @BeforeAll

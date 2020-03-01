@@ -1,6 +1,5 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.FindInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.FindException;
@@ -15,11 +14,9 @@ import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
-
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FLAG_PREFIX;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_OSTREAM;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 
 public class FindApplication implements FindInterface {
     public static final String FILE_IDENT = CHAR_FLAG_PREFIX + "name";
@@ -37,9 +34,8 @@ public class FindApplication implements FindInterface {
      * @param args   Array of arguments for the application. Each array element can be a folder name, flag or filename.
      * @param stdin  An InputStream, not used.
      * @param stdout An OutputStream. The output of the command is written to this OutputStream.
-     *
      * @throws FindException If the folder(s)/filename specified do not exist or are unreadable or
-     * invalid arguments are given.
+     *                       invalid arguments are given.
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
@@ -74,6 +70,7 @@ public class FindApplication implements FindInterface {
 
     /**
      * Get folder names and filename supplied by user.
+     *
      * @param args supplied by user.
      * @return a String of the regex of filename if specified by user, else returns an empty string
      */
@@ -114,6 +111,7 @@ public class FindApplication implements FindInterface {
 
     /**
      * Converts file name provided by user into regular expression format.
+     *
      * @param fileName supplied by user
      * @return a String the fileName in regular expression format
      */
@@ -149,8 +147,8 @@ public class FindApplication implements FindInterface {
      *
      * @param fileName   String of a regular expression of the file name
      * @param folderName Array of String of given folder/folders' name
-     * @throws Exception
      * @return the string listing the names of the matched file/folder in the folders specified
+     * @throws Exception
      */
     private String findInFolders(String fileName, String... folderName) throws Exception {
         ArrayList<String> listOfFileNames;
@@ -204,9 +202,10 @@ public class FindApplication implements FindInterface {
     /**
      * Sorts the listOfFileNames and listOfFolder Names in alphabetical order and format the files/folders
      * into the required format.
-     * @param filePattern regex pattern of specified file, if isFindingFile is true
+     *
+     * @param filePattern     regex pattern of specified file, if isFindingFile is true
      * @param listOfFileNames unsorted list of file names
-     * @param folderName subpath from pwd
+     * @param folderName      subpath from pwd
      * @return string of all or specified file name(s) concatenated and delimited by a new line character
      */
     private String formatResult(Pattern filePattern, ArrayList<String> listOfFileNames, String folderName) {
@@ -225,6 +224,7 @@ public class FindApplication implements FindInterface {
 
     /**
      * Pre-condition: currFolder exists
+     *
      * @param currFolder the folder to list all files
      * @return an ArrayList<String> containing all the file names
      */
@@ -244,6 +244,7 @@ public class FindApplication implements FindInterface {
 
     /**
      * Pre-condition: currFolder exists
+     *
      * @param currFolder the folder to list all folders
      * @return an ArrayList<String> containing all the folder names
      */
@@ -263,8 +264,9 @@ public class FindApplication implements FindInterface {
 
     /**
      * Update folder names to include entire subpath from pwd
+     *
      * @param listOfFolderNames folder names to be updated
-     * @param path subpath from pwd
+     * @param path              subpath from pwd
      * @return String array containing updated paths
      */
     private String[] updatePath(ArrayList<String> listOfFolderNames, String path) {

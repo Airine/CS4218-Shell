@@ -17,13 +17,13 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class SedApplicationTest {
 
-    private final SedInterface app = new SedApplication();
-    private OutputStream outputStream = null;
-    private static String folderName = "asset"+CHAR_FILE_SEP+"app"+CHAR_FILE_SEP+"common";
+    private static String folderName = "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "common";
     private static String fileNameA = "A.txt";
     private static String subDirName = "subDir";
     private static String fileNameNotExist = "notExist.txt";
     private static String sedPrefix = "sed: ";
+    private final SedInterface app = new SedApplication();
+    private OutputStream outputStream = null;
 
     @Test
     void testReplaceEmptyCharater() throws Exception {
@@ -195,7 +195,7 @@ class SedApplicationTest {
     }
 
     @Test
-    void testReplaceParenthesesCharater(){
+    void testReplaceParenthesesCharater() {
         String original = "abcabcde";
         String pattern = "(abc)+";
         String replacement = "a";
@@ -222,7 +222,7 @@ class SedApplicationTest {
     void testRunWithoutSpecifiedFile() {
         String[] args = {"s/a/b/"};
         String original = "abcd";
-        String expectResult = "bbcd"+STRING_NEWLINE;
+        String expectResult = "bbcd" + STRING_NEWLINE;
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
@@ -233,8 +233,8 @@ class SedApplicationTest {
 
     @Test
     void testRunWithFiles() {
-        String[] args = {"s/A/a/", folderName+CHAR_FILE_SEP+fileNameA};
-        String expectResult = "a"+STRING_NEWLINE+"B"+STRING_NEWLINE+"C"+STRING_NEWLINE+"D"+STRING_NEWLINE;
+        String[] args = {"s/A/a/", folderName + CHAR_FILE_SEP + fileNameA};
+        String expectResult = "a" + STRING_NEWLINE + "B" + STRING_NEWLINE + "C" + STRING_NEWLINE + "D" + STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, System.in, outputStream);
@@ -249,7 +249,7 @@ class SedApplicationTest {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.run(args, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), sedPrefix+ERR_NO_REP_RULE);
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_NO_REP_RULE);
     }
 
     @Test
@@ -259,7 +259,7 @@ class SedApplicationTest {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.run(args, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REP_RULE);
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_INVALID_REP_RULE);
     }
 
     @Test
@@ -269,7 +269,7 @@ class SedApplicationTest {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.run(args, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REP_RULE);
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_INVALID_REP_RULE);
     }
 
     @Test
@@ -279,7 +279,7 @@ class SedApplicationTest {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.run(args, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REP_X);
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_INVALID_REP_X);
     }
 
     @Test
@@ -289,7 +289,7 @@ class SedApplicationTest {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.run(args, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), sedPrefix+ERR_EMPTY_REGEX);
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_EMPTY_REGEX);
     }
 
     @Test
@@ -299,7 +299,7 @@ class SedApplicationTest {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.run(args, System.in, outputStream);
         });
-        assertEquals(thrown.getMessage(), sedPrefix+ERR_INVALID_REGEX);
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_INVALID_REGEX);
     }
 
     @Test
@@ -313,7 +313,7 @@ class SedApplicationTest {
     @Test
     void testReplaceInNotExistFileName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.replaceSubstringInFile("", "", 1, folderName+CHAR_FILE_SEP+fileNameNotExist);
+            app.replaceSubstringInFile("", "", 1, folderName + CHAR_FILE_SEP + fileNameNotExist);
         });
         assertEquals(thrown.getMessage(), ERR_FILE_NOT_FOUND);
     }
@@ -321,7 +321,7 @@ class SedApplicationTest {
     @Test
     void testReplaceInNullFileName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.replaceSubstringInFile("", "", 1,  null);
+            app.replaceSubstringInFile("", "", 1, null);
         });
         assertEquals(thrown.getMessage(), ERR_NULL_ARGS);
     }
@@ -329,7 +329,7 @@ class SedApplicationTest {
     @Test
     void testReplaceInDirectory() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.replaceSubstringInFile("", "", 1, folderName+CHAR_FILE_SEP+subDirName);
+            app.replaceSubstringInFile("", "", 1, folderName + CHAR_FILE_SEP + subDirName);
         });
         assertEquals(thrown.getMessage(), ERR_IS_DIR);
     }

@@ -1,6 +1,8 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 import java.io.*;
@@ -14,7 +16,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class IOUtilsTest {
 
-    private final static String TEST_TXT ="test.txt";
+    private final static String TEST_TXT = "test.txt";
     private final static String NULL_TXT = "null/null.txt";
     private final static String NONE_TXT = "null/none.txt";
 
@@ -22,8 +24,8 @@ class IOUtilsTest {
     void setUp() {
         try {
             FileSystemUtils.createFile(TEST_TXT);
-            try(OutputStream fileOutputStream = openOutputStream(TEST_TXT);
-                Writer writer = new OutputStreamWriter(fileOutputStream)){
+            try (OutputStream fileOutputStream = openOutputStream(TEST_TXT);
+                 Writer writer = new OutputStreamWriter(fileOutputStream)) {
                 writer.write("hello\nworld");
             }
         } catch (Exception e) {
@@ -34,27 +36,35 @@ class IOUtilsTest {
 
     @Test
     void openInputStreamFromExistFile() {
-        assertDoesNotThrow(()->{ openInputStream(TEST_TXT); });
+        assertDoesNotThrow(() -> {
+            openInputStream(TEST_TXT);
+        });
     }
 
     @Test
     void openInputStreamFromNotExistFile() {
-        assertThrows(ShellException.class,()->{ openInputStream(NULL_TXT); });
+        assertThrows(ShellException.class, () -> {
+            openInputStream(NULL_TXT);
+        });
     }
 
     @Test
     void openOutputStreamFromExistFile() {
-        assertDoesNotThrow(()->{ openOutputStream(TEST_TXT); });
+        assertDoesNotThrow(() -> {
+            openOutputStream(TEST_TXT);
+        });
     }
 
     @Test
     void openOutputStreamFromNotExistFile() {
-        assertThrows(ShellException.class,()->{ openOutputStream(NONE_TXT); });
+        assertThrows(ShellException.class, () -> {
+            openOutputStream(NONE_TXT);
+        });
     }
 
     @Test
     void closeSystemIn() {
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             closeInputStream(System.in);
             return System.in.available();
         });
@@ -62,7 +72,7 @@ class IOUtilsTest {
 
     @Test
     void closeSystemOut() {
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             closeOutputStream(System.out);
             System.out.print("");
         });
@@ -70,57 +80,57 @@ class IOUtilsTest {
 
     @Test
     void closeNullIn() {
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             closeInputStream(null);
         });
     }
 
     @Test
     void closeNullOut() {
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             closeOutputStream(null);
         });
     }
 
     @Test
     void closeNormalInputStream() {
-        assertDoesNotThrow(()-> {
+        assertDoesNotThrow(() -> {
             closeInputStream(openInputStream(TEST_TXT));
         });
     }
 
     @Test
     void closeNormalOutputStream() {
-        assertDoesNotThrow(()-> {
+        assertDoesNotThrow(() -> {
             closeOutputStream(openOutputStream(TEST_TXT));
         });
     }
 
     @Test
     void closeUnClosableInputStream() {
-        assertThrows(ShellException.class, ()->{
+        assertThrows(ShellException.class, () -> {
             closeInputStream(new UnClosableInputStream(TEST_TXT));
         });
     }
 
     @Test
     void closeUnClosableOutputStream() {
-        assertThrows(ShellException.class, ()->{
+        assertThrows(ShellException.class, () -> {
             closeOutputStream(new UnClosableOutputStream(TEST_TXT));
         });
     }
 
     @Test
     void getLinesFromTestFile() {
-        List<String> result = new ArrayList<>(Arrays.asList("hello","world"));
-        assertDoesNotThrow(()->{
+        List<String> result = new ArrayList<>(Arrays.asList("hello", "world"));
+        assertDoesNotThrow(() -> {
             assertIterableEquals(result, getLinesFromInputStream(openInputStream(TEST_TXT)));
         });
     }
 
     @Test
     void getLinesFromNull() {
-        assertDoesNotThrow(()->{
+        assertDoesNotThrow(() -> {
             assertNull(getLinesFromInputStream(null));
         });
     }
@@ -130,7 +140,7 @@ class IOUtilsTest {
         FileSystemUtils.deleteFileRecursive(new File(TEST_TXT));
         FileSystemUtils.deleteFileRecursive(new File(NULL_TXT));
         FileSystemUtils.deleteFileRecursive(new File(NONE_TXT));
-        FileSystemUtils.deleteFileRecursive(new File("asset"+CHAR_FILE_SEP+TEST_TXT));
+        FileSystemUtils.deleteFileRecursive(new File("asset" + CHAR_FILE_SEP + TEST_TXT));
     }
 
     static class UnClosableInputStream extends FileInputStream {

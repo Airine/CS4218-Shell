@@ -16,21 +16,21 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class SortApplicationTest {
 
-    private final SortInterface app = new SortApplication();
-    private OutputStream outputStream = null;
-    private static String folderName = "asset"+CHAR_FILE_SEP+"app"+CHAR_FILE_SEP+"common";
+    private static String folderName = "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "common";
     private static String fileNameD = "D.txt";
     private static String fileNameE = "E.txt";
     private static String subDirName = "subDir";
     private static String fileNameEmpty1 = "empty1.txt";
     private static String fileNameNotExist = "notExist.txt";
     private static String sortPrefix = "sort: ";
+    private final SortInterface app = new SortApplication();
+    private OutputStream outputStream = null;
 
     @Test
     void testRunWithFiles() {
-        String[] args = {folderName+CHAR_FILE_SEP+fileNameD, folderName+CHAR_FILE_SEP+fileNameE};
-        String expectResult = "1"+STRING_NEWLINE+"10"+STRING_NEWLINE+"2"
-                +STRING_NEWLINE+"A"+STRING_NEWLINE+"b"+STRING_NEWLINE;
+        String[] args = {folderName + CHAR_FILE_SEP + fileNameD, folderName + CHAR_FILE_SEP + fileNameE};
+        String expectResult = "1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2"
+                + STRING_NEWLINE + "A" + STRING_NEWLINE + "b" + STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, System.in, outputStream);
@@ -41,9 +41,9 @@ class SortApplicationTest {
     @Test
     void testRunWithWrongSuffix() {
         String[] args = {"-a", "-r", "-f"};
-        String original = "A"+STRING_NEWLINE+"b"+STRING_NEWLINE+"c"+STRING_NEWLINE+"D";
+        String original = "A" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE + "D";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        String expectResult = "D"+STRING_NEWLINE+"c"+STRING_NEWLINE+"b"+STRING_NEWLINE+"A"+STRING_NEWLINE;
+        String expectResult = "D" + STRING_NEWLINE + "c" + STRING_NEWLINE + "b" + STRING_NEWLINE + "A" + STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, stdin, outputStream);
@@ -54,9 +54,9 @@ class SortApplicationTest {
     @Test
     void testRunWithEmptyArg() {
         String[] args = {"", "-r", "-f"};
-        String original = "A"+STRING_NEWLINE+"b"+STRING_NEWLINE+"c"+STRING_NEWLINE+"D";
+        String original = "A" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE + "D";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        String expectResult = "D"+STRING_NEWLINE+"c"+STRING_NEWLINE+"b"+STRING_NEWLINE+"A"+STRING_NEWLINE;
+        String expectResult = "D" + STRING_NEWLINE + "c" + STRING_NEWLINE + "b" + STRING_NEWLINE + "A" + STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, stdin, outputStream);
@@ -67,9 +67,9 @@ class SortApplicationTest {
     @Test
     void testRunWithNoFiles() {
         String[] args = {"-nr", "-f"};
-        String original = "A"+STRING_NEWLINE+"b"+STRING_NEWLINE+"c"+STRING_NEWLINE+"D";
+        String original = "A" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE + "D";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        String expectResult = "D"+STRING_NEWLINE+"c"+STRING_NEWLINE+"b"+STRING_NEWLINE+"A"+STRING_NEWLINE;
+        String expectResult = "D" + STRING_NEWLINE + "c" + STRING_NEWLINE + "b" + STRING_NEWLINE + "A" + STRING_NEWLINE;
         outputStream = new ByteArrayOutputStream();
         assertDoesNotThrow(() -> {
             app.run(args, stdin, outputStream);
@@ -78,46 +78,46 @@ class SortApplicationTest {
     }
 
     @Test
-    void testSortFromEmptyFile(){
+    void testSortFromEmptyFile() {
         String expectResult = "";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+fileNameEmpty1);
+            String realResult = app.sortFromFiles(false, false, false, folderName + CHAR_FILE_SEP + fileNameEmpty1);
             assertEquals(expectResult, realResult);
         });
     }
 
     @Test
-    void testSortNumberByCharacterFromFile(){
-        String expectResult = "1"+STRING_NEWLINE+"10"+STRING_NEWLINE+"2";
+    void testSortNumberByCharacterFromFile() {
+        String expectResult = "1" + STRING_NEWLINE + "10" + STRING_NEWLINE + "2";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+fileNameD);
+            String realResult = app.sortFromFiles(false, false, false, folderName + CHAR_FILE_SEP + fileNameD);
             assertEquals(expectResult, realResult);
         });
     }
 
     @Test
-    void testSortNumberByWordFromFile(){
-        String expectResult = "1"+STRING_NEWLINE+"2"+STRING_NEWLINE+"10";
+    void testSortNumberByWordFromFile() {
+        String expectResult = "1" + STRING_NEWLINE + "2" + STRING_NEWLINE + "10";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(true, false, false, folderName+CHAR_FILE_SEP+fileNameD);
+            String realResult = app.sortFromFiles(true, false, false, folderName + CHAR_FILE_SEP + fileNameD);
             assertEquals(expectResult, realResult);
         });
     }
 
     @Test
-    void testSortNumbersInReverseOrderFromFile(){
-        String expectResult = "2"+STRING_NEWLINE+"10"+STRING_NEWLINE+"1";
+    void testSortNumbersInReverseOrderFromFile() {
+        String expectResult = "2" + STRING_NEWLINE + "10" + STRING_NEWLINE + "1";
         assertDoesNotThrow(() -> {
-            String realResult = app.sortFromFiles(false, true, false, folderName+CHAR_FILE_SEP+fileNameD);
+            String realResult = app.sortFromFiles(false, true, false, folderName + CHAR_FILE_SEP + fileNameD);
             assertEquals(expectResult, realResult);
         });
     }
 
     @Test
-    void testSortLettersFromStdin(){
-        String original = "A"+STRING_NEWLINE+"b"+STRING_NEWLINE+"c"+STRING_NEWLINE+"D";
+    void testSortLettersFromStdin() {
+        String original = "A" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE + "D";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        String expectResult = "A"+STRING_NEWLINE+"D"+STRING_NEWLINE+"b"+STRING_NEWLINE+"c";
+        String expectResult = "A" + STRING_NEWLINE + "D" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c";
         assertDoesNotThrow(() -> {
             String realResult = app.sortFromStdin(false, false, false, stdin);
             assertEquals(expectResult, realResult);
@@ -125,10 +125,10 @@ class SortApplicationTest {
     }
 
     @Test
-    void testSortSameLettersFromStdin(){
-        String original = "A1"+STRING_NEWLINE+"A"+STRING_NEWLINE+"A"+STRING_NEWLINE+"A";
+    void testSortSameLettersFromStdin() {
+        String original = "A1" + STRING_NEWLINE + "A" + STRING_NEWLINE + "A" + STRING_NEWLINE + "A";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        String expectResult = "A"+STRING_NEWLINE+"A"+STRING_NEWLINE+"A"+STRING_NEWLINE+"A1";
+        String expectResult = "A" + STRING_NEWLINE + "A" + STRING_NEWLINE + "A" + STRING_NEWLINE + "A1";
         assertDoesNotThrow(() -> {
             String realResult = app.sortFromStdin(true, false, false, stdin);
             assertEquals(expectResult, realResult);
@@ -136,10 +136,10 @@ class SortApplicationTest {
     }
 
     @Test
-    void testSortCaseIndependentLettersFromStdin(){
-        String original = "A"+STRING_NEWLINE+"b"+STRING_NEWLINE+"c"+STRING_NEWLINE+"D";
+    void testSortCaseIndependentLettersFromStdin() {
+        String original = "A" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE + "D";
         InputStream stdin = new ByteArrayInputStream(original.getBytes());
-        String expectResult = "A"+STRING_NEWLINE+"b"+STRING_NEWLINE+"c"+STRING_NEWLINE+"D";
+        String expectResult = "A" + STRING_NEWLINE + "b" + STRING_NEWLINE + "c" + STRING_NEWLINE + "D";
         assertDoesNotThrow(() -> {
             String realResult = app.sortFromStdin(false, false, true, stdin);
             assertEquals(expectResult, realResult);
@@ -157,7 +157,7 @@ class SortApplicationTest {
     @Test
     void testSortWithNotExistFileName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+fileNameNotExist);
+            app.sortFromFiles(false, false, false, folderName + CHAR_FILE_SEP + fileNameNotExist);
         });
         assertEquals(thrown.getMessage(), ERR_FILE_NOT_FOUND);
     }
@@ -173,7 +173,7 @@ class SortApplicationTest {
     @Test
     void testSortWithDirectoryName() {
         Throwable thrown = assertThrows(Exception.class, () -> {
-            app.sortFromFiles(false, false, false, folderName+CHAR_FILE_SEP+subDirName);
+            app.sortFromFiles(false, false, false, folderName + CHAR_FILE_SEP + subDirName);
         });
         assertEquals(thrown.getMessage(), ERR_IS_DIR);
     }
@@ -189,7 +189,7 @@ class SortApplicationTest {
 
     @Test
     void testRunWithNullOStream() {
-        String[] args = {folderName+CHAR_FILE_SEP+fileNameD, folderName+CHAR_FILE_SEP+fileNameE};
+        String[] args = {folderName + CHAR_FILE_SEP + fileNameD, folderName + CHAR_FILE_SEP + fileNameE};
         Throwable thrown = assertThrows(SortException.class, () -> {
             app.run(args, System.in, outputStream);
         });

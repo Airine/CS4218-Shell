@@ -3,9 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app.args;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_INVALID_FLAG;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_INVALID_RANGE;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_ARGS;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FLAG_PREFIX;
 
 public class CutArguments {
@@ -38,25 +36,25 @@ public class CutArguments {
         // See if flag is invalid
         if (args[0].charAt(0) == CHAR_FLAG_PREFIX && args[0].charAt(1) == CHAR_CUTBYCHAR) {
             charPo = true;
-        } else if (args[0].charAt(0) == CHAR_FLAG_PREFIX && args[0].charAt(1) == CHAR_CUTBYBYTE){
+        } else if (args[0].charAt(0) == CHAR_FLAG_PREFIX && args[0].charAt(1) == CHAR_CUTBYBYTE) {
             bytePo = true;
         } else {
             throw new Exception(ERR_INVALID_FLAG);
         }
 
         // Parse indexes
-        if (args[1].contains("-")){
-            int begin = Integer.parseInt(args[1].substring(0,args[1].indexOf('-')));
-            int end = Integer.parseInt(args[1].substring(args[1].indexOf('-')+1));
-            if (begin > end){
+        if (args[1].contains("-")) {
+            int begin = Integer.parseInt(args[1].substring(0, args[1].indexOf('-')));
+            int end = Integer.parseInt(args[1].substring(args[1].indexOf('-') + 1));
+            if (begin > end) {
                 throw new Exception(ERR_INVALID_RANGE);
             }
             range = true;
             startIdx = begin;
             endIdx = end;
-        } else if (args[1].contains(",")){
-            startIdx = Integer.parseInt(args[1].substring(0,args[1].indexOf(',')));
-            endIdx = Integer.parseInt(args[1].substring(args[1].indexOf(',')+1));
+        } else if (args[1].contains(",")) {
+            startIdx = Integer.parseInt(args[1].substring(0, args[1].indexOf(',')));
+            endIdx = Integer.parseInt(args[1].substring(args[1].indexOf(',') + 1));
         } else {
             startIdx = Integer.parseInt(args[1]);
         }

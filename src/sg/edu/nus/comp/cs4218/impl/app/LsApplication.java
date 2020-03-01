@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_CURR_DIR;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 
 public class LsApplication implements LsInterface {
 
@@ -112,7 +111,7 @@ public class LsApplication implements LsInterface {
                 String formatted = formatContents(contents);
                 String relativePath = getRelativeToCwd(path).toString();
                 result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
-                result.append(":\n");
+                result.append(":").append(STRING_NEWLINE);
                 result.append(formatted);
 
                 if (!formatted.isEmpty()) {
@@ -135,10 +134,10 @@ public class LsApplication implements LsInterface {
                 if (!isRecursive) {
                     if (path.toFile().exists()) {
                         result.append(getRelativeToCwd(path).toString());
-                        result.append("\n\n");
+                        result.append(STRING_NEWLINE).append(STRING_NEWLINE);
                     } else {
                         result.append(e.getMessage());
-                        result.append('\n');
+                        result.append(STRING_NEWLINE);
                     }
                 }
             }
@@ -162,7 +161,7 @@ public class LsApplication implements LsInterface {
         StringBuilder result = new StringBuilder();
         for (String fileName : fileNames) {
             result.append(fileName);
-            result.append('\n');
+            result.append(STRING_NEWLINE);
         }
 
         return result.toString().trim();
@@ -224,7 +223,7 @@ public class LsApplication implements LsInterface {
      * @return
      */
     private Path resolvePath(String directory) {
-        if (directory.charAt(0) == '/') {
+        if (directory.charAt(0) == CHAR_FILE_SEP || directory.charAt(1) == ':') {
             // This is an absolute path
             return Paths.get(directory).normalize();
         }

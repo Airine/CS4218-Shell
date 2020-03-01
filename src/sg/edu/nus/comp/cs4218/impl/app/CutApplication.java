@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_IS_DIR;
-import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class CutApplication implements CutInterface {
@@ -133,11 +131,23 @@ public class CutApplication implements CutInterface {
     }
 
 
+    /**
+     * @param isCharPo Boolean option to cut by character position
+     * @param isBytePo Boolean option to cut by byte position
+     * @param isRange  Boolean option to perform range-based cut
+     * @param startIdx index to begin cut
+     * @param endIdx   index to end cut
+     * @param lines    lines to be cut
+     * @throws Exception
+     */
     private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws Exception {
+        if (startIdx == 0) {
+            throw new Exception(ERR_OUT_RANGE);
+        }
         if (isCharPo) {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
-                if (endIdx > line.length()) {
+                if (startIdx > line.length() || endIdx > line.length()) {
                     throw new Exception(ERR_OUT_RANGE);
                 }
                 if (isRange) {
@@ -154,7 +164,7 @@ public class CutApplication implements CutInterface {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 byte[] byteArray = line.getBytes();
-                if (endIdx > byteArray.length) {
+                if (startIdx > byteArray.length || endIdx > byteArray.length) {
                     throw new Exception(ERR_OUT_RANGE);
                 }
                 if (isRange) {

@@ -1,8 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,10 +12,10 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 
 class StringUtilsTest {
 
-    private String str;
-    private final Properties props = System.getProperties();
-    private String osName;
     private final static String OSNAMESTR = "os.name";
+    private final Properties props = System.getProperties();
+    private String str;
+    private String osName;
 
     @BeforeEach
     void storeOSName() {
@@ -72,7 +73,7 @@ class StringUtilsTest {
     @Test
     void windowsSeparator() {
         props.setProperty(OSNAMESTR, "Windows");
-        assertEquals('\\'+"/", fileSeparator());
+        assertEquals('\\' + "/", fileSeparator());
     }
 
     @Test
@@ -135,7 +136,7 @@ class StringUtilsTest {
 
 
     @AfterEach
-    void resetOSName(){
+    void resetOSName() {
         props.setProperty(OSNAMESTR, osName);
     }
 }
