@@ -12,7 +12,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class WcApplicationTest {
-
+    //TODO: Add more failed test cases
     private final WcApplication wcApplication = new WcApplication();
     private final static String wcFolder = "asset" + CHAR_FILE_SEP+ "app" +CHAR_FILE_SEP + "wc" + CHAR_FILE_SEP;
     private final static String TEST_FILE = wcFolder + "test.txt";
@@ -21,6 +21,7 @@ class WcApplicationTest {
     private final static String NONE_FILE = wcFolder + "none.txt";
     private final static String SUB_DIR = wcFolder + "subDir";
     private final static String NO_PERMISSION = SUB_DIR + CHAR_FILE_SEP + "NO_PERMISSION.txt";
+    private final static String WC_ERR_HEADER = "wc: ";
     private InputStream inputStream = System.in;;
     private OutputStream outputStream = new ByteArrayOutputStream();
 
@@ -30,7 +31,7 @@ class WcApplicationTest {
         Throwable throwable = assertThrows(WcException.class, ()->{
             wcApplication.run(args, System.in, null);
         });
-        assertEquals("wc: " + ERR_NULL_STREAMS, throwable.getMessage());
+        assertEquals(WC_ERR_HEADER + ERR_NULL_STREAMS, throwable.getMessage());
     }
 
     @Test
@@ -90,7 +91,7 @@ class WcApplicationTest {
 
     @Test
     void countFromNonExistFile() {
-        String result = "wc: " + ERR_FILE_NOT_FOUND;
+        String result = WC_ERR_HEADER + ERR_FILE_NOT_FOUND;
         assertDoesNotThrow(()->{
             assertEquals(result, wcApplication.countFromFiles(true, true, true, NONE_FILE));
         });
@@ -98,7 +99,7 @@ class WcApplicationTest {
 
     @Test
     void countFromDirectory() {
-        String result = "wc: " + ERR_IS_DIR;
+        String result = WC_ERR_HEADER + ERR_IS_DIR;
         assertDoesNotThrow(()->{
             assertEquals(result, wcApplication.countFromFiles(true, true, true, SUB_DIR));
         });
@@ -106,7 +107,7 @@ class WcApplicationTest {
 
     @Test
     void countFromNoPermission() {
-        String result = "wc: " + ERR_NO_PERM;
+        String result = WC_ERR_HEADER + ERR_NO_PERM;
         File no_perm_file = new File(NO_PERMISSION);
         assertTrue(no_perm_file.setReadable(false));
         assertDoesNotThrow(()->{

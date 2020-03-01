@@ -18,6 +18,7 @@ class LsApplicationTest {
 
     private final LsInterface lsApplication = new LsApplication();
     private final OutputStream outputStream = new ByteArrayOutputStream();
+    private static final String SUB_DIR = "subDir";
     private final String cwd = EnvironmentUtils.currentDirectory;
 
     @BeforeEach
@@ -65,10 +66,10 @@ class LsApplicationTest {
 
     @Test
     void runWithMultiArgs() {
-        String[] args = {"test.txt", "subDir"};
+        String[] args = {"test.txt", SUB_DIR};
         String result = "test.txt\n" +
                         "\n" +
-                        "subDir:\n" +
+                        SUB_DIR+":\n" +
                         "subSubDir\n";
         assertDoesNotThrow(()->{
             lsApplication.run(args, System.in, outputStream);
@@ -80,7 +81,7 @@ class LsApplicationTest {
 
     @Test
     void runWithNonExistFile() {
-        String[] args = {"test.txt", "subDir", "none.txt"};
+        String[] args = {"test.txt", SUB_DIR, "none.txt"};
         String result = "test.txt\n" +
                         "\n" +
                         "subDir:\n" +
@@ -134,7 +135,7 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithRecursionFlag() {
-        String result = "subDir:\n" +
+        String result = SUB_DIR+":\n" +
                         "subSubDir\n" +
                         "\n" +
                         "subDir/subSubDir:\n" +
