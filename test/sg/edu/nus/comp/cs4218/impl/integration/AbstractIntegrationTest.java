@@ -1,13 +1,14 @@
-package sg.edu.nus.comp.cs4218.impl;
+package sg.edu.nus.comp.cs4218.impl.integration;
 
 import org.junit.jupiter.api.*;
+import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.NewIOStream;
 import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
-import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.*;
@@ -16,16 +17,16 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class IORedirectIntegrationTest {
-
+@Disabled
+public abstract class AbstractIntegrationTest {
     private Shell shell;
     private InputStream inputStream;
     private PrintStream outputStream;
     private NewIOStream ioStream;
 
-    private String integrationDir = FileSystemUtils.joinPath("asset", "itest", "redirect");
+    private String originalCwd;
+
 
     @BeforeAll
     static void setUp() {
@@ -41,6 +42,11 @@ public class IORedirectIntegrationTest {
         TestFileUtils.rmCreatedFiles();
     }
 
+    /** App will change directory to this path and run relative test
+     * @return the integration test path
+     */
+    abstract String getIntegrationDir();
+
     @BeforeEach
     void setStdInAndOut() {
         inputStream = System.in;
@@ -53,7 +59,10 @@ public class IORedirectIntegrationTest {
             e.printStackTrace();
         }
         shell = new ShellImpl();
+        originalCwd = EnvironmentUtils.currentDirectory;;
+        EnvironmentUtils.currentDirectory = FileSystemUtils.getAbsolutePathName(getIntegrationDir());
     }
+
 
     @AfterEach
     void resumeStdInAndOut() {
@@ -64,6 +73,7 @@ public class IORedirectIntegrationTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        EnvironmentUtils.currentDirectory = originalCwd;
     }
 
     @Test
@@ -87,16 +97,20 @@ public class IORedirectIntegrationTest {
         return new String(bytes);
     }
 
+    /**
+     * It will use xx.in as System.in and xx.out is its expect output, all these files
+     * should be in a same folder.
+     */
     @Test
     void testSimpleRedirect() {
-        File[] files = new File(this.integrationDir).listFiles();
+        File[] files = new File(EnvironmentUtils.currentDirectory).listFiles();
         Object[] testFileIn = Arrays.stream(Objects.requireNonNull(files))
                 .filter(file -> file.getName().endsWith(".in"))
                 .toArray();
         HashMap<String, File> map = new HashMap<>();
         for (Object file : files) {
-            File fo = (File) file;
-            map.put(fo.getName(), fo);
+            File objectFile = (File) file;
+            map.put(objectFile.getName(), objectFile);
         }
         for (Object o : testFileIn) {
             File testFile = (File) o;
@@ -107,7 +121,7 @@ public class IORedirectIntegrationTest {
             File testStd = map.get(outFileName);
             try (NewIOStream ioStream = new NewIOStream(testFile.getAbsolutePath())) {
                 buildTestSuit(ioStream.inputStream, ioStream.outputStream);
-                valideResult(testStd.getAbsolutePath(), ioStream.outputStream);
+                validResult(testStd.getAbsolutePath(), ioStream.outputStream);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -115,14 +129,31 @@ public class IORedirectIntegrationTest {
         }
     }
 
-    private void valideResult(String stdOutPath, OutputStream outputStream) throws IOException {
+    /**
+     * use to valid the result by comparing with output file,
+     * typically, the answer should not exceed 1024 bytes
+     *
+     * @param stdOutPath   the file path which contains stand ouput
+     * @param outputStream application output stream
+     * @throws IOException
+     */
+    protected void validResult(String stdOutPath, OutputStream outputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(stdOutPath)))) {
+
             char[] buf = new char[1024];
             int len = reader.read(buf);
             assertEquals(new String(buf, 0, len), outputStream.toString(), "for test:" + stdOutPath);
+            assertEquals(-1, reader.read(), "this stand output exceed 1024 bytes");
         }
     }
 
+    /**
+     * run some groups of tests in the inputStream
+     *
+     * @param inputStream  replace stdin
+     * @param outputStream repalce stdout
+     * @throws IOException
+     */
     private void buildTestSuit(InputStream inputStream, OutputStream outputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String command;
@@ -136,6 +167,4 @@ public class IORedirectIntegrationTest {
             e.printStackTrace();
         }
     }
-
-
 }
