@@ -3,11 +3,9 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.CutInterface;
 import sg.edu.nus.comp.cs4218.exception.CutException;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
@@ -21,6 +19,7 @@ class CutApplicationTest {
     private static String fileNameNames = "course.txt";
     private static String subDirName = "subDir";
     private static String fileNameNotExist = "notExist.txt";
+    private static String fileNameEmpty1 = "empty1.txt";
     private static String cutPrefix = "cut: ";
     private final CutInterface app = new CutApplication();
     private OutputStream outputStream = null;
@@ -151,6 +150,17 @@ class CutApplicationTest {
             app.run(args, System.in, outputStream);
             assertEquals(expectResult, outputStream.toString());
         });
+    }
+
+    @Test
+    void testRunWithClosedOutputStream() {
+        String[] args = {"-b", "1-8", folderName + CHAR_FILE_SEP + fileNameTest};
+        Throwable thrown = assertThrows(CutException.class, () -> {
+            outputStream = new FileOutputStream(new File(folderName + CHAR_FILE_SEP + fileNameEmpty1));
+            IOUtils.closeOutputStream(outputStream);
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), cutPrefix + ERR_WRITE_STREAM);
     }
 
     @Test
