@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.app;
 
 import sg.edu.nus.comp.cs4218.Application;
+import sg.edu.nus.comp.cs4218.exception.CutException;
 
 import java.io.InputStream;
 
@@ -15,11 +16,11 @@ public interface CutInterface extends Application {
      * @param startIdx index to begin cut
      * @param endIdx   index to end cut
      * @param fileName Array of String of file names
-     * @return
-     * @throws Exception
+     * @return The expected result
+     * @throws CutException Throw exception caused by CutApplication
      */
     String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx,
-                        String... fileName) throws Exception;
+                        String... fileName) throws CutException;
 
 
     /**
@@ -31,9 +32,9 @@ public interface CutInterface extends Application {
      * @param startIdx index to begin cut
      * @param endIdx   index to end cut
      * @param stdin    InputStream containing arguments from Stdin
-     * @return
-     * @throws Exception
+     * @return The expected result
+     * @throws CutException Throw exception caused by CutApplication
      */
     String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx,
-                        InputStream stdin) throws Exception;
+                        InputStream stdin) throws CutException;
 }
