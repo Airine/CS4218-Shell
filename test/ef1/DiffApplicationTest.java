@@ -2,6 +2,7 @@ package ef1;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.DiffInterface;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -14,6 +15,7 @@ import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 public class DiffApplicationTest {
 
     private static String testText1 = "are you ok?";
