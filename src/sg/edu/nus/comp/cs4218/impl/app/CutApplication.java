@@ -134,10 +134,13 @@ public class CutApplication implements CutInterface {
 
 
     private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws Exception {
+        if (startIdx == 0) {
+            throw new Exception(ERR_OUT_RANGE);
+        }
         if (isCharPo) {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
-                if (endIdx > line.length()) {
+                if (startIdx > line.length() || endIdx > line.length()) {
                     throw new Exception(ERR_OUT_RANGE);
                 }
                 if (isRange) {
@@ -154,7 +157,7 @@ public class CutApplication implements CutInterface {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 byte[] byteArray = line.getBytes();
-                if (endIdx > byteArray.length) {
+                if (startIdx > byteArray.length || endIdx > byteArray.length) {
                     throw new Exception(ERR_OUT_RANGE);
                 }
                 if (isRange) {

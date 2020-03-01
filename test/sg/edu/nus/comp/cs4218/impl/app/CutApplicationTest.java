@@ -32,6 +32,15 @@ class CutApplicationTest {
     }
 
     @Test
+    void testCutTwoCharactersInReverseOrderFromFile() {
+        String expectResult = "sT";
+        assertDoesNotThrow(() -> {
+            String realResult = app.cutFromFiles(true,false,false,8,1,folderName+CHAR_FILE_SEP+fileNameTest);
+            assertEquals(expectResult, realResult);
+        });
+    }
+
+    @Test
     void testCutRangeOfCharactersFromFile() {
         String expectResult = "Today is";
         assertDoesNotThrow(() -> {
@@ -242,5 +251,15 @@ class CutApplicationTest {
             app.run(args, System.in, outputStream);
         });
         assertEquals(thrown.getMessage(), cutPrefix + ERR_INVALID_RANGE);
+    }
+
+    @Test
+    void testRunWithInvalidNumber() {
+        String[] args = {"-c","0", folderName+CHAR_FILE_SEP+fileNameTest};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(CutException.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), cutPrefix + ERR_OUT_RANGE);
     }
 }
