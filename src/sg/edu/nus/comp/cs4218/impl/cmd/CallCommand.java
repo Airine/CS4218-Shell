@@ -55,7 +55,9 @@ public class CallCommand implements Command {
     }
 
     @Override
-    public void terminate() {}
+    public void terminate() {
+        // to not need it
+    }
 
     public List<String> getArgsList() {
         return argsList;

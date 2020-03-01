@@ -69,7 +69,9 @@ public class PipeCommand implements Command {
     }
 
     @Override
-    public void terminate() { }
+    public void terminate() {
+        // do not need to implement
+    }
 
     public List<CallCommand> getCallCommands() {
         return callCommands;

@@ -101,9 +101,9 @@ public class WcApplication implements WcInterface {
 
             // Format all output: " %7d %7d %7d %s"
             // Output in the following order: lines words bytes filename
-            StringBuilder sb = getStringBuilder(isBytes, isLines, isWords, count);
-            sb.append(String.format(" %s", file));
-            result.add(sb.toString());
+            StringBuilder stringBuilder = getStringBuilder(isBytes, isLines, isWords, count);
+            stringBuilder.append(String.format(" %s", file));
+            result.add(stringBuilder.toString());
         }
 
         // Print cumulative counts for all the files
@@ -143,15 +143,15 @@ public class WcApplication implements WcInterface {
         try {
             count = getCountReport(stdin);
         } catch (Exception e) {
-            throw new WcException(e.getMessage());
+            throw (WcException) new WcException(e.getMessage()).initCause(e);
         }
 
-        StringBuilder sb = getStringBuilder(isBytes, isLines, isWords, count);
+        StringBuilder stringBuilder = getStringBuilder(isBytes, isLines, isWords, count);
 
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
-    private StringBuilder getStringBuilder(Boolean isBytes, Boolean isLines, Boolean isWords, long[] count) {
+    private StringBuilder getStringBuilder(Boolean isBytes, Boolean isLines, Boolean isWords, long... count) {
         StringBuilder sb = new StringBuilder(); //NOPMD
         if (isLines) {
             sb.append(String.format(NUMBER_FORMAT, count[0]));

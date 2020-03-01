@@ -115,3 +115,4 @@ target/
 .idea/
 .DS_Store
 asset/integration/redirect/*
+results/

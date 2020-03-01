@@ -53,13 +53,13 @@ public class CutApplication implements CutInterface {
                 lines.addAll(IOUtils.getLinesFromInputStream(input));
                 IOUtils.closeInputStream(input);
             } catch (Exception e){
-                throw new CutException(e.getMessage());
+                throw (CutException) new CutException(e.getMessage()).initCause(e);
             }
         }
         try {
             cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
         } catch (Exception e) {
-            throw new CutException(e.getMessage());
+            throw (CutException) new CutException(e.getMessage()).initCause(e);
         }
         return String.join(STRING_NEWLINE, lines);
     }
@@ -86,7 +86,7 @@ public class CutApplication implements CutInterface {
             lines = IOUtils.getLinesFromInputStream(stdin);
             cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
         } catch (Exception e) {
-            throw new CutException(e.getMessage());
+            throw (CutException) new CutException(e.getMessage()).initCause(e);
         }
         return String.join(STRING_NEWLINE, lines);
     }

@@ -89,7 +89,7 @@ public class LsApplication implements LsInterface {
         try {
             return formatContents(getContents(Paths.get(cwd), isFoldersOnly));
         } catch (InvalidDirectoryException e) {
-            throw new LsException("Unexpected error occurred!");
+            throw (LsException) new LsException("Unexpected error occurred!").initCause(e);
         }
     }
 
@@ -111,7 +111,7 @@ public class LsApplication implements LsInterface {
                 String formatted = formatContents(contents);
                 String relativePath = getRelativeToCwd(path).toString();
                 result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
-                result.append(":").append(STRING_NEWLINE);
+                result.append(':').append(STRING_NEWLINE);
                 result.append(formatted);
 
                 if (!formatted.isEmpty()) {
@@ -220,7 +220,7 @@ public class LsApplication implements LsInterface {
      * is an absolute path.
      *
      * @param directory
-     * @return
+     * @return the Path object of this path
      */
     private Path resolvePath(String directory) {
         if (directory.charAt(0) == CHAR_FILE_SEP || directory.charAt(1) == ':') {
