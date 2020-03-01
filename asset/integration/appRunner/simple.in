@@ -2,4 +2,4 @@ ls
 find img -name "timeline*"
 echo "hello"
 grep "Team" README.md
-sort asset/app/common/C.txt
+sort test.txt

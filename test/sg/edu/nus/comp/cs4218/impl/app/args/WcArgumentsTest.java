@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WcArgumentsTest {
 
-    private WcArguments wcArguments = new WcArguments();
+    private final WcArguments wcArguments = new WcArguments();
 
     @Test
     void parseWithEmptyArg() {
