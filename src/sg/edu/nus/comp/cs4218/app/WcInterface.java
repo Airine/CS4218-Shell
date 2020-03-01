@@ -12,7 +12,7 @@ public interface WcInterface extends Application {
      * @param isLines  Boolean option to count the number of lines
      * @param isWords  Boolean option to count the number of words
      * @param fileName Array of String of file names
-     * @return  string containing the number of lines, words, and bytes in input files
+     * @return
      * @throws Exception
      */
     String countFromFiles(Boolean isBytes, Boolean isLines, Boolean isWords,
@@ -25,7 +25,7 @@ public interface WcInterface extends Application {
      * @param isLines Boolean option to count the number of lines
      * @param isWords Boolean option to count the number of words
      * @param stdin   InputStream containing arguments from Stdin
-     * @return string containing the number of lines, words, and bytes in standard input
+     * @return
      * @throws Exception
      */
     String countFromStdin(Boolean isBytes, Boolean isLines, Boolean isWords,
