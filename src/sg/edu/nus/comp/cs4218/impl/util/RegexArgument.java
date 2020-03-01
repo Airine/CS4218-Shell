@@ -78,12 +78,7 @@ public final class RegexArgument {
                 dir += tokens[i] + File.separator;
             }
 
-            File currentDir;
-            if (Paths.get(dir).isAbsolute()){
-                currentDir = Paths.get(dir).toFile();
-            } else {
-                currentDir = Paths.get(EnvironmentUtils.currentDirectory + File.separator + dir).toFile();
-            }
+            File currentDir = Paths.get(EnvironmentUtils.currentDirectory + File.separator + dir).toFile();
 
             for (String candidate : currentDir.list()) {
                 if (regexPattern.matcher(candidate).matches()) {
@@ -147,6 +142,4 @@ public final class RegexArgument {
     public String toString() {
         return plaintext.toString();
     }
-
-    public String getRegex(){return regex.toString();}
 }
