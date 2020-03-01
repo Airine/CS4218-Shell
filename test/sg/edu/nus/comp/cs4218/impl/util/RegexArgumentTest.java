@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
 class RegexArgumentTest {
     private RegexArgument regexArgument;
@@ -77,7 +78,7 @@ class RegexArgumentTest {
         String str = "*";
         RegexArgument regexArgument = new RegexArgument(str, text, true);
         List<String> result = regexArgument.globFiles();
-        assertEquals(Arrays.asList(TestFileUtils.tempFolderName + "\\test.cc"), result);
+        assertEquals(Arrays.asList(TestFileUtils.tempFolderName + CHAR_FILE_SEP + "test.cc"), result);
     }
 
     @Test
@@ -86,7 +87,7 @@ class RegexArgumentTest {
         String str = "";
         RegexArgument regexArgument = new RegexArgument(str, text, true);
         List<String> result = regexArgument.globFiles();
-        assertEquals(Arrays.asList("test\\temp\\test-folder\\test.cc"), result);
+        assertEquals(Arrays.asList(FileSystemUtils.joinPath("test","temp","test-folder","test.cc")), result);
     }
 
     @Test
