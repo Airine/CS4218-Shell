@@ -7,7 +7,7 @@ public interface CdInterface extends Application {
      * Change the environment context to a different directory.
      *
      * @param path String of the path to a directory
-     * @throws Exception The Exception from CdApplication
+     * @throws Exception
      */
     void changeToDirectory(String path) throws Exception;
 }

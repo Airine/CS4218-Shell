@@ -12,7 +12,7 @@ public interface SortInterface extends Application {
      * @param isReverseOrder    Boolean option to sort in reverse order
      * @param isCaseIndependent Boolean option to perform case-independent sorting
      * @param fileName          Array of String of file names
-     * @return the expected result
+     * @return
      * @throws Exception
      */
     String sortFromFiles(Boolean isFirstWordNumber, Boolean isReverseOrder, Boolean isCaseIndependent,
@@ -25,7 +25,7 @@ public interface SortInterface extends Application {
      * @param isReverseOrder    Boolean option to sort in reverse order
      * @param isCaseIndependent Boolean option to perform case-independent sorting
      * @param stdin             InputStream containing arguments from Stdin
-     * @return the result of sort form std in
+     * @return
      * @throws Exception
      */
     String sortFromStdin(Boolean isFirstWordNumber, Boolean isReverseOrder, Boolean isCaseIndependent,
