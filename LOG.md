@@ -107,16 +107,20 @@ execute this command in the root directory:
    <directory>:
    <content in directory>
    ```
+   
+3. Create unit test cases for `IORedirectionHandler` -93% coverage, need information about `RegexArgument` to cover the rest.
+
+4. Create unit test cases for `GrepApplication` -100% coverage
+
+5. InCommandBuilder, when parse args with ";", it do not reinstate tocken `token = new LinkedList<>();`,
+this is a bug of original code. 
+
+## 2020-3-1
+
+
+
+---
 
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
-
-## 2020-2-29
-
-1. Create unit test cases for `IORedirectionHandler` -93% coverage, need information about `RegexArgument` to cover the rest.
-
-2. Create unit test cases for `GrepApplication` -100% coverage
-
-3. InCommandBuilder, when parse args with ";", it do not reinstate tocken `token = new LinkedList<>();`,
-this is a bug of original code. 

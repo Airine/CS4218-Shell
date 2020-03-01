@@ -20,6 +20,8 @@ class LsApplicationTest {
     private final LsInterface lsApplication = new LsApplication();
     private final OutputStream outputStream = new ByteArrayOutputStream();
     private static final String SUB_DIR = "subDir";
+    private static final String TEST_TXT = "test.txt";
+    private static final String SUB_SUB_DIR = "subSubDir";
     private final String cwd = EnvironmentUtils.currentDirectory;
 
     @BeforeEach
@@ -67,14 +69,13 @@ class LsApplicationTest {
 
     @Test
     void runWithMultiArgs() {
-        String[] args = {"test.txt", SUB_DIR};
-        String result = "test.txt" + STRING_NEWLINE +
+        String[] args = {TEST_TXT, SUB_DIR};
+        String result = TEST_TXT + STRING_NEWLINE +
                 STRING_NEWLINE +
                 SUB_DIR+":" + STRING_NEWLINE +
-                "subSubDir" + STRING_NEWLINE;
+                SUB_SUB_DIR + STRING_NEWLINE;
         assertDoesNotThrow(()->{
             lsApplication.run(args, System.in, outputStream);
-            String a = outputStream.toString();
             assertEquals(result,outputStream.toString());
 
         });
@@ -83,11 +84,11 @@ class LsApplicationTest {
 
     @Test
     void runWithNonExistFile() {
-        String[] args = {"test.txt", SUB_DIR, "none.txt"};
-        String result = "test.txt" + STRING_NEWLINE +
+        String[] args = {TEST_TXT, SUB_DIR, "none.txt"};
+        String result = TEST_TXT + STRING_NEWLINE +
                 STRING_NEWLINE +
                 SUB_DIR + ":" + STRING_NEWLINE +
-                "subSubDir" + STRING_NEWLINE +
+                SUB_SUB_DIR + STRING_NEWLINE +
                 STRING_NEWLINE +
                 "ls: cannot access 'none.txt': No such file or directory" + STRING_NEWLINE;
         assertDoesNotThrow(()->{
@@ -118,7 +119,7 @@ class LsApplicationTest {
         String result = SUB_DIR + STRING_NEWLINE +
                 "subDir1" + STRING_NEWLINE +
                 "subDir2" + STRING_NEWLINE +
-                "test.txt" + STRING_NEWLINE +
+                TEST_TXT + STRING_NEWLINE +
                 "test1.txt" + STRING_NEWLINE +
                 "test2.txt";
         assertDoesNotThrow(()->{
@@ -129,28 +130,28 @@ class LsApplicationTest {
 
     @Test
     void listFolderContentWithOnlyFolderFlag() {
-        String result = "subDir:" + STRING_NEWLINE+ "subSubDir";
+        String result = SUB_DIR + ":" + STRING_NEWLINE + SUB_SUB_DIR;
         assertDoesNotThrow(()->{
-            assertEquals(result, lsApplication.listFolderContent(true, false, "subDir"));
+            assertEquals(result, lsApplication.listFolderContent(true, false, SUB_DIR));
         });
     }
 
     @Test
     void listFolderContentWithRecursionFlag() {
-        String result = SUB_DIR+":" + STRING_NEWLINE +
-                "subSubDir" + STRING_NEWLINE +
+        String result = SUB_DIR + ":" + STRING_NEWLINE +
+                SUB_SUB_DIR + STRING_NEWLINE +
                 STRING_NEWLINE +
-                "subDir"+CHAR_FILE_SEP+"subSubDir:" + STRING_NEWLINE +
-                "test.txt";
+                SUB_DIR+CHAR_FILE_SEP+"subSubDir:" + STRING_NEWLINE +
+                TEST_TXT;
         assertDoesNotThrow(()->{
-            assertEquals(result, lsApplication.listFolderContent(false, true, "subDir"));
+            assertEquals(result, lsApplication.listFolderContent(false, true, SUB_DIR));
         });
     }
 
     @Test
     void listCwdContentWithWrongCwd() {
         //noinspection NonAtomicOperationOnVolatileField
-        EnvironmentUtils.currentDirectory += "/none/";
+        EnvironmentUtils.currentDirectory += CHAR_FILE_SEP+ "none" + CHAR_FILE_SEP;
         assertThrows(LsException.class, ()->{
             lsApplication.listFolderContent(false,false);
         });

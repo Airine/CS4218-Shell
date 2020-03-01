@@ -3,7 +3,6 @@ package sg.edu.nus.comp.cs4218.impl.util;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class IORedirectionHandlerTest {
 
-    private String testString = "Hello World";
+    private static final String TEST_STRING = "Hello World";
     private IORedirectionHandler handler;
 
     @BeforeEach
@@ -92,11 +91,11 @@ class IORedirectionHandlerTest {
             assertEquals(Arrays.asList("g"), handler.getNoRedirArgsList());
 
             OutputStream outstream = new FileOutputStream(TestFileUtils.tempFileName1);
-            outstream.write(testString.getBytes());
-            byte[] returnString = new byte[testString.getBytes().length];
+            outstream.write(TEST_STRING.getBytes());
+            byte[] returnString = new byte[TEST_STRING.getBytes().length];
             handler.getInputStream().read(returnString);
             outstream.close();
-            assertTrue(Arrays.equals(testString.getBytes(), returnString));
+            assertTrue(Arrays.equals(TEST_STRING.getBytes(), returnString));
             assertEquals(System.out, handler.getOutputStream());
         });
     }
@@ -109,11 +108,11 @@ class IORedirectionHandlerTest {
         assertDoesNotThrow(()->{
             handler.extractRedirOptions();
             OutputStream outstream = new FileOutputStream(TestFileUtils.tempFileName1);
-            outstream.write(testString.getBytes());
-            byte[] returnString = new byte[testString.getBytes().length];
+            outstream.write(TEST_STRING.getBytes());
+            byte[] returnString = new byte[TEST_STRING.getBytes().length];
             handler.getInputStream().read(returnString);
             outstream.close();
-            assertTrue(Arrays.equals(testString.getBytes(), returnString));
+            assertTrue(Arrays.equals(TEST_STRING.getBytes(), returnString));
             assertEquals(System.out, handler.getOutputStream());
         });
     }
@@ -125,12 +124,12 @@ class IORedirectionHandlerTest {
         handler = new IORedirectionHandler(args, System.in, System.out, resolver);
         assertDoesNotThrow(()->{
             handler.extractRedirOptions();
-            handler.getOutputStream().write(testString.getBytes());
+            handler.getOutputStream().write(TEST_STRING.getBytes());
             InputStream instream = new FileInputStream(TestFileUtils.tempFileName1);
-            byte[] returnString = new byte[testString.getBytes().length];
+            byte[] returnString = new byte[TEST_STRING.getBytes().length];
             instream.read(returnString);
             instream.close();
-            assertTrue(Arrays.equals(testString.getBytes(), returnString));
+            assertTrue(Arrays.equals(TEST_STRING.getBytes(), returnString));
             assertEquals(System.in, handler.getInputStream());
         });
     }

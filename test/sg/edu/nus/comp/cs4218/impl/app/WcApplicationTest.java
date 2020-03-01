@@ -1,7 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.Test;
-import sg.edu.nus.comp.cs4218.app.WcInterface;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
@@ -14,12 +13,12 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 class WcApplicationTest {
     //TODO: Add more failed test cases
     private final WcApplication wcApplication = new WcApplication();
-    private final static String wcFolder = "asset" + CHAR_FILE_SEP+ "app" +CHAR_FILE_SEP + "wc" + CHAR_FILE_SEP;
-    private final static String TEST_FILE = wcFolder + "test.txt";
-    private final static String TEST_FILE_1 = wcFolder + "test1.txt";
-    private final static String TEST_FILE_2 = wcFolder + "test2.txt";
-    private final static String NONE_FILE = wcFolder + "none.txt";
-    private final static String SUB_DIR = wcFolder + "subDir";
+    private final static String WC_FOLDER = "asset" + CHAR_FILE_SEP+ "app" +CHAR_FILE_SEP + "wc" + CHAR_FILE_SEP;
+    private final static String TEST_FILE = WC_FOLDER + "test.txt";
+    private final static String TEST_FILE_1 = WC_FOLDER + "test1.txt";
+    private final static String TEST_FILE_2 = WC_FOLDER + "test2.txt";
+    private final static String NONE_FILE = WC_FOLDER + "none.txt";
+    private final static String SUB_DIR = WC_FOLDER + "subDir";
     private final static String NO_PERMISSION = SUB_DIR + CHAR_FILE_SEP + "NO_PERMISSION.txt";
     private final static String WC_ERR_HEADER = "wc: ";
     private InputStream inputStream = System.in;;
@@ -108,12 +107,12 @@ class WcApplicationTest {
     @Test
     void countFromNoPermission() {
         String result = WC_ERR_HEADER + ERR_NO_PERM;
-        File no_perm_file = new File(NO_PERMISSION);
-        if(no_perm_file.setReadable(false)){
+        File noPermFile = new File(NO_PERMISSION);
+        if(noPermFile.setReadable(false)){
             assertDoesNotThrow(()->{
                 assertEquals(result, wcApplication.countFromFiles(true, true, true, NO_PERMISSION));
             });
-            assertTrue(no_perm_file.setReadable(true));
+            assertTrue(noPermFile.setReadable(true));
         }
     }
 
