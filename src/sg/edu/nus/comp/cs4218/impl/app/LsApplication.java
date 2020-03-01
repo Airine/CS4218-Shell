@@ -220,7 +220,7 @@ public class LsApplication implements LsInterface {
      * is an absolute path.
      *
      * @param directory
-     * @return
+     * @return the Path object of this path
      */
     private Path resolvePath(String directory) {
         if (directory.charAt(0) == CHAR_FILE_SEP || directory.charAt(1) == ':') {
