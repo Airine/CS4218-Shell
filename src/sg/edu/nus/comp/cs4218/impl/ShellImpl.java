@@ -32,6 +32,9 @@ public class ShellImpl implements Shell {
                 try {
                     System.out.print(currentDirectory.substring(lastSlash + 1) + "> ");
                     commandString = reader.readLine();
+                    if(commandString==null){
+                        break;
+                    }
                 } catch (IOException e) {
                     break; // Streams are closed, terminate process
                 }

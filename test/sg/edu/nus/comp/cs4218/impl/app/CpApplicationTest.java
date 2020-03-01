@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
@@ -10,6 +11,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 class CpApplicationTest {
 
     private CpInterface cpInterface;
