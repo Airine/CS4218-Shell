@@ -169,7 +169,13 @@ public class PasteApplication implements PasteInterface {
         return output.toString();
     }
 
-    /* Algorithm to merge files */
+
+    /**
+     * @param fileNumber    number of files to merge
+     * @param readers       BufferReader list of all files
+     * @param output        result of merge
+     * @throws IOException
+     */
     private void mergeAlgorithm(int fileNumber, BufferedReader[] readers, StringBuilder output) throws IOException {
         String line;
         int unfinished;

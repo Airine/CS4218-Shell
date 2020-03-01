@@ -131,6 +131,15 @@ public class CutApplication implements CutInterface {
     }
 
 
+    /**
+     * @param isCharPo Boolean option to cut by character position
+     * @param isBytePo Boolean option to cut by byte position
+     * @param isRange  Boolean option to perform range-based cut
+     * @param startIdx index to begin cut
+     * @param endIdx   index to end cut
+     * @param lines    lines to be cut
+     * @throws Exception
+     */
     private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws Exception {
         if (startIdx == 0) {
             throw new Exception(ERR_OUT_RANGE);
