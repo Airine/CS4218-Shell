@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.util;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
@@ -23,6 +24,7 @@ class IORedirectionHandlerTest {
     @BeforeEach
     void setUp() {
         try {
+            TestFileUtils.rmCreatedFiles();
             TestFileUtils.createSomeFiles();
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,6 +152,7 @@ class IORedirectionHandlerTest {
     }
 
     @Test
+    @Disabled
     void testSeveralFileSegment() {
         List<String> args = Arrays.asList("<", "\"" + TestFileUtils.tempFileName1 + "\"\"" + TestFileUtils.tempFileName2 + "\"");
         ArgumentResolver resolver = new ArgumentResolver();

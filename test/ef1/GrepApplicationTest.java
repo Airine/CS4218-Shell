@@ -1,10 +1,12 @@
-package sg.edu.nus.comp.cs4218.impl.app;
+package ef1;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.GrepInterface;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
+import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
+import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,10 +1,12 @@
-package sg.edu.nus.comp.cs4218.impl.app;
+package ef1;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.DiffInterface;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.app.NewIOStream;
+import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 

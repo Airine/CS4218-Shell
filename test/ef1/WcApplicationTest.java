@@ -1,7 +1,8 @@
-package sg.edu.nus.comp.cs4218.impl.app;
+package ef1;
 
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.exception.WcException;
+import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.*;
