@@ -3,11 +3,9 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.SedInterface;
 import sg.edu.nus.comp.cs4218.exception.SedException;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
@@ -20,6 +18,7 @@ class SedApplicationTest {
     private static String folderName = "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "common";
     private static String fileNameA = "A.txt";
     private static String subDirName = "subDir";
+    private static String fileNameEmpty1 = "empty1.txt";
     private static String fileNameNotExist = "notExist.txt";
     private static String sedPrefix = "sed: ";
     private final SedInterface app = new SedApplication();
@@ -332,6 +331,27 @@ class SedApplicationTest {
             app.replaceSubstringInFile("", "", 1, folderName + CHAR_FILE_SEP + subDirName);
         });
         assertEquals(thrown.getMessage(), ERR_IS_DIR);
+    }
+
+    @Test
+    void testRunWithDirectoryFileName() {
+        String[] args = {"s/A/a/", folderName + CHAR_FILE_SEP + subDirName};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(SedException.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_IS_DIR);
+    }
+
+    @Test
+    void testRunWithClosedOutputStream() {
+        String[] args = {"s/A/a/", folderName + CHAR_FILE_SEP + fileNameA};
+        Throwable thrown = assertThrows(SedException.class, () -> {
+            outputStream = new FileOutputStream(new File(folderName + CHAR_FILE_SEP + fileNameEmpty1));
+            IOUtils.closeOutputStream(outputStream);
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sedPrefix + ERR_WRITE_STREAM);
     }
 
     @Test

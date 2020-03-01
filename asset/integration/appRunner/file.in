@@ -1,0 +1,6 @@
+paste test.txt
+cd .
+sed s/A/a/1 test.txt
+rm not_exist
+mv not_exist
+flink

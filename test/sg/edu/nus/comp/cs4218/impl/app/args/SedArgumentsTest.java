@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SedArgumentsTest {
 
-    private SedArguments sedArguments = new SedArguments();
+    private final SedArguments sedArguments = new SedArguments();
 
     @Test
     void validateWithNullArgs() {
