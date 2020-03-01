@@ -64,7 +64,7 @@ public class SequenceCommand implements Command {
 
     @Override
     public void terminate() {
-        // Unused for now
+        // do not need to implement
     }
 
     public List<Command> getCommands() {

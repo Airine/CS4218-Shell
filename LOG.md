@@ -58,6 +58,16 @@ execute this command in the root directory:
 
 1. Solved abnormal exit
 
+## 2020-2-18
+
+#### Complete Implementation and test for Paste
+
+1. Paste can take at most one input stream and arbitrary number of files in our implementation.
+
+2. PMD warnings can be suppressed by adding `\\NOPMD` at the end of the statement.
+
+---
+
 ## 2020-2-19
 
 1. Complete unit test cases for `StringUtil`.  - 100% coverage
@@ -70,9 +80,55 @@ execute this command in the root directory:
 
 ---
 
-## 2020-2-20
+## 2020-2-26
+
+1. Fix 60% coverage of `ExitApplication`, now 100% coverage.
+
+2. Complete unit test cases for `IOUtils`. - 100% coverage.
+
+3. Handle null `InputStream` in `IOUtils.getLinesFromInputStream(InputStream input)`
+
+4. Refactor and solve [issue](https://github.com/nus-cs4218/cs4218-project-ay1920-s2-2020-team6/issues/8) - No PMD warnings
+
+## 2020-2-27
+
+1. Solve PMD warnings in test folder.
+
+## 2020-2-29
+
+1. Complete unit test cases for `LsApplication`. - 100% coverage.
+
+2. Make an assumption to the NOTE in `buildResult`:
+    
+    Assume that `ls <text file> <directory>` will return:
+    ```
+   <text file>
+   
+   <directory>:
+   <content in directory>
+   ```
+   
+3. Create unit test cases for `IORedirectionHandler` -93% coverage, need information about `RegexArgument` to cover the rest.
+
+4. Create unit test cases for `GrepApplication` -100% coverage
+
+Bug:
+5. InCommandBuilder, when parse args with ";", it do not reinstate token `token = new LinkedList<>();`,
+this is a bug of original code. 
+
+## 2020-3-1
+
+Bug:
+- In CommandBuilder, the redirect operation doest not contains <.
+- In pipeCommand, the nextOutputStream finally should resume to stdout
+
+
+Assumption:
+- echo will push new line
+- when command substitution new line will change to white space 
+
+---
 
 Notice: Please kindly do logs while finding and fixing bugs and follow the format. 
 Which I think would be very helpful for writing or presenting 
 project progress.
-

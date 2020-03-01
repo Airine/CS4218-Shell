@@ -17,7 +17,6 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 public class CdApplication implements CdInterface {
 
 
-
     @Override
     public void changeToDirectory(String path) throws CdException {
         EnvironmentUtils.currentDirectory = getNormalizedAbsolutePath(path);
@@ -30,7 +29,7 @@ public class CdApplication implements CdInterface {
      * @param args   Array of arguments for the application.
      * @param stdin  An InputStream, not used.
      * @param stdout An OutputStream, not used.
-     * @throws CdException
+     * @throws CdException The Exception from CdApplication
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout)

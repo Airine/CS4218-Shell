@@ -1,0 +1,5 @@
+ls
+find img -name "timeline*"
+echo "hello"
+grep "Team" README.md
+sort test.txt

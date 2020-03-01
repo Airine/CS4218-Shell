@@ -77,7 +77,7 @@ public final class CommandBuilder {
 
             switch (firstChar) {
                 case CHAR_REDIR_INPUT:
-                    break;
+//                    break;
                 case CHAR_REDIR_OUTPUT:
                     // add as a separate token on its own
                     tokens.add(String.valueOf(firstChar));
@@ -109,6 +109,7 @@ public final class CommandBuilder {
                         cmdsForSequence.add(new PipeCommand(callCmdsForPipe));
                         callCmdsForPipe = new LinkedList<>();
                     }
+                    tokens = new LinkedList<>();
                     break;
 
                 default:

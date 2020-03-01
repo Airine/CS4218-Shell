@@ -1,17 +1,14 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.RmInterface;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.RmException;
+import sg.edu.nus.comp.cs4218.impl.parser.RmArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 public class RmApplication implements RmInterface {
@@ -40,44 +37,14 @@ public class RmApplication implements RmInterface {
         }
     }
 
-    private String[] listToStringArray(List<String> list) {
-        Object[] objects = list.toArray();
-        String[] strings = new String[objects.length];
-        for (int i = 0; i < objects.length; i++) {
-            strings[i] = (String) objects[i];
-        }
-        return strings;
-    }
-
 
     @Override
-    public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+    public void run(String[] args, InputStream stdin, OutputStream stdout) throws RmException {
 
-        List<String> list = new ArrayList<>();
-        boolean isRecursive = false, isEmptyFolder = true;
+        RmArgsParser parser = new RmArgsParser();
         try {
-            for (String arg : args) {
-                if ("-r".equals(arg)) {
-                    if (!list.isEmpty()) {
-                        remove(isEmptyFolder, isRecursive, listToStringArray(list));
-                        isEmptyFolder = false;
-                        list = new LinkedList<>();
-                    }
-                    isRecursive = true;
-                } else if ("-d".equals(arg)) {
-                    if (!list.isEmpty()) {
-                        remove(isEmptyFolder, isRecursive, listToStringArray(list));
-                        isRecursive = false;
-                        list = new LinkedList<>();
-                    }
-                    isEmptyFolder = true;
-                } else {
-                    list.add(arg);
-                }
-            }
-            if (!list.isEmpty()) {
-                remove(isEmptyFolder, isRecursive, listToStringArray(list));
-            }
+            parser.parse(args);
+            remove(parser.isEmptyFolder(), parser.isRecursive(), parser.files());
         } catch (Exception e) {
             try {
                 stdout.write(e.getMessage().getBytes());

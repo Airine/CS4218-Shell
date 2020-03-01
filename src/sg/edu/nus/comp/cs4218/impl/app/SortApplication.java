@@ -33,6 +33,9 @@ public class SortApplication implements SortInterface {
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws SortException {
         // Format: sort [-nrf] [FILES]
+        if (args == null) {
+            throw new SortException(ERR_NULL_ARGS);
+        }
         if (stdout == null) {
             throw new SortException(ERR_NULL_STREAMS);
         }

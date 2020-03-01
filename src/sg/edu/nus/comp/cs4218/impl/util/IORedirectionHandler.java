@@ -82,6 +82,11 @@ public class IORedirectionHandler {
         }
     }
 
+    public void close() throws ShellException {
+        IOUtils.closeInputStream(inputStream);
+        IOUtils.closeOutputStream(outputStream);
+    }
+
     public List<String> getNoRedirArgsList() {
         return noRedirArgsList;
     }
@@ -95,6 +100,6 @@ public class IORedirectionHandler {
     }
 
     private boolean isRedirOperator(String str) {
-        return str.equals(String.valueOf(CHAR_REDIR_INPUT));
+        return str.equals(String.valueOf(CHAR_REDIR_INPUT)) || str.equals(String.valueOf(CHAR_REDIR_OUTPUT));
     }
 }

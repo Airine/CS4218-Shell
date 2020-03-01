@@ -27,7 +27,7 @@ public class WcApplication implements WcInterface {
      * @param stdin  An InputStream. The input for the command is read from this InputStream if no
      *               files are specified.
      * @param stdout An OutputStream. The output of the command is written to this OutputStream.
-     * @throws WcException
+     * @throws WcException Exception for WcApplication
      */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout)
@@ -101,18 +101,9 @@ public class WcApplication implements WcInterface {
 
             // Format all output: " %7d %7d %7d %s"
             // Output in the following order: lines words bytes filename
-            StringBuilder sb = new StringBuilder(); //NOPMD
-            if (isLines) {
-                sb.append(String.format(NUMBER_FORMAT, count[0]));
-            }
-            if (isWords) {
-                sb.append(String.format(NUMBER_FORMAT, count[1]));
-            }
-            if (isBytes) {
-                sb.append(String.format(NUMBER_FORMAT, count[2]));
-            }
-            sb.append(String.format(" %s", file));
-            result.add(sb.toString());
+            StringBuilder stringBuilder = getStringBuilder(isBytes, isLines, isWords, count);
+            stringBuilder.append(String.format(" %s", file));
+            result.add(stringBuilder.toString());
         }
 
         // Print cumulative counts for all the files
@@ -140,16 +131,27 @@ public class WcApplication implements WcInterface {
      * @param isLines Boolean option to count the number of lines
      * @param isWords Boolean option to count the number of words
      * @param stdin   InputStream containing arguments from Stdin
-     * @throws Exception
+     * @throws WcException WcException
      */
     @Override
     public String countFromStdin(Boolean isBytes, Boolean isLines, Boolean isWords,
-                                 InputStream stdin) throws Exception {
+                                 InputStream stdin) throws WcException {
         if (stdin == null) {
-            throw new Exception(ERR_NULL_STREAMS);
+            throw new WcException(ERR_NULL_STREAMS);
         }
-        long[] count = getCountReport(stdin); // lines words bytes;
+        long[] count; // lines words bytes;
+        try {
+            count = getCountReport(stdin);
+        } catch (Exception e) {
+            throw (WcException) new WcException(e.getMessage()).initCause(e);
+        }
 
+        StringBuilder stringBuilder = getStringBuilder(isBytes, isLines, isWords, count);
+
+        return stringBuilder.toString();
+    }
+
+    private StringBuilder getStringBuilder(Boolean isBytes, Boolean isLines, Boolean isWords, long... count) {
         StringBuilder sb = new StringBuilder(); //NOPMD
         if (isLines) {
             sb.append(String.format(NUMBER_FORMAT, count[0]));
@@ -160,15 +162,14 @@ public class WcApplication implements WcInterface {
         if (isBytes) {
             sb.append(String.format(NUMBER_FORMAT, count[2]));
         }
-
-        return sb.toString();
+        return sb;
     }
 
     /**
      * Returns array containing the number of lines, words, and bytes based on data in InputStream.
      *
      * @param input An InputStream
-     * @throws IOException
+     * @throws Exception IOException
      */
     public long[] getCountReport(InputStream input) throws Exception {
         if (input == null) {

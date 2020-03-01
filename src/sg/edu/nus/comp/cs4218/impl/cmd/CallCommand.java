@@ -8,7 +8,6 @@ import sg.edu.nus.comp.cs4218.impl.util.ArgumentResolver;
 import sg.edu.nus.comp.cs4218.impl.util.IORedirectionHandler;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -57,7 +56,7 @@ public class CallCommand implements Command {
 
     @Override
     public void terminate() {
-        // Unused for now
+        // to not need it
     }
 
     public List<String> getArgsList() {

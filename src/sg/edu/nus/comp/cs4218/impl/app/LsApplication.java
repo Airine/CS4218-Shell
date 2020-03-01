@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.EnvironmentUtils;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
+import sg.edu.nus.comp.cs4218.exception.InvalidDirectoryException;
 import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.impl.parser.LsArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
@@ -16,10 +17,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
-import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_CURR_DIR;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.*;
 
 public class LsApplication implements LsInterface {
 
@@ -33,7 +34,7 @@ public class LsApplication implements LsInterface {
         }
 
         List<Path> paths;
-        if (folderName.length == 0 && isRecursive) {
+        if (folderName.length == 0) {
             String[] directories = new String[1];
             directories[0] = EnvironmentUtils.currentDirectory;
             paths = resolvePaths(directories);
@@ -65,7 +66,7 @@ public class LsApplication implements LsInterface {
         Boolean foldersOnly = parser.isFoldersOnly();
         Boolean recursive = parser.isRecursive();
         String[] directories = parser.getDirectories()
-                .toArray(new String[parser.getDirectories().size()]);
+                .toArray(new String[0]);
         String result = listFolderContent(foldersOnly, recursive, directories);
 
         try {
@@ -80,8 +81,8 @@ public class LsApplication implements LsInterface {
      * Lists only the current directory's content and RETURNS. This does not account for recursive
      * mode in cwd.
      *
-     * @param isFoldersOnly
-     * @return
+     * @param isFoldersOnly isFoldersOnly flag
+     * @return the result
      */
     private String listCwdContent(Boolean isFoldersOnly) throws LsException {
         String cwd = EnvironmentUtils.currentDirectory;
@@ -110,7 +111,7 @@ public class LsApplication implements LsInterface {
                 String formatted = formatContents(contents);
                 String relativePath = getRelativeToCwd(path).toString();
                 result.append(StringUtils.isBlank(relativePath) ? PATH_CURR_DIR : relativePath);
-                result.append(":\n");
+                result.append(':').append(STRING_NEWLINE);
                 result.append(formatted);
 
                 if (!formatted.isEmpty()) {
@@ -131,8 +132,13 @@ public class LsApplication implements LsInterface {
                 // However the user might have written a command like `ls invalid1 valid1 -R`, what
                 // do we do then?
                 if (!isRecursive) {
-                    result.append(e.getMessage());
-                    result.append('\n');
+                    if (path.toFile().exists()) {
+                        result.append(getRelativeToCwd(path).toString());
+                        result.append(STRING_NEWLINE).append(STRING_NEWLINE);
+                    } else {
+                        result.append(e.getMessage());
+                        result.append(STRING_NEWLINE);
+                    }
                 }
             }
         }
@@ -144,7 +150,7 @@ public class LsApplication implements LsInterface {
      * Formats the contents of a directory into a single string.
      *
      * @param contents - list of items in a directory
-     * @return
+     * @return formatted contents
      */
     private String formatContents(List<Path> contents) {
         List<String> fileNames = new ArrayList<>();
@@ -155,7 +161,7 @@ public class LsApplication implements LsInterface {
         StringBuilder result = new StringBuilder();
         for (String fileName : fileNames) {
             result.append(fileName);
-            result.append('\n');
+            result.append(STRING_NEWLINE);
         }
 
         return result.toString().trim();
@@ -164,7 +170,7 @@ public class LsApplication implements LsInterface {
     /**
      * Gets the contents in a single specified directory.
      *
-     * @param directory
+     * @param directory input directory (Path object)
      * @return List of files + directories in the passed directory.
      */
     private List<Path> getContents(Path directory, Boolean isFoldersOnly)
@@ -179,7 +185,7 @@ public class LsApplication implements LsInterface {
 
         List<Path> result = new ArrayList<>();
         File pwd = directory.toFile();
-        for (File f : pwd.listFiles()) {
+        for (File f : Objects.requireNonNull(pwd.listFiles())) {
             if (isFoldersOnly && !f.isDirectory()) {
                 continue;
             }
@@ -197,7 +203,7 @@ public class LsApplication implements LsInterface {
     /**
      * Resolve all paths given as arguments into a list of Path objects for easy path management.
      *
-     * @param directories
+     * @param directories input directories needed to be
      * @return List of java.nio.Path objects
      */
     private List<Path> resolvePaths(String... directories) {
@@ -214,10 +220,10 @@ public class LsApplication implements LsInterface {
      * is an absolute path.
      *
      * @param directory
-     * @return
+     * @return the Path object of this path
      */
     private Path resolvePath(String directory) {
-        if (directory.charAt(0) == '/') {
+        if (directory.charAt(0) == CHAR_FILE_SEP || directory.charAt(1) == ':') {
             // This is an absolute path
             return Paths.get(directory).normalize();
         }
@@ -228,21 +234,11 @@ public class LsApplication implements LsInterface {
     /**
      * Converts a path to a relative path to the current directory.
      *
-     * @param path
-     * @return
+     * @param path input absolute path
+     * @return the converted relative path
      */
     private Path getRelativeToCwd(Path path) {
         return Paths.get(EnvironmentUtils.currentDirectory).relativize(path);
     }
 
-    private class InvalidDirectoryException extends Exception {
-        InvalidDirectoryException(String directory) {
-            super(String.format("ls: cannot access '%s': No such file or directory", directory));
-        }
-
-        InvalidDirectoryException(String directory, Throwable cause) {
-            super(String.format("ls: cannot access '%s': No such file or directory", directory),
-                    cause);
-        }
-    }
 }
