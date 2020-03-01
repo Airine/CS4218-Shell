@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class ArgumentResolverTest {
     private final ArgumentResolver argumentResolver = new ArgumentResolver();
@@ -44,7 +45,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"`echo 'ddd'`\"");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("ddd"), parsedArgsList);
+            assertEquals(Arrays.asList("ddd "), parsedArgsList);
         });
     }
 
@@ -81,7 +82,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"'fff `echo \"ggg\"`'\"");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("'fff ggg'"), parsedArgsList);
+            assertEquals(Arrays.asList("'fff ggg '"), parsedArgsList);
         });
     }
 
@@ -109,7 +110,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"mmm `echo '\"nnn'`");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("mmm \"nnn"), parsedArgsList);
+            assertEquals(Arrays.asList("mmm \"nnn "), parsedArgsList);
         });
     }
 }
