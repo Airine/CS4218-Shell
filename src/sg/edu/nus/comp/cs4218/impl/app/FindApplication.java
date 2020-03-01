@@ -139,7 +139,7 @@ public class FindApplication implements FindInterface {
         try {
             results = findInFolders(fileName, folderName);
         } catch (Exception e) {
-            throw new FindException(e.getMessage());
+            throw (FindException) new FindException(e.getMessage()).initCause(e);
         }
 
         return results;
