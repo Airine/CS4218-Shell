@@ -9,9 +9,7 @@ import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
@@ -23,13 +21,14 @@ class LsApplicationTest {
     private static final String TEST_TXT = "test.txt";
     private static final String SUB_SUB_DIR = "subSubDir";
     private final LsInterface lsApplication = new LsApplication();
-    private final OutputStream outputStream = new ByteArrayOutputStream();
+    private OutputStream outputStream;
     private final String cwd = EnvironmentUtils.currentDirectory;
 
     @BeforeEach
     void setCurrentDirectory() {
         //noinspection NonAtomicOperationOnVolatileField
         EnvironmentUtils.currentDirectory += CHAR_FILE_SEP + "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "ls";
+        outputStream = new ByteArrayOutputStream();
     }
 
 
@@ -50,6 +49,16 @@ class LsApplicationTest {
         String[] args = {};
         assertThrows(LsException.class, () -> {
             lsApplication.run(args, System.in, null);
+        });
+    }
+
+    @Test
+    void runWithClosedOutputStream() {
+        String[] args = {};
+        assertThrows(LsException.class, () -> {
+            outputStream = new FileOutputStream(new File(TEST_TXT));
+            outputStream.close();
+            lsApplication.run(args, System.in, outputStream);
         });
     }
 
