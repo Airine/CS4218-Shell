@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.app.CutInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CutException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.app.args.CutArguments;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
@@ -28,11 +29,11 @@ public class CutApplication implements CutInterface {
      * @param startIdx index to begin cut
      * @param endIdx   index to end cut
      * @param fileName Array of String of file names
-     * @return
-     * @throws Exception
+     * @return The expected result
+     * @throws CutException Throw exception caused by CutApplication
      */
     @Override
-    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, String... fileName) throws Exception {
+    public String cutFromFiles(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, String... fileName) throws CutException {
         if (fileName == null) {
             throw new CutException(ERR_NULL_ARGS);
         }
@@ -48,12 +49,18 @@ public class CutApplication implements CutInterface {
             if (!node.canRead()) {
                 throw new CutException(ERR_NO_PERM);
             }
-            InputStream input = IOUtils.openInputStream(file);//NOPMD we suppress the close process because we will use
-            // special method to close this source stream:   IOUtils.closeInputStream(input);
-            lines.addAll(IOUtils.getLinesFromInputStream(input));
-            IOUtils.closeInputStream(input);
+            try(InputStream input = IOUtils.openInputStream(file)) {
+                lines.addAll(IOUtils.getLinesFromInputStream(input));
+                IOUtils.closeInputStream(input);
+            } catch (Exception e){
+                throw new CutException(e.getMessage());
+            }
         }
-        cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
+        try {
+            cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
+        } catch (Exception e) {
+            throw new CutException(e.getMessage());
+        }
         return String.join(STRING_NEWLINE, lines);
     }
 
@@ -66,28 +73,34 @@ public class CutApplication implements CutInterface {
      * @param startIdx index to begin cut
      * @param endIdx   index to end cut
      * @param stdin    InputStream containing arguments from Stdin
-     * @return
-     * @throws Exception
+     * @return The expected result
+     * @throws CutException The exception from CutApplication
      */
     @Override
-    public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, InputStream stdin) throws Exception {
+    public String cutFromStdin(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, InputStream stdin) throws CutException {
         if (stdin == null) {
             throw new CutException(ERR_NULL_STREAMS);
         }
-        List<String> lines = IOUtils.getLinesFromInputStream(stdin);
-        cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
+        List<String> lines;
+        try {
+            lines = IOUtils.getLinesFromInputStream(stdin);
+            cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
+        } catch (Exception e) {
+            throw new CutException(e.getMessage());
+        }
         return String.join(STRING_NEWLINE, lines);
     }
 
     /**
      * Runs application with specified input data and specified output stream.
      *
-     * @param args
-     * @param stdin
-     * @param stdout
+     * @param args List of input arguments
+     * @param stdin The specified InputStream
+     * @param stdout The specified OutputStream
+     * @throws CutException The exception from CutApplication
      */
     @Override
-    public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+    public void run(String[] args, InputStream stdin, OutputStream stdout) throws CutException {
         // Format: cut [Option] [LIST] FILES...
         if (args == null) {
             throw new CutException(ERR_NULL_ARGS);
@@ -138,17 +151,17 @@ public class CutApplication implements CutInterface {
      * @param startIdx index to begin cut
      * @param endIdx   index to end cut
      * @param lines    lines to be cut
-     * @throws Exception
+     * @throws CutException The exception from CutApplication.
      */
-    private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws Exception {
+    private void cutInputString(Boolean isCharPo, Boolean isBytePo, Boolean isRange, int startIdx, int endIdx, List<String> lines) throws CutException {
         if (startIdx == 0) {
-            throw new Exception(ERR_OUT_RANGE);
+            throw new CutException(ERR_OUT_RANGE);
         }
         if (isCharPo) {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 if (startIdx > line.length() || endIdx > line.length()) {
-                    throw new Exception(ERR_OUT_RANGE);
+                    throw new CutException(ERR_OUT_RANGE);
                 }
                 if (isRange) {
                     lines.set(i, line.substring(startIdx - 1, endIdx));
@@ -165,7 +178,7 @@ public class CutApplication implements CutInterface {
                 String line = lines.get(i);
                 byte[] byteArray = line.getBytes();
                 if (startIdx > byteArray.length || endIdx > byteArray.length) {
-                    throw new Exception(ERR_OUT_RANGE);
+                    throw new CutException(ERR_OUT_RANGE);
                 }
                 if (isRange) {
                     byte[] byteArrayNew = Arrays.copyOfRange(byteArray, startIdx - 1, endIdx);

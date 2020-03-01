@@ -38,7 +38,7 @@ public class FindApplication implements FindInterface {
      *                       invalid arguments are given.
      */
     @Override
-    public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+    public void run(String[] args, InputStream stdin, OutputStream stdout) throws FindException {
         ArrayList<String> folderNames = new ArrayList<>();
 
         try {
@@ -71,10 +71,12 @@ public class FindApplication implements FindInterface {
     /**
      * Get folder names and filename supplied by user.
      *
-     * @param args supplied by user.
+     * @param args supplied by user
+     * @param folderNames folders supplied by user
      * @return a String of the regex of filename if specified by user, else returns an empty string
+     * @throws FindException The exception caused by FindApplication
      */
-    private String getArguments(String[] args, ArrayList<String> folderNames) throws Exception {
+    private String getArguments(String[] args, ArrayList<String> folderNames) throws FindException {
         String fileName = "";
         boolean isFileName = false;
 
@@ -125,7 +127,7 @@ public class FindApplication implements FindInterface {
     }
 
     @Override
-    public String findFolderContent(String fileName, String... folderName) throws Exception {
+    public String findFolderContent(String fileName, String... folderName) throws FindException {
         if (folderName == null || folderName.length == 0) {
             throw new FindException(NO_FOLDER);
         }
@@ -134,7 +136,11 @@ public class FindApplication implements FindInterface {
         }
 
         String results = "";
-        results = findInFolders(fileName, folderName);
+        try {
+            results = findInFolders(fileName, folderName);
+        } catch (Exception e) {
+            throw new FindException(e.getMessage());
+        }
 
         return results;
     }
@@ -148,9 +154,9 @@ public class FindApplication implements FindInterface {
      * @param fileName   String of a regular expression of the file name
      * @param folderName Array of String of given folder/folders' name
      * @return the string listing the names of the matched file/folder in the folders specified
-     * @throws Exception
+     * @throws FindException The exception caused by FindApplication
      */
-    private String findInFolders(String fileName, String... folderName) throws Exception {
+    private String findInFolders(String fileName, String... folderName) throws FindException {
         ArrayList<String> listOfFileNames;
         ArrayList<String> listOfFolderNames;
         String result = "";
@@ -226,7 +232,7 @@ public class FindApplication implements FindInterface {
      * Pre-condition: currFolder exists
      *
      * @param currFolder the folder to list all files
-     * @return an ArrayList<String> containing all the file names
+     * @return an ArrayList containing all the file names
      */
     private ArrayList<String> getFilesFrom(File currFolder) {
         File[] listOfFiles = currFolder.listFiles();
@@ -246,7 +252,7 @@ public class FindApplication implements FindInterface {
      * Pre-condition: currFolder exists
      *
      * @param currFolder the folder to list all folders
-     * @return an ArrayList<String> containing all the folder names
+     * @return an ArrayList containing all the folder names
      */
     private ArrayList<String> getFoldersFrom(File currFolder) {
         File[] listOfFiles = currFolder.listFiles();
