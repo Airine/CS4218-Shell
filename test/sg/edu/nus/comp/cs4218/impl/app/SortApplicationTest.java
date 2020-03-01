@@ -3,11 +3,9 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.SortInterface;
 import sg.edu.nus.comp.cs4218.exception.SortException;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
@@ -179,6 +177,16 @@ class SortApplicationTest {
     }
 
     @Test
+    void testRunWithDirectoryFileName() {
+        String[] args = {folderName + CHAR_FILE_SEP + subDirName};
+        outputStream = new ByteArrayOutputStream();
+        Throwable thrown = assertThrows(SortException.class, () -> {
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), sortPrefix + ERR_IS_DIR);
+    }
+
+    @Test
     void testRunWithNullArg() {
         outputStream = new ByteArrayOutputStream();
         Throwable thrown = assertThrows(SortException.class, () -> {
@@ -194,5 +202,15 @@ class SortApplicationTest {
             app.run(args, System.in, outputStream);
         });
         assertEquals(thrown.getMessage(), sortPrefix + ERR_NULL_STREAMS);
+    }
+
+    @Test
+    void testRunWithClosedOutputStream() {
+        String[] args = {folderName + CHAR_FILE_SEP + fileNameD};
+        assertThrows(SortException.class, () -> {
+            outputStream = new FileOutputStream(new File(folderName + CHAR_FILE_SEP + fileNameEmpty1));
+            IOUtils.closeOutputStream(outputStream);
+            app.run(args, System.in, outputStream);
+        });
     }
 }

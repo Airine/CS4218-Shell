@@ -3,11 +3,9 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.PasteInterface;
 import sg.edu.nus.comp.cs4218.exception.PasteException;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
@@ -197,6 +195,17 @@ class PasteApplicationTest {
             app.run(args, System.in, outputStream);
         });
         assertEquals(thrown.getMessage(), pastePrefix + ERR_FILE_NOT_FOUND);
+    }
+
+    @Test
+    void testRunWithClosedOutputStream() {
+        String[] args = {folderName + CHAR_FILE_SEP + fileNameA};
+        Throwable thrown = assertThrows(PasteException.class, () -> {
+            outputStream = new FileOutputStream(new File(folderName + CHAR_FILE_SEP + fileNameEmpty1));
+            IOUtils.closeOutputStream(outputStream);
+            app.run(args, System.in, outputStream);
+        });
+        assertEquals(thrown.getMessage(), pastePrefix + ERR_IO_EXCEPTION);
     }
 
     @Test
