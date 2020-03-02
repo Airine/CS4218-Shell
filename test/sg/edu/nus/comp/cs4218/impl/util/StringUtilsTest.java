@@ -68,7 +68,7 @@ class StringUtilsTest {
     @Test
     void windowsSeparator() {
         props.setProperty(OSNAMESTR, "Windows");
-        assertEquals(String.valueOf('\\') + CHAR_FILE_SEP, fileSeparator());
+        assertEquals("\\" + CHAR_FILE_SEP, fileSeparator());
     }
 
     @Test
