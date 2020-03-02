@@ -25,6 +25,7 @@ public class ApplicationRunner {
     public final static String APP_SED = "sed";
     public final static String APP_RM = "rm";
     public final static String APP_MV = "mv";
+    public final static String APP_CUT = "cut";
 
     /**
      * Run the application as specified by the application command keyword and arguments.
@@ -79,6 +80,9 @@ public class ApplicationRunner {
                 break;
             case APP_MV:
                 application = new MvApplication();
+                break;
+            case APP_CUT:
+                application = new CutApplication();
                 break;
             default:
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
