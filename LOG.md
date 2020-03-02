@@ -1,12 +1,12 @@
 ## 2020-2-5
 
-1. Find bugs in `impl.util.StringUtils.isBlank()` - Runxin 
+1. Find bugs in `impl.util.StringUtils.isBlank()` 
     
     - infinite loop (solved)
     
     - 5 test cases: 3 failed, 2 passed (solved)
    
-2. Some bugs in `ApplicationRunner` - Runxin
+2. Some bugs in `ApplicationRunner`
 
     - switch without breaks (solved)
  

@@ -1,13 +1,20 @@
 # CS4218 Software Testing Project - The SHELL
 *Group Project for CS4218, 19/20 Sem2*
 
-Team Members: Tian Runxin, Huang Yu'an, Luo Tianzuo, Lao Guoyin
+## How to run tests
 
-Slack: https://cs4218-team6.slack.com/
+- Right click on test folder, choose `Run 'All Tests'`
 
-![timeline](./img/timeline.png)
+![run all tests](img/run.png)
+
+- Or run with maven command
+
+  ```bash
+  mvn test
+  ```
 
 If you want to run this app in the terminal
 execute this command in the root directory:
+
 >  mvn compile -Pcode-mainclass
 
