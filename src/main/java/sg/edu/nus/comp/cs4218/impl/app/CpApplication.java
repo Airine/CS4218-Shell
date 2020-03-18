@@ -18,6 +18,10 @@ public class CpApplication implements CpInterface {
     @Override
     public String cpSrcFileToDestFile(String srcFile, String destFile) throws Exception {
         String destFilePath = FileSystemUtils.getAbsolutePathName(destFile);
+        File oriFile = new File(destFilePath);
+        if(oriFile.exists()){
+            oriFile.delete();
+        }
         Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
                 Paths.get(destFilePath));
         return destFilePath;
@@ -31,6 +35,10 @@ public class CpApplication implements CpInterface {
                     FileSystemUtils.getAbsolutePathName(destFolder),
                     new File(FileSystemUtils.getAbsolutePathName(oneFileName))
                             .getName());
+            File oriFile = new File(destFilePath);
+            if(oriFile.exists()){
+                oriFile.delete();
+            }
             Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(oneFileName)),
                     Paths.get(destFilePath));
         }
@@ -50,20 +58,16 @@ public class CpApplication implements CpInterface {
             parser.parse(args);
             String destPath = FileSystemUtils.getAbsolutePathName(parser.getDestFilePathName());
             String[] toCopy = parser.getToCopyFileName();
-            if (!new File(destPath).isDirectory() ) {
+            if (!new File(destPath).isDirectory()) {
                 if (toCopy.length != 1) {
                     throw new CpException(ErrorConstants.ERR_TOO_MANY_ARGS);
                 }
-                cpFilesToFolder(toCopy[0], destPath);
+                cpSrcFileToDestFile(toCopy[0], destPath);
             } else {
                 cpFilesToFolder(destPath, toCopy);
             }
         } catch (Exception e) {
-            try {
-                stdout.write(e.getMessage().getBytes());
-            } catch (IOException ex) {
-                throw (CpException) new CpException(ErrorConstants.ERR_IO_EXCEPTION).initCause(ex);
-            }
+            throw (CpException) new CpException(ErrorConstants.ERR_IO_EXCEPTION).initCause(e);
         }
 
 
