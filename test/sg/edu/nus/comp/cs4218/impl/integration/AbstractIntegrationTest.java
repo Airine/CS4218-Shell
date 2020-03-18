@@ -1,7 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.integration;
 
 import org.junit.jupiter.api.*;
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -61,8 +61,8 @@ public abstract class AbstractIntegrationTest {
             e.printStackTrace();
         }
         shell = new ShellImpl();
-        originalCwd = EnvironmentUtils.currentDirectory;
-        EnvironmentUtils.currentDirectory = FileSystemUtils.getAbsolutePathName(getIntegrationDir());
+        originalCwd = Environment.currentDirectory;
+        Environment.currentDirectory = FileSystemUtils.getAbsolutePathName(getIntegrationDir());
     }
 
 
@@ -75,7 +75,7 @@ public abstract class AbstractIntegrationTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        EnvironmentUtils.currentDirectory = originalCwd;
+        Environment.currentDirectory = originalCwd;
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class AbstractIntegrationTest {
      */
     @Test
     void testAndValidateStdOut() {
-        File[] files = new File(EnvironmentUtils.currentDirectory).listFiles();
+        File[] files = new File(Environment.currentDirectory).listFiles();
         Object[] testFileIn = Arrays.stream(Objects.requireNonNull(files))
                 .filter(file -> file.getName().endsWith(".in"))
                 .toArray();

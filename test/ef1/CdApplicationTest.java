@@ -1,7 +1,7 @@
 package ef1;
 
 import org.junit.jupiter.api.*;
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.CdInterface;
 import sg.edu.nus.comp.cs4218.exception.CdException;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
@@ -32,12 +32,12 @@ class CdApplicationTest {
 
     @BeforeEach
     public void saveCurrDir() {
-        currDir = EnvironmentUtils.currentDirectory;
+        currDir = Environment.currentDirectory;
     }
 
     @AfterEach
     public void resumeCurrDir() {
-        EnvironmentUtils.currentDirectory = currDir;
+        Environment.currentDirectory = currDir;
     }
 
     @Test
@@ -62,13 +62,13 @@ class CdApplicationTest {
     @Test
     public void testCdFolder() {
         assertDoesNotThrow(() -> cdInterface.changeToDirectory(TestFileUtils.tempFolderName));
-        assertEquals(TestFileUtils.tempFolderName, EnvironmentUtils.currentDirectory);
+        assertEquals(TestFileUtils.tempFolderName, Environment.currentDirectory);
     }
 
     @Test
     public void runCdFolder() {
         assertDoesNotThrow(() -> cdInterface.run(new String[]{TestFileUtils.tempFolderName}, System.in, System.out));
-        assertEquals(TestFileUtils.tempFolderName, EnvironmentUtils.currentDirectory);
+        assertEquals(TestFileUtils.tempFolderName, Environment.currentDirectory);
     }
 
     @Test

@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -27,7 +27,7 @@ public final class FileSystemUtils {
     public static String getAbsolutePathName(String name) {
         Path path = new File(name).toPath();
         if (!path.isAbsolute()) {
-            path = Paths.get(EnvironmentUtils.currentDirectory, name);
+            path = Paths.get(Environment.currentDirectory, name);
         }
         return path.normalize().toString();
     }
@@ -61,7 +61,7 @@ public final class FileSystemUtils {
      */
     public static String convertToAbsolutePath(String fileName) {
         String home = System.getProperty("user.home").trim();
-        String currentDir = EnvironmentUtils.currentDirectory.trim();
+        String currentDir = Environment.currentDirectory.trim();
         String convertedPath = convertPathToSystemPath(fileName);
 // check whether is has been absolute path
         if (Paths.get(convertedPath).isAbsolute()) {

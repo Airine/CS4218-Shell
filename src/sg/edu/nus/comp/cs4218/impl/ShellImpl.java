@@ -1,7 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import sg.edu.nus.comp.cs4218.Command;
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -25,7 +25,7 @@ public class ShellImpl implements Shell {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Shell shell = new ShellImpl();
         try {
-            String currentDirectory = EnvironmentUtils.currentDirectory;
+            String currentDirectory = Environment.currentDirectory;
             int lastSlash = currentDirectory.lastIndexOf('/'); // TODO: Tempt solution, may not work on Windows
             String commandString;
             while (true) {

@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -82,7 +82,7 @@ public final class RegexArgument {
             if (Paths.get(dir).isAbsolute()){
                 currentDir = Paths.get(dir).toFile();
             } else {
-                currentDir = Paths.get(EnvironmentUtils.currentDirectory + File.separator + dir).toFile();
+                currentDir = Paths.get(Environment.currentDirectory + File.separator + dir).toFile();
             }
 
             for (String candidate : currentDir.list()) {
@@ -123,7 +123,7 @@ public final class RegexArgument {
             File nextNode = new File(node, current);
             String match = isAbsolute
                     ? nextNode.getPath()
-                    : nextNode.getPath().substring(EnvironmentUtils.currentDirectory.length() + 1);
+                    : nextNode.getPath().substring(Environment.currentDirectory.length() + 1);
             // TODO: Find a better way to handle this.
             if (onlyDirectories && nextNode.isDirectory()) {
                 match += File.separator;

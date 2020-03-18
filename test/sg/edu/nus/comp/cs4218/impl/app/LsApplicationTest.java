@@ -3,7 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -22,19 +22,19 @@ class LsApplicationTest {
     private static final String SUB_SUB_DIR = "subSubDir";
     private final LsInterface lsApplication = new LsApplication();
     private OutputStream outputStream;
-    private final String cwd = EnvironmentUtils.currentDirectory;
+    private final String cwd = Environment.currentDirectory;
 
     @BeforeEach
     void setCurrentDirectory() {
         //noinspection NonAtomicOperationOnVolatileField
-        EnvironmentUtils.currentDirectory += CHAR_FILE_SEP + "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "ls";
+        Environment.currentDirectory += CHAR_FILE_SEP + "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "ls";
         outputStream = new ByteArrayOutputStream();
     }
 
 
     @AfterEach
     void resetCurrentDirectory() {
-        EnvironmentUtils.currentDirectory = cwd;
+        Environment.currentDirectory = cwd;
     }
 
     @Test
@@ -136,7 +136,7 @@ class LsApplicationTest {
         assertDoesNotThrow(() -> {
             assertEquals(result, lsApplication.listFolderContent(false, false));
         });
-        EnvironmentUtils.currentDirectory = cwd;
+        Environment.currentDirectory = cwd;
     }
 
     @Test
@@ -162,11 +162,11 @@ class LsApplicationTest {
     @Test
     void listCwdContentWithWrongCwd() {
         //noinspection NonAtomicOperationOnVolatileField
-        EnvironmentUtils.currentDirectory += CHAR_FILE_SEP + "none" + CHAR_FILE_SEP;
+        Environment.currentDirectory += CHAR_FILE_SEP + "none" + CHAR_FILE_SEP;
         assertThrows(LsException.class, () -> {
             lsApplication.listFolderContent(false, false);
         });
-        EnvironmentUtils.currentDirectory = cwd;
+        Environment.currentDirectory = cwd;
     }
 
 }

@@ -64,4 +64,6 @@ public class ErrorConstants {
     public static final String ERR_GENERAL = "Exception Caught";
     public static final String ERR_IO_EXCEPTION = "IOException";
 
+    public static final String ERR_CURR_DIR = "Error in current directory";
+    public static final String ERR_DIR_NOT_EMPTY = "Error, the directory is not empty";
 }

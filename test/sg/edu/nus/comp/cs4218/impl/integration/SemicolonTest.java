@@ -2,7 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.integration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
 import java.io.File;
@@ -22,7 +22,7 @@ public class SemicolonTest extends AbstractIntegrationTest {
 
     @BeforeEach
     void setSimpleTest() {
-        File file = new File(FileSystemUtils.joinPath(EnvironmentUtils.currentDirectory, "hello.txt"));
+        File file = new File(FileSystemUtils.joinPath(Environment.currentDirectory, "hello.txt"));
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -34,7 +34,7 @@ public class SemicolonTest extends AbstractIntegrationTest {
 
     @AfterEach
     void clearFiles() {
-        File file = new File(FileSystemUtils.joinPath(EnvironmentUtils.currentDirectory, "hello.txt"));
+        File file = new File(FileSystemUtils.joinPath(Environment.currentDirectory, "hello.txt"));
         if (file.exists()) {
             file.delete();
         }

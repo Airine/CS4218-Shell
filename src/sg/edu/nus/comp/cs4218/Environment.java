@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218;
 
-public final class EnvironmentUtils {
+public final class Environment {
 
     /**
      * Java VM does not support changing the current working directory.
@@ -9,7 +9,7 @@ public final class EnvironmentUtils {
     public static volatile String currentDirectory = System.getProperty("user.dir");
 
 
-    private EnvironmentUtils() {
+    private Environment() {
     }
 
 }

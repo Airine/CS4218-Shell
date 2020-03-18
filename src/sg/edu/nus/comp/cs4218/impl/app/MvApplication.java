@@ -37,7 +37,7 @@ public class MvApplication implements MvInterface {
     }
 
     @Override
-    public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+    public void run(String[] args, InputStream stdin, OutputStream stdout) throws MvException {
         MvArgsParser mvArgsParser = new MvArgsParser();
         try {
             mvArgsParser.parse(args);

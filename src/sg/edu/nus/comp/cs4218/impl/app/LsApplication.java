@@ -1,6 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import sg.edu.nus.comp.cs4218.EnvironmentUtils;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.InvalidDirectoryException;
@@ -36,7 +36,7 @@ public class LsApplication implements LsInterface {
         List<Path> paths;
         if (folderName.length == 0) {
             String[] directories = new String[1];
-            directories[0] = EnvironmentUtils.currentDirectory;
+            directories[0] = Environment.currentDirectory;
             paths = resolvePaths(directories);
         } else {
             paths = resolvePaths(folderName);
@@ -85,7 +85,7 @@ public class LsApplication implements LsInterface {
      * @return the result
      */
     private String listCwdContent(Boolean isFoldersOnly) throws LsException {
-        String cwd = EnvironmentUtils.currentDirectory;
+        String cwd = Environment.currentDirectory;
         try {
             return formatContents(getContents(Paths.get(cwd), isFoldersOnly));
         } catch (InvalidDirectoryException e) {
@@ -228,7 +228,7 @@ public class LsApplication implements LsInterface {
             return Paths.get(directory).normalize();
         }
 
-        return Paths.get(EnvironmentUtils.currentDirectory, directory).normalize();
+        return Paths.get(Environment.currentDirectory, directory).normalize();
     }
 
     /**
@@ -238,7 +238,7 @@ public class LsApplication implements LsInterface {
      * @return the converted relative path
      */
     private Path getRelativeToCwd(Path path) {
-        return Paths.get(EnvironmentUtils.currentDirectory).relativize(path);
+        return Paths.get(Environment.currentDirectory).relativize(path);
     }
 
 }

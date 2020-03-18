@@ -30,7 +30,7 @@ public final class StringUtils {
      *
      * @return String of file separator
      */
-    static String fileSeparator() {
+    public static String fileSeparator() {
         // We need to escape \ in Windows...
         if (System.getProperty("os.name").toLowerCase().contains("win")) {//NOPMD
             return '\\' + File.separator;
