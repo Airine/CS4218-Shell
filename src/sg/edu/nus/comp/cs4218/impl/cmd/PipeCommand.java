@@ -3,6 +3,7 @@ package sg.edu.nus.comp.cs4218.impl.cmd;
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.*;
 import java.util.List;
@@ -26,8 +27,8 @@ public class PipeCommand implements Command {
         AbstractApplicationException absAppException = null;
         ShellException shellException = null;
 
-        InputStream nextInputStream = stdin;
-        OutputStream nextOutputStream = stdout;
+        InputStream nextInputStream = stdin;//NOPMD avoid close std in by using IOUtils.closeInputStream()
+        OutputStream nextOutputStream = stdout;//NOPMD avoid close std out in by using IOUtils.closeOutputStream()
 
         for (int i = 0; i < callCommands.size(); i++) {
             CallCommand callCommand = callCommands.get(i);
@@ -45,7 +46,7 @@ public class PipeCommand implements Command {
                 }
 
                 callCommand.evaluate(nextInputStream, nextOutputStream);
-                if (i != callCommands.size()) {
+                if (i < callCommands.size() - 1) {
                     nextInputStream = new ByteArrayInputStream(((ByteArrayOutputStream) nextOutputStream).toByteArray());
                 }
 
@@ -54,12 +55,8 @@ public class PipeCommand implements Command {
             } catch (ShellException e) {
                 shellException = e;
             } finally {
-                try {
-                    nextInputStream.close();
-                    nextOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                IOUtils.closeInputStream(nextInputStream);
+                IOUtils.closeOutputStream(nextOutputStream);
             }
         }
 
