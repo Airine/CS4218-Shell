@@ -21,7 +21,6 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 @SuppressWarnings({"PMD.MethodNamingConventions", "PMD.AvoidDuplicateLiterals"})
-@Disabled
 class PasteApplicationTest {
     private static PasteApplication pasteApp;
     private static final Path DIRECTORY = Paths.get("test", "util", "dummyTestFolder",
