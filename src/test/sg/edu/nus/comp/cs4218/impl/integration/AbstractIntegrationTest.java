@@ -157,7 +157,7 @@ public abstract class AbstractIntegrationTest {
             String command;
             while ((command = reader.readLine()) != null) {
                 if (StringUtils.isBlank(command)) {
-                    OutputStream.write(STRING_NEWLINE.getbytes());
+                    outputStream.write(STRING_NEWLINE.getBytes());
                     continue;
                 }
                 shell.parseAndEvaluate(command, outputStream);
