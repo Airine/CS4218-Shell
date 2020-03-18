@@ -1,1 +1,13 @@
 echo "`echo hello` world"
+
+echo `paste test1.txt test2.txt`
+
+paste `ls test*`
+
+sed "s/^/> /" `ls test*`
+
+sed "s/^> /`echo 'new'`/1" test1.txt
+
+diff `ls test*`
+
+grep "`echo 'A'`" `ls test*`
