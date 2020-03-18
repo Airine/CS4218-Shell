@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 @Disabled
 public abstract class AbstractIntegrationTest {
@@ -156,6 +157,7 @@ public abstract class AbstractIntegrationTest {
             String command;
             while ((command = reader.readLine()) != null) {
                 if (StringUtils.isBlank(command)) {
+                    OutputStream.write(STRING_NEWLINE.getbytes());
                     continue;
                 }
                 shell.parseAndEvaluate(command, outputStream);
