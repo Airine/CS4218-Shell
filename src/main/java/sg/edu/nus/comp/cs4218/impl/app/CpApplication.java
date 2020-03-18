@@ -19,7 +19,7 @@ public class CpApplication implements CpInterface {
     public String cpSrcFileToDestFile(String srcFile, String destFile) throws Exception {
         String destFilePath = FileSystemUtils.getAbsolutePathName(destFile);
         File oriFile = new File(destFilePath);
-        if(oriFile.exists()){
+        if (oriFile.exists()) {
             oriFile.delete();
         }
         Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
@@ -36,7 +36,7 @@ public class CpApplication implements CpInterface {
                     new File(FileSystemUtils.getAbsolutePathName(oneFileName))
                             .getName());
             File oriFile = new File(destFilePath);
-            if(oriFile.exists()){
+            if (oriFile.exists()) {
                 oriFile.delete();
             }
             Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(oneFileName)),
@@ -58,13 +58,13 @@ public class CpApplication implements CpInterface {
             parser.parse(args);
             String destPath = FileSystemUtils.getAbsolutePathName(parser.getDestFilePathName());
             String[] toCopy = parser.getToCopyFileName();
-            if (!new File(destPath).isDirectory()) {
+            if (new File(destPath).isDirectory()) {
+                cpFilesToFolder(destPath, toCopy);
+            } else {
                 if (toCopy.length != 1) {
                     throw new CpException(ErrorConstants.ERR_TOO_MANY_ARGS);
                 }
                 cpSrcFileToDestFile(toCopy[0], destPath);
-            } else {
-                cpFilesToFolder(destPath, toCopy);
             }
         } catch (Exception e) {
             throw (CpException) new CpException(ErrorConstants.ERR_IO_EXCEPTION).initCause(e);
