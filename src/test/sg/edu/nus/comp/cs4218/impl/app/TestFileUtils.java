@@ -6,7 +6,7 @@ import java.io.File;
 
 final public class TestFileUtils {
 
-    private static String currTestDir = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath("test", "temp"));
+    private static String currTestDir = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath( "temp"));
     public static String tempFileName1 = FileSystemUtils.joinPath(currTestDir, "test1.txt");
     public static String tempFileName2 = FileSystemUtils.joinPath(currTestDir, "test2.txt");
 

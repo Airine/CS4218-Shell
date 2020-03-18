@@ -83,11 +83,11 @@ class RegexArgumentTest {
 
     @Test
     void testGlobFilesIsRegexRelativePath() {
-        String text = "test/temp/test-folder/test.cc";
+        String text = "temp/test-folder/test.cc";
         String str = "";
         RegexArgument regexArgument = new RegexArgument(str, text, true);
         List<String> result = regexArgument.globFiles();
-        assertEquals(Arrays.asList(FileSystemUtils.joinPath("test","temp","test-folder","test.cc")), result);
+        assertEquals(Arrays.asList(FileSystemUtils.joinPath("temp","test-folder","test.cc")), result);
     }
 
     @Test
