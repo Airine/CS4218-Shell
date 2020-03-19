@@ -141,7 +141,6 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    @Disabled
     void testSeveralFileSegment() {
         List<String> args = Arrays.asList("<", "\"" + TestFileUtils.tempFileName1 + "\"\"" + TestFileUtils.tempFileName2 + "\"");
         ArgumentResolver resolver = new ArgumentResolver();

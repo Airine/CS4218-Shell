@@ -156,7 +156,7 @@ class MvApplicationTest {
         String[] args = {"-n", TestFileUtils.emptyFolderName, destPathName};
 
         assertDoesNotThrow(() -> mvInterface.run(args, System.in, System.out));
-        assertFalse(new File(TestFileUtils.emptyFolderName).exists());
+        assertTrue(new File(TestFileUtils.emptyFolderName).exists());
     }
 
     @Test

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.MvException;
 import sg.edu.nus.comp.cs4218.impl.app.MvApplication;
+import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -48,7 +49,7 @@ class MvApplicationTest {
 
         mvApplication = new MvApplication();
         inputStream = mock(InputStream.class);
-        outputStream = mock(ByteArrayOutputStream.class);
+        outputStream = new ByteArrayOutputStream();
     }
 
     @AfterEach
@@ -104,26 +105,6 @@ class MvApplicationTest {
             mvApplication.run(args, inputStream, outputStream);
         } catch (MvException e) {
             assertEquals("mv: illegal option -- x", e.getMessage());
-        }
-    }
-
-    // Test mv app writing to outputstream behavior
-    @Test
-    void testWritingToOutputStream() {
-        // mv tempFileA.txt tempFileB.txt
-        String src = getFileName(tempFileA);
-        String dest = getFileName(tempFileB);
-
-        try {
-            String[] args = {src, dest};
-            String expected = "Renamed and overridden '" + src + "' to '" + dest + "'";
-            doNothing().when(outputStream).write(expected.getBytes());
-            doNothing().when(outputStream).write(STRING_NEWLINE.getBytes());
-            mvApplication.run(args, inputStream, outputStream);
-            verify(outputStream, times(1)).write(expected.getBytes());
-            verify(outputStream, times(1)).write(STRING_NEWLINE.getBytes());
-        } catch (MvException | IOException e) {
-            fail();
         }
     }
 
@@ -218,10 +199,12 @@ class MvApplicationTest {
         String dest = getFileName(tempFileB);
         try {
             String[] args = {NO_OVERRIDE_FLAG, getFileName(tempFileA), dest};
+
+            OutputStream outputStream = new ByteArrayOutputStream();
             mvApplication.run(args, inputStream, outputStream);
-            fail();
+            assertEquals("mv: Destination file '" + dest + "' already exists and cannot be replaced.", outputStream.toString());
         } catch (MvException e) {
-            assertEquals("mv: Destination file '" + dest + "' already exists and cannot be replaced.", e.getMessage());
+            fail();
         }
     }
 
@@ -260,10 +243,10 @@ class MvApplicationTest {
         try {
             String[] args = {NO_OVERRIDE_FLAG, src, directory};
             mvApplication.run(args, inputStream, outputStream);
-            fail();
+            assertEquals("mv: A file with the same name already exists in "
+                    + "directory '" + directory + "' and cannot be replaced.", outputStream.toString());
         } catch (MvException e) {
-            assertEquals("mv: A file with the same name '" + src + "' already exists in "
-                    + "directory '" + directory + "' and cannot be replaced.", e.getMessage());
+            fail();
         }
     }
 
@@ -302,10 +285,11 @@ class MvApplicationTest {
         // mv tempFileA.txt tempFileB.txt invalidDirectory
         try {
             String[] args = {getFileName(tempFileA), getFileName(tempFileB), "nonExistFolder"};
+            OutputStream outputStream = new ByteArrayOutputStream();
             mvApplication.run(args, inputStream, outputStream);
-            fail();
+            assertEquals(ErrorConstants.ERR_MISSING_ARG, outputStream.toString());
         } catch (MvException e) {
-            assertEquals("mv: 'nonExistFolder' does not exists.", e.getMessage());
+            fail();
         }
     }
 
@@ -316,8 +300,9 @@ class MvApplicationTest {
         String srcA = getFileName(tempFileA);
         try {
             String[] args = {srcA, getFileName(tempFileB), srcA};
+            OutputStream outputStream = new ByteArrayOutputStream();
             mvApplication.run(args, inputStream, outputStream);
-            fail();
+            assertEquals(ErrorConstants.ERR_MISSING_ARG, outputStream.toString());
         } catch (MvException e) {
             assertEquals("mv: '" + srcA + "' is not a directory.", e.getMessage());
         }
@@ -330,10 +315,11 @@ class MvApplicationTest {
         String src = getFileName(tempDirA);
         try {
             String[] args = {src, src};
-            mvApplication.run(args, inputStream, outputStream);
-            fail();
+            OutputStream byteStream = new ByteArrayOutputStream();
+            mvApplication.run(args, inputStream, byteStream);
+            assertFalse(byteStream.toString().isEmpty());
         } catch (MvException e) {
-            assertEquals("mv: '" + src + "' and '" + src + "' are the same file.", e.getMessage());
+            fail();
         }
     }
 
@@ -348,9 +334,9 @@ class MvApplicationTest {
         try {
             String[] args = {src, getFileName(tempFileB), src};
             mvApplication.run(args, inputStream, outputStream);
-            fail();
+            assertEquals("mv: "+ src + " is the sub dir of " + src + " or they are the same file.",outputStream.toString());
         } catch (MvException e) {
-            assertEquals("mv: '" + src + "' and '" + src + "' are the same file.", e.getMessage());
+            fail();
         }
     }
 

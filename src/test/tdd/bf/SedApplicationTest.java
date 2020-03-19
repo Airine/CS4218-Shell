@@ -28,6 +28,7 @@ class SedApplicationTest {
     private static final String DIR_NAME = "sedTestDir";
     private static final String FILENAME1 = "sedFile1";
     private static final String FILENAME2 = "sedFile2";
+    private static final String SED = "sed: ";
     private String expected;
 
     @BeforeEach
@@ -111,10 +112,14 @@ class SedApplicationTest {
 
     @Test
     public void testEmptyRegexFile() throws Exception {
-        String pattern = "";
-        String replacement = "> ";
-        int replacementIndex = 1;
-        assertEquals(TEXT1, sedApplication.replaceSubstringInFile(pattern, replacement, replacementIndex, file1.toString()));
+        try {
+            String pattern = "";
+            String replacement = "> ";
+            int replacementIndex = 1;
+            sedApplication.replaceSubstringInFile(pattern, replacement, replacementIndex, file1.toString());
+        }catch (Exception expected){
+            assertEquals(String.format(ERR_EMPTY_REGEX), expected.getMessage());
+        }
     }
 
     @Test
@@ -188,7 +193,7 @@ class SedApplicationTest {
             String path = file1.toString();
             sedApplication.run(new String[]{path}, System.in, System.out);
         }catch (SedException expected){
-            assertEquals("sed: " + String.format(ERR_INVALID_REP_RULE) , expected.getMessage());
+            assertEquals(SED + String.format(ERR_INVALID_REP_RULE) , expected.getMessage());
         }
     }
 
@@ -198,7 +203,7 @@ class SedApplicationTest {
             String path = file1.toString();
             sedApplication.run(new String[]{"/\\t/ /", path}, System.in, System.out);
         }catch (SedException expected){
-            assertEquals("sed: " + String.format(ERR_INVALID_REP_RULE), expected.getMessage());
+            assertEquals(SED + String.format(ERR_INVALID_REP_RULE), expected.getMessage());
         }
     }
 
@@ -208,7 +213,7 @@ class SedApplicationTest {
             String path = file1.toString();
             sedApplication.run(new String[]{"s/hello/hi/-2", path}, System.in, System.out);
         }catch (SedException expected){
-            assertEquals("sed: " + String.format(ERR_INVALID_REP_X), expected.getMessage());
+            assertEquals(SED + String.format(ERR_INVALID_REP_X), expected.getMessage());
         }
     }
 
@@ -218,7 +223,7 @@ class SedApplicationTest {
             String[] args = {"s/test/t/"};
             sedApplication.run(args, null, stdout);
         }catch (SedException expected){
-            assertEquals("sed: " + String.format(ERR_NULL_STREAMS) , expected.getMessage());
+            assertEquals(SED + String.format(ERR_NULL_STREAMS) , expected.getMessage());
         }
     }
 
@@ -228,7 +233,7 @@ class SedApplicationTest {
             String[] args = {"s/hello", file1.toString()};
             sedApplication.run(args, null, stdout);
         }catch (SedException expected){
-            assertEquals("sed: " + String.format(ERR_INVALID_REP_RULE), expected.getMessage());
+            assertEquals(SED + String.format(ERR_INVALID_REP_RULE), expected.getMessage());
         }
     }
 
@@ -238,7 +243,7 @@ class SedApplicationTest {
             String[] args = {"s/ing/s/", file1.toString()};
             sedApplication.run(args, null, null);
         }catch (SedException expected){
-            assertEquals("sed: " + String.format(ERR_NULL_STREAMS), expected.getMessage());
+            assertEquals(SED + String.format(ERR_NULL_STREAMS), expected.getMessage());
         }
     }
 
@@ -249,7 +254,7 @@ class SedApplicationTest {
             String[] args = {};
             sedApplication.run(args, null, stdout);
         }catch (SedException expected){
-            assertEquals("sed: "+String.format(ERR_NO_REP_RULE), expected.getMessage());
+            assertEquals(SED+String.format(ERR_NO_REP_RULE), expected.getMessage());
         }
     }
 
@@ -259,7 +264,7 @@ class SedApplicationTest {
             String[] args = {"s/ing/s/??", file1.toString()};
             sedApplication.run(args, null, stdout);
         }catch (Exception expected){
-            assertEquals("sed: " + String.format(ERR_INVALID_REP_X), expected.getMessage());
+            assertEquals(SED + String.format(ERR_INVALID_REP_X), expected.getMessage());
         }
     }
 
@@ -277,7 +282,7 @@ class SedApplicationTest {
             sedApplication.run(args, null, stdout);
             assertEquals(TEXT1, stdout.toString());
         }catch(SedException expected){
-            assertEquals("sed: " + String.format(ERR_EMPTY_REGEX) , expected.getMessage());
+            assertEquals(SED + String.format(ERR_EMPTY_REGEX) , expected.getMessage());
         }
     }
 

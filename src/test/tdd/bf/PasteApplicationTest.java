@@ -7,10 +7,7 @@ import sg.edu.nus.comp.cs4218.exception.PasteException;
 import sg.edu.nus.comp.cs4218.impl.app.PasteApplication;
 import tdd.util.StdOutStubIOExceptionOnWrite;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,7 +20,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 @SuppressWarnings({"PMD.MethodNamingConventions", "PMD.AvoidDuplicateLiterals"})
 class PasteApplicationTest {
     private static PasteApplication pasteApp;
-    private static final Path DIRECTORY = Paths.get("test", "util", "dummyTestFolder",
+    private static final Path DIRECTORY = Paths.get("src", "test", "tdd", "util", "dummyTestFolder",
             "PasteTestFolder");
     private static final String ABSOLUTE_PATH = DIRECTORY.toFile().getAbsolutePath();
     private static final String DASH = "-";
@@ -67,7 +64,7 @@ class PasteApplicationTest {
 
     @Test
     public void testMergeStdin_nullStdin_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NO_ISTREAM;
         String thrown = assertThrows(PasteException.class, () -> pasteApp.mergeStdin(null)).getMessage();
         assertEquals(expected, thrown);
     }
@@ -84,32 +81,34 @@ class PasteApplicationTest {
     public void testMergeStdin_multipleLine() throws Exception {
         // Double lines
         try (InputStream inStream = new FileInputStream(FILE_DOUBLE)) {
-            String expected = "Double\tdouble";
+            String expected = "Double"+STRING_NEWLINE+"double";
             assertEquals(expected, pasteApp.mergeStdin(inStream));
         }
 
         // Triple lines
         try (InputStream inStream = new FileInputStream(FILE_TRIPLE)) {
-            String expected = "Triple\ttriple\t3ple";
+            String expected = "Triple"+STRING_NEWLINE+"triple"+STRING_NEWLINE+"3ple";
             assertEquals(expected, pasteApp.mergeStdin(inStream));
         }
 
         // Multiple lines with line that have space
         try (InputStream inStream = new FileInputStream(FILE_MULTIPLE)) {
-            String expected = "qaz\twsx\tedc\trfv\ttgb\tyhn\tujm\tik  ol p\ttab";
+            String expected = "qaz"+STRING_NEWLINE+"wsx"+STRING_NEWLINE+"edc"+STRING_NEWLINE+
+                    "rfv"+STRING_NEWLINE+"tgb"+STRING_NEWLINE+"yhn"+STRING_NEWLINE+"ujm"+STRING_NEWLINE+
+                    "ik  ol p"+STRING_NEWLINE+"tab";
             assertEquals(expected, pasteApp.mergeStdin(inStream));
         }
 
         // Newline
         try (InputStream inStream = new FileInputStream(FILE_NEW_PATH)) {
-            String expected = "\t\t\t";
+            String expected = STRING_NEWLINE+STRING_NEWLINE+STRING_NEWLINE;
             assertEquals(expected, pasteApp.mergeStdin(inStream));
         }
     }
 
     @Test
     public void testMergeFile_nullFile_throwException() {
-        String expected = ERR_GENERAL;
+        String expected = PASTE + ERR_NULL_ARGS;
         String thrown = assertThrows(Exception.class, () -> pasteApp.mergeFile(null)).getMessage();
         assertEquals(expected, thrown);
     }
@@ -196,10 +195,7 @@ class PasteApplicationTest {
         assertEquals(expected, thrown);
 
         // Multiple files not found
-        expected = PASTE + "fileNotFound1.txt " + ERR_FILE_NOT_FOUND + System.lineSeparator() +
-                "fileNotFound2.txt " + ERR_FILE_NOT_FOUND + System.lineSeparator() +
-                "fileNotFound3.txt " + ERR_FILE_NOT_FOUND + System.lineSeparator() +
-                "fileNotFound4.txt " + ERR_FILE_NOT_FOUND;
+        expected = PASTE + "fileNotFound1.txt " + ERR_FILE_NOT_FOUND;
         thrown = assertThrows(PasteException.class,
                 () -> pasteApp.mergeFile("fileNotFound1.txt", "fileNotFound2.txt",
                         "fileNotFound3.txt", "fileNotFound4.txt")).getMessage();
@@ -226,10 +222,7 @@ class PasteApplicationTest {
         assertEquals(expected, thrown);
 
         // Multiple directories
-        expected = PASTE + ABSOLUTE_PATH + " " + ERR_IS_DIR + System.lineSeparator() +
-                ABSOLUTE_PATH + " " + ERR_IS_DIR + System.lineSeparator() +
-                ABSOLUTE_PATH + " " + ERR_IS_DIR + System.lineSeparator() +
-               ABSOLUTE_PATH + " " + ERR_IS_DIR;
+        expected = PASTE + ABSOLUTE_PATH + " " + ERR_IS_DIR;
         thrown = assertThrows(PasteException.class,
                 () -> pasteApp.mergeFile(ABSOLUTE_PATH, ABSOLUTE_PATH,
                         ABSOLUTE_PATH, ABSOLUTE_PATH)).getMessage();
@@ -244,7 +237,7 @@ class PasteApplicationTest {
 
     @Test
     public void testMergeFileAndStdin_nullStdin_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NO_ISTREAM;
         String thrown = assertThrows(PasteException.class,
                 () -> pasteApp.mergeFileAndStdin(null, "")).getMessage();
         assertEquals(expected, thrown);
@@ -252,14 +245,16 @@ class PasteApplicationTest {
 
     @Test
     public void testMergeFileAndStdin_nullFile_throwException() {
+        String original = "abcd";
+        InputStream stdin = new ByteArrayInputStream(original.getBytes());
         String thrown = assertThrows(Exception.class,
-                () -> pasteApp.mergeFileAndStdin(System.in, null)).getMessage();
-        assertEquals(ERR_GENERAL, thrown);
+                () -> pasteApp.mergeFileAndStdin(stdin, null)).getMessage();
+        assertEquals(PASTE + ERR_NULL_ARGS, thrown);
     }
 
     @Test
     public void testMergeFileAndStdin_nullStdinWithNullFile_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NO_ISTREAM;
         String thrown = assertThrows(PasteException.class,
                 () -> pasteApp.mergeFileAndStdin(null, null)).getMessage();
         assertEquals(expected, thrown);
@@ -277,25 +272,27 @@ class PasteApplicationTest {
     public void testMergeFileAndStdin_stdinOnly_multipleLine() throws Exception {
         // Double lines
         try (InputStream inStream = new FileInputStream(FILE_DOUBLE)) {
-            String expected = "Double\tdouble";
+            String expected = "Double"+STRING_NEWLINE+"double";
             assertEquals(expected, pasteApp.mergeFileAndStdin(inStream, DASH));
         }
 
         // Triple lines
         try (InputStream inStream = new FileInputStream(FILE_TRIPLE)) {
-            String expected = "Triple\ttriple\t3ple";
+            String expected = "Triple"+STRING_NEWLINE+"triple"+STRING_NEWLINE+"3ple";
             assertEquals(expected, pasteApp.mergeFileAndStdin(inStream, DASH));
         }
 
         // Multiple lines with line that have space
         try (InputStream inStream = new FileInputStream(FILE_MULTIPLE)) {
-            String expected = "qaz\twsx\tedc\trfv\ttgb\tyhn\tujm\tik  ol p\ttab";
+            String expected = "qaz"+STRING_NEWLINE+"wsx"+STRING_NEWLINE+"edc"+STRING_NEWLINE+
+                    "rfv"+STRING_NEWLINE+"tgb"+STRING_NEWLINE+"yhn"+STRING_NEWLINE+"ujm"+STRING_NEWLINE+
+                    "ik  ol p"+STRING_NEWLINE+"tab";
             assertEquals(expected, pasteApp.mergeFileAndStdin(inStream, DASH));
         }
 
         // Newline
         try (InputStream inStream = new FileInputStream(FILE_NEW_PATH)) {
-            String expected = "\t\t\t";
+            String expected = STRING_NEWLINE+STRING_NEWLINE+STRING_NEWLINE;
             assertEquals(expected, pasteApp.mergeFileAndStdin(inStream, DASH));
         }
     }
@@ -440,61 +437,59 @@ class PasteApplicationTest {
 
     @Test
     public void testMergeFileAndStdin_fileErrorMsg_fileNotFound() {
+        String original = "abcd";
+        InputStream stdin = new ByteArrayInputStream(original.getBytes());
         // Single file not found
         String expected = PASTE + "fileNotFound.txt " + ERR_FILE_NOT_FOUND;
         String thrown = assertThrows(PasteException.class,
-                () -> pasteApp.mergeFileAndStdin(System.in,"fileNotFound.txt", DASH)).getMessage();
+                () -> pasteApp.mergeFileAndStdin(stdin,"fileNotFound.txt", DASH)).getMessage();
         assertEquals(expected, thrown);
 
         // Single file not found with other files
         thrown = assertThrows(PasteException.class,
-                () ->  pasteApp.mergeFileAndStdin(System.in,DASH, "fileNotFound.txt", FILE_2)).getMessage();
+                () ->  pasteApp.mergeFileAndStdin(stdin,DASH, "fileNotFound.txt", FILE_2)).getMessage();
         assertEquals(expected, thrown);
 
         // Multiple files not found
-        expected = PASTE + "fileNotFound1.txt " + ERR_FILE_NOT_FOUND + System.lineSeparator() +
-                "fileNotFound2.txt " + ERR_FILE_NOT_FOUND + System.lineSeparator() +
-                "fileNotFound3.txt " + ERR_FILE_NOT_FOUND + System.lineSeparator() +
-                "fileNotFound4.txt " + ERR_FILE_NOT_FOUND;
+        expected = PASTE + "fileNotFound1.txt " + ERR_FILE_NOT_FOUND;
         thrown = assertThrows(PasteException.class,
-                () ->  pasteApp.mergeFileAndStdin(System.in,"fileNotFound1.txt",
+                () ->  pasteApp.mergeFileAndStdin(stdin,"fileNotFound1.txt",
                         "fileNotFound2.txt", "fileNotFound3.txt", "fileNotFound4.txt", DASH)).getMessage();
         assertEquals(expected, thrown);
 
         // Multiple files not found with other files
         thrown = assertThrows(PasteException.class,
-                () ->  pasteApp.mergeFileAndStdin(System.in,"fileNotFound1.txt",
+                () ->  pasteApp.mergeFileAndStdin(stdin,"fileNotFound1.txt",
                         FILE_2, "fileNotFound2.txt", DASH, "fileNotFound3.txt",
                         FILE_SINGLE, "fileNotFound4.txt")).getMessage();
         assertEquals(expected, thrown);
     }
 
     @Test
-    public void testMergeFileAndStdin_fileErrorMsg_isDirectory() throws Exception {
+    public void testMergeFileAndStdin_fileErrorMsg_isDirectory(){
+        String original = "abcd";
+        InputStream stdin = new ByteArrayInputStream(original.getBytes());
         // Single directory
         String expected = PASTE + ABSOLUTE_PATH + " " + ERR_IS_DIR;
         String thrown = assertThrows(PasteException.class,
-                () -> pasteApp.mergeFileAndStdin(System.in, ABSOLUTE_PATH, DASH)).getMessage();
+                () -> pasteApp.mergeFileAndStdin(stdin, ABSOLUTE_PATH, DASH)).getMessage();
         assertEquals(expected, thrown);
 
         // Single directory with other files
         thrown = assertThrows(PasteException.class,
-                () -> pasteApp.mergeFileAndStdin(System.in, ABSOLUTE_PATH, FILE_2, DASH)).getMessage();
+                () -> pasteApp.mergeFileAndStdin(stdin, ABSOLUTE_PATH, FILE_2, DASH)).getMessage();
         assertEquals(expected, thrown);
 
         // Multiple directories
-        expected = PASTE + ABSOLUTE_PATH + " " + ERR_IS_DIR + System.lineSeparator() +
-                ABSOLUTE_PATH + " " + ERR_IS_DIR + System.lineSeparator() +
-                ABSOLUTE_PATH + " " + ERR_IS_DIR + System.lineSeparator() +
-                ABSOLUTE_PATH + " " + ERR_IS_DIR;
+        expected = PASTE + ABSOLUTE_PATH + " " + ERR_IS_DIR;
         thrown = assertThrows(PasteException.class,
-                () -> pasteApp.mergeFileAndStdin(System.in,ABSOLUTE_PATH,
+                () -> pasteApp.mergeFileAndStdin(stdin,ABSOLUTE_PATH,
                         ABSOLUTE_PATH, DASH, ABSOLUTE_PATH, ABSOLUTE_PATH)).getMessage();
         assertEquals(expected, thrown);
 
         // Multiple directories with other files
         thrown = assertThrows(PasteException.class,
-                () -> pasteApp.mergeFileAndStdin(System.in, ABSOLUTE_PATH,
+                () -> pasteApp.mergeFileAndStdin(stdin, ABSOLUTE_PATH,
                         FILE_NEW_PATH, ABSOLUTE_PATH, ABSOLUTE_PATH, FILE_3,
                         DASH, ABSOLUTE_PATH, FILE_2)).getMessage();
         assertEquals(expected, thrown);
@@ -502,7 +497,7 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdinWithEmptyArgs_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NULL_ARGS;
         String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{}, null, System.out))
                 .getMessage();
         assertEquals(expected, thrown);
@@ -519,7 +514,7 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdinWithSingleDash_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NO_ISTREAM;
         String thrown = assertThrows(PasteException.class,
                 () -> pasteApp.run(new String[]{"-"}, null, System.out)).getMessage();
         assertEquals(expected, thrown);
@@ -527,7 +522,7 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdinWithSingleDashAndFiles_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NO_ISTREAM;
         String thrown = assertThrows(PasteException.class,
                 () -> pasteApp.run(new String[]{"-", "randomFile", "test"}, null, System.out)).getMessage();
         assertEquals(expected, thrown);
@@ -535,7 +530,7 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdout_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NULL_ARGS;
         String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{}, System.in, null))
                 .getMessage();
         assertEquals(expected, thrown);
@@ -543,7 +538,7 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdoutWithNullStdin_throwPasteException() {
-        String expected = PASTE + ERR_NULL_STREAMS;
+        String expected = PASTE + ERR_NULL_ARGS;
         String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{}, null, null))
                 .getMessage();
         assertEquals(expected, thrown);
@@ -553,7 +548,7 @@ class PasteApplicationTest {
     public void testRun_stdoutError_throwPasteException() throws Exception {
         try (InputStream inStream = new FileInputStream(FILE_SINGLE)) {
             String expected = PASTE + ERR_WRITE_STREAM;
-            String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{}, inStream,
+            String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{"-"}, inStream,
                     new StdOutStubIOExceptionOnWrite()))
                     .getMessage();
             assertEquals(expected, thrown);

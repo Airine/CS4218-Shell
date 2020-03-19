@@ -32,30 +32,26 @@ public class PasteApplication implements PasteInterface {
             throw new PasteException(ERR_NO_OSTREAM);
         }
         String results;
-        boolean haveFile = false;
-        boolean haveStdin = false;
-        ArrayList<String> fileList = new ArrayList<>();
+        int countFile = 0;
+        int countStdin = 0;
         for (String arg : args) {
             if ("-".equals(arg)) {
-                haveStdin = true;
+                countStdin += 1;
             } else {
-                haveFile = true;
-                fileList.add(arg);
+                countFile += 1;
             }
         }
-        String[] fileNames = new String[fileList.size()];
-        fileList.toArray(fileNames);
-        if (haveFile && haveStdin) {
-            results = mergeFileAndStdin(stdin, fileNames);
-        } else if (haveFile) {
-            results = mergeFile(fileNames);
+        if ((countStdin > 0 && countFile > 0) || countStdin > 1) {
+            results = mergeFileAndStdin(stdin, args);
+        } else if (countFile == args.length) {
+            results = mergeFile(args);
         } else {
             results = mergeStdin(stdin);
         }
         try {
             stdout.write(results.getBytes());
         } catch (IOException e) {
-            throw new PasteException(ERR_IO_EXCEPTION);//NOPMD
+            throw new PasteException(ERR_WRITE_STREAM);//NOPMD
         }
     }
 
@@ -76,6 +72,9 @@ public class PasteApplication implements PasteInterface {
             StringBuilder output = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 output.append(line).append(STRING_NEWLINE);
+            }
+            if (output.length() > STRING_NEWLINE.length()) {
+                output.delete(output.length()-STRING_NEWLINE.length(),output.length());
             }
             if (stdin != System.in) {
                 reader.close();
@@ -102,24 +101,7 @@ public class PasteApplication implements PasteInterface {
         BufferedReader[] readers = new BufferedReader[fileName.length];
         try {
             for (int i = 0; i < fileName.length; i++) {
-                if (fileName[i] == null) {
-                    throw new PasteException(ERR_NULL_ARGS);
-                }
-
-                String path = convertToAbsolutePath(fileName[i]);
-                File file = new File(path);
-
-                if (!file.exists()) {
-                    throw new PasteException(ERR_FILE_NOT_FOUND);
-                }
-
-                if (file.isDirectory()) {
-                    throw new PasteException(ERR_IS_DIR);
-                }
-
-                if (!file.canRead()) {
-                    throw new PasteException(ERR_NO_PERM);
-                }
+                String path = validateFileName(fileName[i]);
 
                 readers[i] = new BufferedReader(new FileReader(path));
             }
@@ -128,13 +110,15 @@ public class PasteApplication implements PasteInterface {
                 while ((line = readers[0].readLine()) != null) {
                     output.append(line).append(STRING_NEWLINE);
                 }
+                if (output.length() > STRING_NEWLINE.length()) {
+                    output.delete(output.length()-STRING_NEWLINE.length(),output.length());
+                }
                 readers[0].close();
                 return output.toString();
             }
             mergeAlgorithm(fileName.length, readers, output);
 
             for (BufferedReader reader : readers) reader.close();//NOPMD
-
         } catch (IOException e) {
             throw new PasteException(ERR_IO_EXCEPTION);//NOPMD
         }
@@ -150,21 +134,46 @@ public class PasteApplication implements PasteInterface {
      */
     @Override
     public String mergeFileAndStdin(InputStream stdin, String... fileName) throws PasteException {
-        String mergeStdinResult = mergeStdin(stdin);
-        String mergeFileResult = mergeFile(fileName);
-        String[] stdinLines = mergeStdinResult.split(STRING_NEWLINE);
-        String[] fileLines = mergeFileResult.split(STRING_NEWLINE);
-        int numResultLines = Math.max(stdinLines.length, fileLines.length);
+        if (stdin == null) {
+            throw new PasteException(ERR_NO_ISTREAM);
+        }
+        if (fileName == null || fileName.length == 0) {
+            throw new PasteException(ERR_NULL_ARGS);
+        }
+        BufferedReader stdinReader = new BufferedReader(new InputStreamReader(stdin));
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        byte[] buffer = new byte[1024];
+//        int n = 0;
+//        try {
+//            while (-1 != (n = stdin.read(buffer))) {
+//                baos.write(buffer, 0, n);
+//            }
+//            baos.flush();
+//        } catch (IOException e) {
+//            throw new PasteException(ERR_IO_EXCEPTION);//NOPMD
+//        }
+
         StringBuilder output = new StringBuilder();
-        for (int i = 0; i < numResultLines; i++) {
-            if (i < stdinLines.length) {
-                output.append(stdinLines[i].trim());
+        BufferedReader[] readers = new BufferedReader[fileName.length];
+        try {
+            for (int i = 0; i < fileName.length; i++) {
+                if ("-".equals(fileName[i])) {
+//                    InputStream is = new ByteArrayInputStream(baos.toByteArray());
+//                    readers[i] = new BufferedReader(new InputStreamReader(is));
+                    readers[i] = stdinReader;
+                    continue;
+                }
+
+                String path = validateFileName(fileName[i]);
+
+                readers[i] = new BufferedReader(new FileReader(path));
             }
-            output.append(CHAR_TAB);
-            if (i < fileLines.length) {
-                output.append(fileLines[i]);
-            }
-            output.append(STRING_NEWLINE);
+            mergeAlgorithm(fileName.length, readers, output);
+
+            for (BufferedReader reader : readers) reader.close();//NOPMD
+
+        } catch (IOException e) {
+            throw new PasteException(ERR_IO_EXCEPTION);//NOPMD
         }
         return output.toString();
     }
@@ -185,15 +194,48 @@ public class PasteApplication implements PasteInterface {
             for (int i = 0; i < fileNumber; i++) {
                 line = readers[i].readLine();
                 if (line == null) {
-                    builder.append(CHAR_TAB);
                     unfinished--;
                 } else {
-                    builder.append(line).append(CHAR_TAB);
+                    builder.append(line);
+                }
+                if (i < fileNumber-1) {
+                    builder.append(CHAR_TAB);
                 }
             }
             if (unfinished > 0) {
                 output.append(builder.toString()).append(STRING_NEWLINE);
             }
         } while (unfinished > 0);
+        if (output.length() > STRING_NEWLINE.length()) {
+            output.delete(output.length()-STRING_NEWLINE.length(),output.length());
+        }
+    }
+
+
+    /**
+     * @param fileName the name of the file to check
+     * @throws PasteException
+     */
+    private String validateFileName(String fileName) throws PasteException {
+        if (fileName == null) {
+            throw new PasteException(ERR_NULL_ARGS);
+        }
+
+        String path = convertToAbsolutePath(fileName);
+        File file = new File(path);
+
+        if (!file.exists()) {
+            throw new PasteException(fileName + " " + ERR_FILE_NOT_FOUND);
+        }
+
+        if (file.isDirectory()) {
+            throw new PasteException(path + " " + ERR_IS_DIR);
+        }
+
+        if (!file.canRead()) {
+            throw new PasteException(fileName + " " + ERR_NO_PERM);
+        }
+
+        return path;
     }
 }

@@ -26,7 +26,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_REDIR_OUTPUT;
 
 @SuppressWarnings({"PMD.MethodNamingConventions", "PMD.LongVariable"})
 class IORedirectionHandlerTest {
-    private static final Path DIRECTORY = Paths.get("test", "tdd", "util","dummyTestFolder","IORedirectionHandlerTestFolder");
+    private static final Path DIRECTORY = Paths.get("src","test", "tdd", "util","dummyTestFolder","IORedirectionHandlerTestFolder");
     private static final String RESOURCE_PATH = DIRECTORY.toString() + File.separator;
     private static final String FILE_1 = RESOURCE_PATH + "file1.txt";
     private static final String FILE_2 = RESOURCE_PATH + "file2.txt";
