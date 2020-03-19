@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 import java.io.*;
@@ -34,6 +35,16 @@ public final class IOUtils {
             throw new ShellException(ERR_FILE_NOT_FOUND);
         }
 
+        return fileInputStream;
+    }
+
+    public static InputStream openInputStream(File file) throws ShellException {
+        FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            throw new ShellException(ERR_FILE_NOT_FOUND);
+        }
         return fileInputStream;
     }
 
