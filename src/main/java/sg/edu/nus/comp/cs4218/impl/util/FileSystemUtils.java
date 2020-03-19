@@ -16,8 +16,11 @@ public final class FileSystemUtils {
     public static void deleteFileRecursive(File file) {
         if (file.exists()) {
             if (file.isDirectory()) {
-                for (File f : Objects.requireNonNull(file.listFiles())) {
-                    deleteFileRecursive(f);
+                File[] files = file.listFiles();
+                if (files != null) {
+                    for (File f : files) {
+                        deleteFileRecursive(f);
+                    }
                 }
             }
             file.delete(); //NOPMD do not need the return value
