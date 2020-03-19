@@ -111,10 +111,14 @@ class SedApplicationTest {
 
     @Test
     public void testEmptyRegexFile() throws Exception {
-        String pattern = "";
-        String replacement = "> ";
-        int replacementIndex = 1;
-        assertEquals(TEXT1, sedApplication.replaceSubstringInFile(pattern, replacement, replacementIndex, file1.toString()));
+        try {
+            String pattern = "";
+            String replacement = "> ";
+            int replacementIndex = 1;
+            sedApplication.replaceSubstringInFile(pattern, replacement, replacementIndex, file1.toString());
+        }catch (Exception expected){
+            assertEquals(String.format(ERR_EMPTY_REGEX), expected.getMessage());
+        }
     }
 
     @Test
