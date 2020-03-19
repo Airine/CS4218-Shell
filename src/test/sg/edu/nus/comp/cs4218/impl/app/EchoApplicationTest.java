@@ -59,7 +59,7 @@ class EchoApplicationTest {
         String[] args = {};
         assertDoesNotThrow(() -> {
             String result = echoApp.constructResult(args);
-            assertEquals(STRING_NEWLINE, result);
+            assertEquals("", result);
         });
     }
 
