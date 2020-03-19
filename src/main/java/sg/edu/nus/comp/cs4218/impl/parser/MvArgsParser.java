@@ -3,18 +3,18 @@ package sg.edu.nus.comp.cs4218.impl.parser;
 import java.util.Iterator;
 
 public class MvArgsParser extends ArgsParser {
-    private final static char OVERWRITE_FLAG = 'n';
+    private final static char NO_OVERWRITE_FLAG = 'n';
     private String[] toMoveFileName;
 
     private String destFilePathName;
 
     public MvArgsParser() {
         super();
-        super.legalFlags.add(OVERWRITE_FLAG);
+        super.legalFlags.add(NO_OVERWRITE_FLAG);
     }
 
     public boolean isOverwrite() {
-        return super.flags.contains(OVERWRITE_FLAG);
+        return !super.flags.contains(NO_OVERWRITE_FLAG);
     }
 
     public String[] getToMoveFileName() {
