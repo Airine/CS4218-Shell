@@ -3,7 +3,9 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import sg.edu.nus.comp.cs4218.app.DiffInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.DiffException;
+import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.parser.DiffArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
@@ -18,6 +20,27 @@ import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class DiffApplication implements DiffInterface {
+
+
+    @Override
+    public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+        checkIfNullArgs(args, stdin, stdout);
+        DiffArgsParser parser = new DiffArgsParser();
+        try {
+            parser.parse(args);
+        } catch (InvalidArgsException e) {
+            throw new DiffException(e.getMessage());
+        }
+
+        Boolean ReportIdentical = parser.isReportIdentical();
+        Boolean IgnoreBlanks = parser.isIgnoreBlanks();
+        Boolean MsgDiff = parser.isMsgDiff();
+
+        String[] files = parser.getDiffFile().toArray(new String[0]);
+
+        //TODO:
+
+    }
 
     private void checkIfNullArgs(Object... args) throws DiffException {
         for (Object arg : args)
@@ -94,14 +117,13 @@ public class DiffApplication implements DiffInterface {
         boolean flag;
         while (i < filesA.length && j < filesB.length) {
             fileA = filesA[i];
+            fileB = filesB[j];
 
             absA = fileA.getAbsolutePath();
             idxA = absA.lastIndexOf(sep);
             nameA = absA.substring(idxA+1);
             idx2A = absA.substring(0,idxA).lastIndexOf(sep);
             dirA = absA.substring(idx2A+1, idxA);
-
-            fileB = filesB[j];
 
             absB = fileB.getAbsolutePath();
             idxB = absB.lastIndexOf(sep);
@@ -206,8 +228,4 @@ public class DiffApplication implements DiffInterface {
         return String.join(STRING_NEWLINE, result);
     }
 
-    @Override
-    public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
-
-    }
 }

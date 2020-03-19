@@ -60,7 +60,7 @@ public class LsApplication implements LsInterface {
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw (LsException) new LsException(e.getMessage()).initCause(e);
+            throw new LsException(e.getMessage());
         }
 
         Boolean foldersOnly = parser.isFoldersOnly();
