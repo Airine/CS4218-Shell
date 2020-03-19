@@ -85,9 +85,11 @@ public final class RegexArgument {
                 currentDir = Paths.get(Environment.currentDirectory + File.separator + dir).toFile();
             }
 
-            for (String candidate : currentDir.list()) {
-                if (regexPattern.matcher(candidate).matches()) {
-                    globbedFiles.add(dir + candidate);
+            if (currentDir.exists()){
+                for (String candidate : currentDir.list()) {
+                    if (regexPattern.matcher(dir + candidate).matches()) {
+                        globbedFiles.add(dir + candidate);
+                    }
                 }
             }
 

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings({"PMD.MethodNamingConventions", "PMD.LongVariable"})
 class GlobbingTest {
-    private static final Path DIRECTORY = Paths.get("test", "tdd","util", "dummyTestFolder", "GlobbingTestFolder");
+    private static final Path DIRECTORY = Paths.get("src","test", "tdd","util", "dummyTestFolder", "GlobbingTestFolder");
     private static final String RESOURCE_PATH = DIRECTORY.toString() + File.separator;
     private static final String FOLDER_WITH_FILE = RESOURCE_PATH + "folderWithFile";
     private static final String FOLDER_WITH_FILE_PATH = FOLDER_WITH_FILE + File.separator;
@@ -132,6 +132,7 @@ class GlobbingTest {
     @Test
     void testResolveOneArgument_singleAsterisk_nonExistentFolder() throws AbstractApplicationException, ShellException {
         String input = RESOURCE_PATH + File.separator + "nonExistent" + File.separator + "*";
+        System.out.println(input);
         List<String> expected = Arrays.asList(input);
         List<String> actual = argumentResolver.resolveOneArgument(input);
         assertEquals(expected, actual);
