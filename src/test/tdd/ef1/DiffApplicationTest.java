@@ -54,6 +54,8 @@ public class DiffApplicationTest { // NOPMD
     private static final String DIFFDIR1 = "diffDir1";
     private static final String DIFFDIR1_IDENTICAL = "diffDir1-identical"; // NOPMD
     private static final String DIFFDIR2 = "diffDir1";
+    private static final String DIFFALPHA = "diffDir-alpha";
+    private static final String DIFFBETA = "diffDir-beta";
 
     @BeforeAll
     static void setupAll() {
@@ -177,7 +179,7 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffDirContainFilesWithSameContent() {
         try {
             String result = diffApp.diffTwoDir(DIFFDIR1, DIFFDIR1_IDENTICAL, false, false, false);
-            assertTrue(result.contains("")); // No message represents a successful diff
+            assertEquals("", result); // No message represents a successful diff
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -295,6 +297,16 @@ public class DiffApplicationTest { // NOPMD
             assertTrue(result.contains("Only in diffDir1: diff1-identical.txt" + StringUtils.STRING_NEWLINE +
                     "Only in diffDir1: diff1.txt" + StringUtils.STRING_NEWLINE +
                     "Only in diffDir2: diff2.txt"));
+        } catch (DiffException e) {
+            fail("should not fail: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDiffDirContainFilesWithDiffAlpha() {
+        try {
+            String result = diffApp.diffTwoDir(DIFFALPHA, DIFFBETA, false, false, false);
+            assertTrue(true);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }

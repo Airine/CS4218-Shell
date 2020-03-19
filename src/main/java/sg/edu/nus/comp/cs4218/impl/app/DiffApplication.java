@@ -5,6 +5,7 @@ import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.DiffException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
+import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -78,16 +79,84 @@ public class DiffApplication implements DiffInterface {
         return result;
     }
 
-    private List<String> getDiffDir(File[] filesA, File[] filesB) throws IOException {
+    private List<String> getDiffDir(File[] filesA, File[] filesB) throws DiffException {
         List<String> result = new ArrayList<>();
         int i = 0;
         int j = 0;
+        File fileA;
+        File fileB;
+        String sep = StringUtils.fileSeparator();
+        String nameA, nameB;
+        String absA, absB;
+        String dirA, dirB;
+        int idxA, idxB;
+        int idx2A, idx2B;
+        boolean flag;
         while (i < filesA.length && j < filesB.length) {
+            fileA = filesA[i];
 
-            i++;
-            j++;
+            absA = fileA.getAbsolutePath();
+            idxA = absA.lastIndexOf(sep);
+            nameA = absA.substring(idxA+1);
+            idx2A = absA.substring(0,idxA).lastIndexOf(sep);
+            dirA = absA.substring(idx2A+1, idxA);
+
+            fileB = filesB[j];
+
+            absB = fileB.getAbsolutePath();
+            idxB = absB.lastIndexOf(sep);
+            nameB = absB.substring(idxB+1);
+            idx2B = absB.substring(0,idxB).lastIndexOf(sep);
+            dirB = absB.substring(idx2B+1, idxB);
+
+            if (nameA.equals(nameB)){
+
+                try {
+                    InputStream inputStreamA = IOUtils.openInputStream(fileA);
+                    InputStream inputStreamB = IOUtils.openInputStream(fileB);
+                    List<String> tmp = getDiff(inputStreamA, inputStreamB);
+                    if (tmp.size() != 0) {
+                        result.add("diff " + dirA + sep + nameA + " " + dirB + sep + nameB);
+                        result.addAll(tmp);
+                    }
+                } catch (ShellException | IOException e) {
+                    throw new DiffException(e.getMessage());
+                }
+                i++;
+                j++;
+            } else if (nameA.compareTo(nameB) > 0) {
+                j++;
+                result.add("Only in " + dirB + ": " + nameB);
+            } else {
+                result.add("Only in " + dirA + ": " + nameA);
+                i++;
+            }
         }
+        if (i == filesA.length && j < filesB.length) {
+            getRemain(filesB, result, j, sep);
+        } else if (i < filesA.length && j == filesB.length) {
+            getRemain(filesA, result, i, sep);
+        }
+
         return result;
+    }
+
+    private void getRemain(File[] filesB, List<String> result, int j, String sep) {
+        File fileB;
+        String absB;
+        int idxB;
+        String nameB;
+        int idx2B;
+        String dirB;
+        for (; j < filesB.length; j++){
+            fileB = filesB[j];
+            absB = fileB.getAbsolutePath();
+            idxB = absB.lastIndexOf(sep);
+            nameB = absB.substring(idxB+1);
+            idx2B = absB.substring(0,idxB).lastIndexOf(sep);
+            dirB = absB.substring(idx2B+1, idxB);
+            result.add("Only in " + dirB + ": " + nameB);
+        }
     }
 
     @Override
@@ -99,8 +168,8 @@ public class DiffApplication implements DiffInterface {
         List<String> result = new ArrayList<>();
         try {
             InputStream inputStreamA = IOUtils.openInputStream(fileA);
-            InputStream inputB = IOUtils.openInputStream(fileB);
-            result = getDiff(inputStreamA, inputB);
+            InputStream inputStreamB = IOUtils.openInputStream(fileB);
+            result = getDiff(inputStreamA, inputStreamB);
         } catch (ShellException | IOException e) {
             throw new DiffException(e.getMessage());
         }
@@ -117,9 +186,9 @@ public class DiffApplication implements DiffInterface {
         checkIfValidFolder(folderBB.listFiles());
         File[] filesA = Stream.of(Objects.requireNonNull(folderAA.listFiles())).sorted(Comparator.comparing(File::toString)).toArray(File[]::new);
         File[] filesB = Stream.of(Objects.requireNonNull(folderBB.listFiles())).sorted(Comparator.comparing(File::toString)).toArray(File[]::new);
-
-
-        return null;
+        List<String> result;
+        result = getDiffDir(filesA, filesB);
+        return String.join(STRING_NEWLINE, result);
     }
 
     @Override
