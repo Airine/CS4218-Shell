@@ -45,6 +45,7 @@ public class SortApplicationTest {
                 + StringUtils.fileSeparator()+ "src"
                 + StringUtils.fileSeparator()+ "test"
                 + StringUtils.fileSeparator() + "tdd"
+                + StringUtils.fileSeparator() + "util"
                 + StringUtils.fileSeparator() + "dummyTestFolder"
                 + StringUtils.fileSeparator() + "SortTestFolder";
         if (Files.isDirectory(TestUtil.resolveFilePath(path))) {
@@ -70,7 +71,7 @@ public class SortApplicationTest {
 
     @Test
     public void testFailsWithNullOutputstream() {
-        Exception expectedException = assertThrows(SortException.class, () -> sortApp.run(null, null, null));
+        Exception expectedException = assertThrows(SortException.class, () -> sortApp.run(new String[] {"a"}, null, null));
         assertTrue(expectedException.getMessage().contains(ERR_NULL_STREAMS));
     }
 
@@ -88,7 +89,7 @@ public class SortApplicationTest {
 
     @Test
     public void testFailsWithEmptyStdin() {
-        Exception expectedException = assertThrows(SortException.class, () -> sortApp.run(null, null, stdout));
+        Exception expectedException = assertThrows(SortException.class, () -> sortApp.run(new String[] {"-"}, null, stdout));
         assertTrue(expectedException.getMessage().contains(ERR_NULL_STREAMS));
     }
 

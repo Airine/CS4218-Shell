@@ -12,34 +12,34 @@ import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class FindApplicationTest {
-    String testDir = "test/tdd/dummyTestFolder/FindTestFolder/sampleFiles/";
-    String testDir2 = "test/tdd/dummyTestFolder/FindTestFolder/sampleFiles2";
-    String testDir3 = "test/tdd/dummyTestFolder/FindTestFolder/sampleFiles3";
+    String srcDir = "src"+CHAR_FILE_SEP+"test"+CHAR_FILE_SEP+"tdd"+CHAR_FILE_SEP+"util"+CHAR_FILE_SEP+
+            "dummyTestFolder"+CHAR_FILE_SEP+"FindTestFolder";
+    String testDir = srcDir+CHAR_FILE_SEP+"sampleFiles";
+    String testDir2 = srcDir+CHAR_FILE_SEP+"sampleFiles2";
+    String testDir3 = srcDir+CHAR_FILE_SEP+"sampleFiles3";
     String sample1 = "sampleNotExist";
     String sample2 = "sampleNotExist2";
+    String fileNameC = "c.txt";
+    String findPrefix = "find: ";
+    String suffix = "-name";
     static FindApplication app;
-    InputStream in;
-    OutputStream out;
+    InputStream inputStream;
+    OutputStream outputStream;
 
     @BeforeAll
     static void setUp() {
         app = new FindApplication();
     }
 
-    @AfterAll
-    static void tearDown() {
-    }
-
     @BeforeEach
     void init() {
-        in = new ByteArrayInputStream("".getBytes());
-        out = new ByteArrayOutputStream();
-    }
-
-    @AfterEach
-    void done() {
+        inputStream = new ByteArrayInputStream("".getBytes());
+        outputStream = new ByteArrayOutputStream();
     }
 
     // ===========================================
@@ -49,111 +49,111 @@ public class FindApplicationTest {
     @Test
     // MUT: findFolderContent
     // Test Case: FileName Null, 0 Folders Specified (Null)
-    void FindFolderContent_FileNameNullNullFolderSpecified_ThrowException() throws Exception {
+    void testFindFolderContentFileNameNullNullFolderSpecifiedThrowException(){
         assertThrows(FindException.class, () -> app.findFolderContent(null, null));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: FileName Null, 1 Folder
-    void FindFolderContent_FileNameNull1Folder_ThrowException() throws Exception {
+    void testFindFolderContentFileNameNull1FolderThrowException(){
         assertThrows(FindException.class, () -> app.findFolderContent(null, testDir));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: FileName Null, >1 Folders
-    void FindFolderContent_FileNameNullMultipleFolder_ThrowException() throws Exception {
+    void testFindFolderContentFileNameNullMultipleFolderThrowException(){
         assertThrows(FindException.class, () -> app.findFolderContent(null, testDir, testDir2));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One Invalid FileName Specified, 1 Valid Folder
-    void FindFolderContent_1InvalidFileName1ValidFolder_OutputToStream() throws Exception {
-        assertEquals("", app.findFolderContent("testInvalidFileName", "src"));
+    void testFindFolderContent1InvalidFileName1ValidFolderOutputToStream() throws Exception {
+        assertEquals("", app.findFolderContent("testInvalidFileName", srcDir));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, 1 Valid Folder
-    void FindFolderContent_1FileName1ValidFolder_OutputToStream() throws Exception {
-        String expected = "src\\test\\sampleFiles2\\c.txt" + System.lineSeparator() +
-                "src\\test\\sampleFiles3\\c.txt";
-        assertEquals(expected, app.findFolderContent("c.txt", "src"));
+    void testFindFolderContent1FileName1ValidFolderOutputToStream() throws Exception {
+        String expected = testDir2 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE +
+                testDir3 + CHAR_FILE_SEP + fileNameC;
+        assertEquals(expected, app.findFolderContent(fileNameC, srcDir));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified (but not found), 1 Valid Folder
-    void FindFolderContent_1FileNameFileNotFound1ValidFolder_OutputToStream() throws Exception {
-        assertEquals("", app.findFolderContent("a.txt", "lib"));
+    void testFindFolderContent1FileNameFileNotFound1ValidFolderOutputToStream() throws Exception {
+        assertEquals("", app.findFolderContent("a.txt", testDir2));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, 1 Invalid Folder i.e. Folder does not exist
-    void FindFolderContent_1FileName1InvalidFolderFolderDNE_OutputToStream() throws Exception {
-        String expected = "find: " + sample1 + ": No such file or directory";
-        assertEquals(expected, app.findFolderContent("c.txt", "sampleNotExist"));
+    void testFindFolderContent1FileName1InvalidFolderFolderDNEOutputToStream() throws Exception {
+        String expected = findPrefix + sample1 + ": " + ERR_FILE_NOT_FOUND;
+        assertEquals(expected, app.findFolderContent(fileNameC, "sampleNotExist"));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, 1 Invalid Folder i.e. File not in folder specified
-    void FindFolderContent_1FileName1InvalidFolderFileNotFound_OutputToStream() throws Exception {
-        assertEquals("", app.findFolderContent("c.txt", testDir));
+    void testFindFolderContent1FileName1InvalidFolderFileNotFoundOutputToStream() throws Exception {
+        assertEquals("", app.findFolderContent(fileNameC, testDir));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, >1 Valid Folders i.e. File found in multiple folders
     // Note: didn't account for case if file found in multiple folders
-    void FindFolderContent_1FileNameMultipleValidFolders_OutputToStream() throws Exception {
-        String expected = "src\\test\\sampleFiles2\\c.txt" + System.lineSeparator() +
-                "src\\test\\sampleFiles3\\c.txt";
-        assertEquals(expected, app.findFolderContent("c.txt", "src"));
+    void testFindFolderContent1FileNameMultipleValidFoldersOutputToStream() throws Exception {
+        String expected = testDir2 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE +
+                testDir3 + CHAR_FILE_SEP + fileNameC;
+        assertEquals(expected, app.findFolderContent(fileNameC, srcDir));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, 1 Valid Folder 1 Invalid Folder i.e. Folder does not exist
-    void FindFolderContent_1FileName1Valid1InvalidDNEFolder_OutputToStream() throws Exception {
-        String expected = "src\\test\\sampleFiles2\\c.txt" + System.lineSeparator() +
-                "src\\test\\sampleFiles3\\c.txt" + System.lineSeparator() +
-                "find: " + sample1 + ": No such file or directory";
-        assertEquals(expected, app.findFolderContent("c.txt", "src", "sampleNotExist"));
+    void testFindFolderContent1FileName1Valid1InvalidDNEFolderOutputToStream() throws Exception {
+        String expected = testDir2 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE +
+                testDir3 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE +
+                findPrefix + sample1 + ": No such file or directory";
+        assertEquals(expected, app.findFolderContent(fileNameC, srcDir, sample1));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, 1 Valid Folder 1 Invalid folder i.e. file not in folder specified
-    void FindFolderContent_1FileName1Valid1InvalidFolderFileNotFound_OutputToStream() throws Exception {
-        String expected = "src\\test\\sampleFiles2\\c.txt" + System.lineSeparator() +
-                "src\\test\\sampleFiles3\\c.txt";
-        assertEquals(expected, app.findFolderContent("c.txt", "src", "lib"));
+    void testFindFolderContent1FileName1Valid1InvalidFolderFileNotFoundOutputToStream() throws Exception {
+        String expected = testDir2 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE +
+                testDir3 + CHAR_FILE_SEP + fileNameC;
+        assertEquals(expected, app.findFolderContent(fileNameC, srcDir, testDir));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, >1 Folders All Invalid i.e. Folders do not exist
-    void FindFolderContent_1FilenameMultipleInvalidFoldersDNE_OutputToStream() throws Exception {
-        String expected = "find: " + sample1 + ": No such file or directory" + System.lineSeparator() +
-                "find: " + sample2 + ": No such file or directory";
-        assertEquals(expected, app.findFolderContent("c.txt", "sampleNotExist", "sampleNotExist2"));
+    void testFindFolderContent1FilenameMultipleInvalidFoldersDNEOutputToStream() throws Exception {
+        String expected = findPrefix + sample1 + ": No such file or directory" + System.lineSeparator() +
+                findPrefix + sample2 + ": No such file or directory";
+        assertEquals(expected, app.findFolderContent(fileNameC, "sampleNotExist", "sampleNotExist2"));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, >1 Folders All Invalid i.e. File not in folders specified
-    void FindFolderContent_1FileNameMultipleInvalidFoldersFileNotFound_OutputToStream() throws Exception {
+    void testFindFolderContent1FileNameMultipleInvalidFoldersFileNotFoundOutputToStream() throws Exception {
         assertEquals("", app.findFolderContent("a.txt", testDir2, testDir3));
     }
 
     @Test
     // MUT: findFolderContent
     // Test Case: One FileName Specified, 0 Folders Specified
-    void FindFolderContent_1FileNameNoFoldersSpecified_OutputToStream() throws Exception {
+    void testFindFolderContent1FileNameNoFoldersSpecifiedOutputToStream(){
         assertThrows(FindException.class, () -> app.findFolderContent("a.txt", null));
     }
 
@@ -164,132 +164,132 @@ public class FindApplicationTest {
     @Test
     // MUT: run
     // Test Case: stdout == null
-    void Run_StdOutNull_ThrowException() throws AbstractApplicationException {
-        String[] args = {"src", "-name", "c.txt"};
-        assertThrows(FindException.class, () -> app.run(args, in, null));
+    void testRunStdOutNullThrowException(){
+        String[] args = {srcDir, suffix, fileNameC};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, null));
     }
 
     @Test
-    void Run_3ArgsPositive_OutputToStream() throws AbstractApplicationException {
-        String[] args = {"src", "-name", "c.txt"};
-        String expected = "src\\test\\sampleFiles2\\c.txt" + System.lineSeparator() +
-                "src\\test\\sampleFiles3\\c.txt" + System.lineSeparator();
-        app.run(args, in, out);
-        assertEquals(expected, out.toString());
+    void testRun3ArgsPositiveOutputToStream() throws AbstractApplicationException {
+        String[] args = {srcDir, suffix, fileNameC};
+        String expected = testDir2 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE +
+                testDir3 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE;
+        app.run(args, inputStream, outputStream);
+        assertEquals(expected, outputStream.toString());
     }
 
     @Test
     // Test Case: 4 Args Multiple FileName; FOLDERS -name FILENAME FILENAME
-    void Run_4Args2Filename_ThrowException() throws AbstractApplicationException {
-        String[] args = {"src", "-name", "c.txt", "d.txt"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun4Args2FilenameThrowException(){
+        String[] args = {srcDir, suffix, fileNameC, "d.txt"};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 4 Args Multiple Folder; FOLDER FOLDER -name FILENAME
-    void Run_4ArgsPositiveMultipleFolders_OutputToStream() throws AbstractApplicationException {
-        String[] args = {"src", "lib", "-name", "c.txt"};
-        app.run(args, in, out);
-        String expected = "src\\test\\sampleFiles2\\c.txt" + System.lineSeparator() +
-                "src\\test\\sampleFiles3\\c.txt" + System.lineSeparator();
-        assertEquals(expected, out.toString());
+    void testRun4ArgsPositiveMultipleFoldersOutputToStream() throws AbstractApplicationException {
+        String[] args = {testDir2, testDir3, suffix, fileNameC};
+        app.run(args, inputStream, outputStream);
+        String expected = testDir2 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE +
+                testDir3 + CHAR_FILE_SEP + fileNameC + STRING_NEWLINE;
+        assertEquals(expected, outputStream.toString());
     }
 
     @Test
     // Test Case: 4 Args Multiple Folder Incorrect Order; -name FILENAME FOLDER FOLDER
-    void Run_4ArgsMultipleFoldersIncorrectOrder_ThrowException() throws AbstractApplicationException {
-        String[] args = {"-name", "c.txt", "src", "lib"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun4ArgsMultipleFoldersIncorrectOrderThrowException() {
+        String[] args = {suffix, fileNameC, srcDir, "lib"};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 3 Args Incorrect Order 1; -name FILENAME FOLDER
-    void Run_3ArgsIncorrectOrder1_ThrowException() throws AbstractApplicationException {
-        String[] args = {"-name", "c.txt", "src"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun3ArgsIncorrectOrder1ThrowException() {
+        String[] args = {suffix, fileNameC, srcDir};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 3 Args Incorrect Order 2; FOLDER FILENAME -name
-    void Run_3ArgsIncorrectOrder2_ThrowException() throws AbstractApplicationException {
-        String[] args = {"src", "c.txt", "-name"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun3ArgsIncorrectOrder2ThrowException() {
+        String[] args = {srcDir, fileNameC, suffix};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 3 Args Incorrect Order 3; -name FOLDER FILENAME
-    void Run_3ArgsIncorrectOrder3_ThrowException() throws AbstractApplicationException {
-        String[] args = {"-name", "src", "c.txt"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun3ArgsIncorrectOrder3ThrowException() {
+        String[] args = {suffix, srcDir, fileNameC};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 3 Args Incorrect Order 4; FILENAME -name FOLDER
-    void Run_3ArgsIncorrectOrder4_OutputToStream() throws AbstractApplicationException {
-        String[] args = {"c.txt", "-name", "src"};
-        String expected = "find: c.txt: No such file or directory" + System.lineSeparator();
-        app.run(args, in, out);
-        assertEquals(expected, out.toString());
+    void testRun3ArgsIncorrectOrder4OutputToStream() throws AbstractApplicationException {
+        String[] args = {fileNameC, suffix, srcDir};
+        String expected = findPrefix + fileNameC + ": " + ERR_FILE_NOT_FOUND + System.lineSeparator();
+        app.run(args, inputStream, outputStream);
+        assertEquals(expected, outputStream.toString());
     }
 
     @Test
     // Test Case: 3 Args Incorrect Order 5; FILENAME FOLDER -name
-    void Run_3ArgsIncorrectOrder5_ThrowException() throws AbstractApplicationException {
-        String[] args = {"c.txt", "src", "-name"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun3ArgsIncorrectOrder5ThrowException() {
+        String[] args = {fileNameC, srcDir, suffix};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 2 Args; FOLDER FILENAME
-    void Run_2ArgsNoFlag_ThrowException() throws AbstractApplicationException {
-        String[] args = {"src", "c.txt"};
-        assertThrows(FindException.class, () -> app.run(args,in, out));
+    void testRun2ArgsNoFlagThrowException() {
+        String[] args = {srcDir, fileNameC};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 2 Args; FOLDER -name
-    void Run_2ArgsNoFileName_ThrowException() throws AbstractApplicationException {
-        String[] args = {"src", "-name"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun2ArgsNoFileNameThrowException(){
+        String[] args = {srcDir, suffix};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 2 Args; -name FILENAME
-    void Run_2ArgsNoFolder_ThrowException() throws AbstractApplicationException {
-        String[] args = {"-name", "c.txt"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun2ArgsNoFolderThrowException() {
+        String[] args = {suffix, fileNameC};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 1 Arg; FOLDER
-    void Run_1ArgFolder_ThrowException() throws AbstractApplicationException {
-        String[] args = {"src"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun1ArgFolderThrowException() {
+        String[] args = {srcDir};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 1 Arg; -name
-    void Run_1ArgFlag_ThrowException() throws AbstractApplicationException {
-        String[] args = {"-name"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+    void testRun1ArgFlagThrowException() {
+        String[] args = {suffix};
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
     // Test Case: 1 Arg; FILENAME
-    void Run_1ArgFileName_ThrowException() throws AbstractApplicationException {
+    void testRun1ArgFileNameThrowException() {
         String[] args = {"-c.txt"};
-        assertThrows(FindException.class, () -> app.run(args, in, out));
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
-    void Run_EmptyArgs_OutputToStream() throws AbstractApplicationException {
+    void testRunEmptyArgsOutputToStream() {
         String[] args = { };
-        assertThrows(FindException.class, () -> app.run(args,in, out));
+        assertThrows(FindException.class, () -> app.run(args, inputStream, outputStream));
     }
 
     @Test
-    void Run_NullArgs_OutputToStream() throws AbstractApplicationException {
-        assertThrows(FindException.class, () -> app.run(null, in, out));
+    void testRunNullArgsOutputToStream() {
+        assertThrows(FindException.class, () -> app.run(null, inputStream, outputStream));
     }
 
 }

@@ -15,7 +15,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class CutApplicationTest {
 
-    private static String folderName = "tdd/util/dummyTestFolder/CutTestFolder";
+    private static String folderName = "src/test/tdd/util/dummyTestFolder/CutTestFolder";
     private static String fileNameTest = "test.txt";
     private static String fileNameNames = "course.txt";
     private static String subDirName = "subDir";
