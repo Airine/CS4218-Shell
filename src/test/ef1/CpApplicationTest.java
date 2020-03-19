@@ -1,10 +1,8 @@
 package ef1;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
+import sg.edu.nus.comp.cs4218.impl.app.CpApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
@@ -12,10 +10,9 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled
 class CpApplicationTest {
 
-    private CpInterface cpInterface;
+    private CpInterface cpInterface = new CpApplication();
 
     @BeforeEach
     void setUp() {
@@ -85,10 +82,12 @@ class CpApplicationTest {
     }
 
     @Test
+    @DisplayName("copy a folder to an exist file should override this file to folder")
     public void runCpFolderToFile() {
         String[] args = {TestFileUtils.emptyFolderName, TestFileUtils.tempFileName1};
         assertDoesNotThrow(() -> cpInterface.run(args, System.in, System.out));
-        assertFalse(new File(TestFileUtils.tempFileName1).isDirectory());
+        assertTrue(new File(TestFileUtils.emptyFolderName).isDirectory());
+        assertTrue(new File(TestFileUtils.tempFileName1).isDirectory());
     }
 
     @Test

@@ -15,7 +15,6 @@ import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled
 public class DiffApplicationTest {
 
     private static String testText1 = "are you ok?";
