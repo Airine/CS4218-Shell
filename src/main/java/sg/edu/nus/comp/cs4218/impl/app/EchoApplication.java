@@ -28,7 +28,7 @@ public class EchoApplication implements EchoInterface {
 
         String result;
         if (args.length == 0) {
-            result = STRING_NEWLINE;
+            result = "";
         } else {
             result = String.join(" ", args);
         }
