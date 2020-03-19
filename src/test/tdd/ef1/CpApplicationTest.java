@@ -10,8 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
 class CpApplicationTest {
@@ -76,10 +76,12 @@ class CpApplicationTest {
     class cpSrcFileToDestFileTests {
 
         @Test
-        @DisplayName("should throw exception if invalid src file")
+        @DisplayName("should write something in stand out if invalid src file")
         void throwsExceptionSrcFileNotFound() {
-            assertThrows(CpException.class, () -> cpApplication.run(new String[]{"src.txt", "dest.txt"},
+            OutputStream outputStream = new ByteArrayOutputStream();
+            assertDoesNotThrow(() -> cpApplication.run(new String[]{"src.txt", "dest.txt"},
                     inputStream, outputStream));
+            assertFalse(outputStream.toString().isEmpty());
         }
 
         @Test
@@ -134,7 +136,7 @@ class CpApplicationTest {
         @Test
         @DisplayName("should throw exception when invalid src file but copy the rest")
         void throwExceptionInvalidSrcFilesAndCopyValidOnes() {
-            assertThrows(CpException.class, () -> cpApplication.run(new String[]{FILENAME1, "invalid file name",
+            assertDoesNotThrow(() -> cpApplication.run(new String[]{FILENAME1, "invalid file name",
                     DIR_NAME}, inputStream, outputStream));
 
             assertFileContentsEqual(file1Data, file1.toPath());

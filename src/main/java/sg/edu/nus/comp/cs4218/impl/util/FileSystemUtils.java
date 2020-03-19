@@ -13,6 +13,25 @@ public final class FileSystemUtils {
     private FileSystemUtils() {
     }
 
+
+    /**
+     * Judge whether one folder is the other folder's sub directory
+     * @param parentFolder The higher level folder
+     * @param childFolder The child level folder
+     * @return true if parentFolder is the parent of childFolder, other wise false
+     */
+    public static boolean isSubDir(String parentFolder, String childFolder){
+        String absParent = FileSystemUtils.getAbsolutePathName(parentFolder);
+        String absChild = FileSystemUtils.getAbsolutePathName(childFolder);
+        if(absChild.equals(absParent))
+            return true;
+        if(!absParent.endsWith(StringUtils.fileSeparator())){
+            absParent += StringUtils.fileSeparator();
+        }
+        return absChild.startsWith(absParent);
+    }
+
+
     public static void deleteFileRecursive(File file) {
         if (file.exists()) {
             if (file.isDirectory()) {

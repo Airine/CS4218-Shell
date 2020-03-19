@@ -2,7 +2,6 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.CpInterface;
 import sg.edu.nus.comp.cs4218.exception.CpException;
-import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.impl.parser.CpArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
@@ -35,7 +34,11 @@ public class CpApplication implements CpInterface {
                     FileSystemUtils.getAbsolutePathName(destFolder),
                     new File(FileSystemUtils.getAbsolutePathName(oneFileName))
                             .getName());
+            if (FileSystemUtils.isSubDir(oneFileName, destFolder)) {
+                throw new Exception(destFolder + " is the sub dir of " + destFolder + " or they are the same file.");
+            }
             File oriFile = new File(destFilePath);
+            // by default we will delete the file if it exists
             if (oriFile.exists()) {
                 oriFile.delete();
             }
@@ -67,7 +70,14 @@ public class CpApplication implements CpInterface {
                 cpSrcFileToDestFile(toCopy[0], destPath);
             }
         } catch (Exception e) {
-            throw (CpException) new CpException(ErrorConstants.ERR_IO_EXCEPTION).initCause(e);
+            try {
+                if(stdout==null){
+                    throw new CpException("OutputStream not provided");
+                }
+                stdout.write(e.getMessage().getBytes());
+            } catch (IOException ex) {
+                throw (CpException) new CpException("Could not write to output stream").initCause(ex);
+            }
         }
 
 
