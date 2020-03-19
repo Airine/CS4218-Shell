@@ -72,7 +72,7 @@ public class CpApplication implements CpInterface {
         } catch (Exception e) {
             try {
                 if(stdout==null){
-                    throw new CpException("OutputStream not provided");
+                    throw (CpException) new CpException("OutputStream not provided").initCause(e);
                 }
                 stdout.write(e.getMessage().getBytes());
             } catch (IOException ex) {

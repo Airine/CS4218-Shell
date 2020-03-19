@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Optional;
 
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 
@@ -16,16 +17,18 @@ public final class FileSystemUtils {
 
     /**
      * Judge whether one folder is the other folder's sub directory
+     *
      * @param parentFolder The higher level folder
-     * @param childFolder The child level folder
+     * @param childFolder  The child level folder
      * @return true if parentFolder is the parent of childFolder, other wise false
      */
-    public static boolean isSubDir(String parentFolder, String childFolder){
+    public static boolean isSubDir(String parentFolder, String childFolder) {
         String absParent = FileSystemUtils.getAbsolutePathName(parentFolder);
         String absChild = FileSystemUtils.getAbsolutePathName(childFolder);
-        if(absChild.equals(absParent))
+        if (absChild.equals(absParent)) {
             return true;
-        if(!absParent.endsWith(StringUtils.fileSeparator())){
+        }
+        if (!absParent.endsWith(StringUtils.fileSeparator())) {
             absParent += StringUtils.fileSeparator();
         }
         return absChild.startsWith(absParent);
@@ -35,11 +38,8 @@ public final class FileSystemUtils {
     public static void deleteFileRecursive(File file) {
         if (file.exists()) {
             if (file.isDirectory()) {
-                File[] files = file.listFiles();
-                if (files != null) {
-                    for (File f : files) {
-                        deleteFileRecursive(f);
-                    }
+                for (File f : Optional.of(file.listFiles()).orElse(new File[]{})) {
+                    deleteFileRecursive(f);
                 }
             }
             file.delete(); //NOPMD do not need the return value
