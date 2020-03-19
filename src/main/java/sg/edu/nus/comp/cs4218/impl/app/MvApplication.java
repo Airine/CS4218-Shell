@@ -49,8 +49,8 @@ public class MvApplication implements MvInterface {
                         Paths.get(destFilePath));
             }
         }catch (FileAlreadyExistsException e){
-            throw new MvException("A file with the same name already exists in "
-                    + "directory '" + destFolder + "' and cannot be replaced.");
+            throw (MvException)new MvException("A file with the same name already exists in "
+                    + "directory '" + destFolder + "' and cannot be replaced.").initCause(e);
         }
         return destFilePath;
     }
@@ -83,7 +83,7 @@ public class MvApplication implements MvInterface {
         } catch (Exception e) {
             try {
                 if(stdout==null){
-                    throw new MvException("OutputStream not provided");
+                    throw (MvException) new MvException("OutputStream not provided").initCause(e);
                 }
                 stdout.write(e.getMessage().getBytes());
             } catch (IOException ex) {

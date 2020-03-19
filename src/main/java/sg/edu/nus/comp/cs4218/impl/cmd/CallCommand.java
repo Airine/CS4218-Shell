@@ -11,6 +11,7 @@ import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Objects;
 
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_SYNTAX;
 
@@ -26,8 +27,8 @@ public class CallCommand implements Command {
 
     public CallCommand(List<String> argsList, ApplicationRunner appRunner, ArgumentResolver argumentResolver) {
         this.argsList = argsList;
-        this.appRunner = appRunner;
-        this.argumentResolver = argumentResolver;
+        this.appRunner = Objects.requireNonNull(appRunner);
+        this.argumentResolver = Objects.requireNonNull(argumentResolver);
     }
 
     @Override
