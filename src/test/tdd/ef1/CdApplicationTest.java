@@ -1,7 +1,5 @@
 package tdd.ef1;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
