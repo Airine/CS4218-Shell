@@ -20,7 +20,7 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 public class GrepApplication implements GrepInterface {
     public static final String INVALID_PATTERN = "Invalid pattern syntax";
     public static final String EMPTY_PATTERN = "Pattern should not be empty.";
-    public static final String IS_DIRECTORY = "Is a directory";
+    public static final String IS_DIRECTORY = "This is a directory";
     public static final String NULL_POINTER = "Null Pointer Exception";
 
     private static final int NUM_ARGUMENTS = 2;
@@ -32,6 +32,12 @@ public class GrepApplication implements GrepInterface {
     @Override
     public String grepFromFiles(String pattern, Boolean isCaseInsensitive, Boolean isCountLines, String... fileNames) throws Exception {
         if (fileNames == null || pattern == null) {
+            throw new GrepException(NULL_POINTER);
+        }
+        if (isCaseInsensitive == null){
+            throw new GrepException(NULL_POINTER);
+        }
+        if (isCountLines == null){
             throw new GrepException(NULL_POINTER);
         }
 
@@ -68,8 +74,18 @@ public class GrepApplication implements GrepInterface {
         for (String f : fileNames) {
             BufferedReader reader = null;
             try {
+                if (f.equals("") || f.charAt(0) == ' '){
+                    lineResults.add(f + ": " + ERR_FILE_NOT_FOUND);
+                    countResults.add(f + ": " + ERR_FILE_NOT_FOUND);
+                    continue;
+                }
                 String path = FileSystemUtils.getAbsolutePathName(f);
                 File file = new File(path);
+                if (!file.canRead()){
+                    lineResults.add(f + ": " + ERR_NO_PERM);
+                    countResults.add(f + ": " + ERR_NO_PERM);
+                    continue;
+                }
                 if (!file.exists()) {
                     lineResults.add(f + ": " + ERR_FILE_NOT_FOUND);
                     countResults.add(f + ": " + ERR_FILE_NOT_FOUND);
@@ -120,6 +136,19 @@ public class GrepApplication implements GrepInterface {
     public String grepFromStdin(String pattern, Boolean isCaseInsensitive, Boolean isCountLines, InputStream stdin) throws Exception {
         int count = 0;
         StringJoiner stringJoiner = new StringJoiner(STRING_NEWLINE);
+
+        if (isCaseInsensitive == null){
+            throw new GrepException(NULL_POINTER);
+        }
+        if (isCountLines == null){
+            throw new GrepException(NULL_POINTER);
+        }
+        if (pattern ==  null){
+            throw new GrepException(NULL_POINTER);
+        }
+        if (stdin == null){
+            throw new GrepException(NULL_POINTER);
+        }
 
         BufferedReader reader = null;
         try {

@@ -10,9 +10,12 @@ import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 @SuppressWarnings({"PMD.MethodNamingConventions", "PMD.LongVariable"})
 public class GrepApplicationTest {
@@ -25,72 +28,53 @@ public class GrepApplicationTest {
 
     private static Path fileOnePath;
     private static final String FILE_ONE_CONTENT = "FirstLine"
-            + StringUtils.STRING_NEWLINE
+            + STRING_NEWLINE
             + "SecondLine";
 
     private static final String MULTIPLE_LINES_MATCHES = "jin ying loves to eat"
-            + StringUtils.STRING_NEWLINE +
-            "jin ying loves to sleep" + StringUtils.STRING_NEWLINE +
-            "jin ying loves to play" + StringUtils.STRING_NEWLINE +
-            "jin ying loves to code" + StringUtils.STRING_NEWLINE +
-            "jin ying loves to repeat" + StringUtils.STRING_NEWLINE;
+            + STRING_NEWLINE +
+            "jin ying loves to sleep" + STRING_NEWLINE +
+            "jin ying loves to play" + STRING_NEWLINE +
+            "jin ying loves to code" + STRING_NEWLINE +
+            "jin ying loves to repeat" + STRING_NEWLINE;
 
     private static final String MULTIPLE_LINES_CASE_INSENSITIVE_MATCHES = "Jin Ying loves to Eat"
-            + StringUtils.STRING_NEWLINE +
-            "Jin ying loves to Sleep" + StringUtils.STRING_NEWLINE +
-            "Jin ying loves to Play" + StringUtils.STRING_NEWLINE +
-            "Jin ying loves to Code" + StringUtils.STRING_NEWLINE +
-            "Jin ying loves to Repeat" + StringUtils.STRING_NEWLINE;
+            + STRING_NEWLINE +
+            "Jin ying loves to Sleep" + STRING_NEWLINE +
+            "Jin ying loves to Play" + STRING_NEWLINE +
+            "Jin ying loves to Code" + STRING_NEWLINE +
+            "Jin ying loves to Repeat" + STRING_NEWLINE;
 
     private static final String MULTIPLE_FILES_CASE_SENSITIVE_MATCHES_COUNT =
+            "src" + StringUtils.CHAR_FILE_SEP + "test" + StringUtils.CHAR_FILE_SEP + "tdd" + StringUtils.CHAR_FILE_SEP +
             "util" + StringUtils.CHAR_FILE_SEP + "dummyTestFolder"//NOPMD
                     + StringUtils.CHAR_FILE_SEP
                     + "GrepTestFolder"//NOPMD
                     + StringUtils.CHAR_FILE_SEP
                     + "file_uppercase_multiplelines.txt: 5"
-                    + StringUtils.STRING_NEWLINE
+                    + STRING_NEWLINE +
+            "src" + StringUtils.CHAR_FILE_SEP + "test" + StringUtils.CHAR_FILE_SEP + "tdd" + StringUtils.CHAR_FILE_SEP
                     + "util" + StringUtils.CHAR_FILE_SEP + "dummyTestFolder"
                     + StringUtils.CHAR_FILE_SEP
                     + "GrepTestFolder"
                     + StringUtils.CHAR_FILE_SEP
                     + "file_jinying_multiplelines.txt: 5"
-                    + StringUtils.STRING_NEWLINE;
+                    + STRING_NEWLINE;
 
-    private static final String IS_A_DIR = ": This is a directory" + StringUtils.STRING_NEWLINE;
-    private static final String NO_SUCH_FILE_OR_DIR = " : No such file or directory"  + StringUtils.STRING_NEWLINE;
+    private static final String IS_A_DIR = ": This is a directory" + STRING_NEWLINE;
+    private static final String NO_SUCH_FILE_OR_DIR = " : No such file or directory"  + STRING_NEWLINE;
     private static final String NULL_POINTER_EXCEPTION = "grep: Null Pointer Exception";
     private static final String INVALID_REGEX = "grep: Invalid regular expression supplied";
     private static final String GREP_NOTHING = "";
-    private static final String NO_READ_PERMISSION = ": Permission denied" + StringUtils.STRING_NEWLINE;
+    private static final String NO_READ_PERMISSION = ": Permission denied" + STRING_NEWLINE;
     private static final String NO_INPUTSTREAM_NO_FILENAMES = "grep: No InputStream and no filenames";
     private static final String REGEX_CANNOT_BE_EMPTY = "grep: Regular expression cannot be empty";
     private Path fileTwoPath;
-    private static final String FILE_TWO_PATH_STRING = "util" + StringUtils.CHAR_FILE_SEP + "dummyTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "GrepTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "file_noread_permission.txt";
 
-    private static final String FILE_ABCABC = "util" + StringUtils.CHAR_FILE_SEP + "dummyTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "GrepTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "file_abcabc.txt";
-
-    private static final String FILE_JINYING_MULTIPLELINES = "util" + StringUtils.CHAR_FILE_SEP + "dummyTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "GrepTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "file_jinying_multiplelines.txt";
-
-    private static final String FILE_UPPERCASE_MULTIPLELINES =  "util" + StringUtils.CHAR_FILE_SEP + "dummyTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "GrepTestFolder"
-            + StringUtils.CHAR_FILE_SEP
-            + "file_uppercase_multiplelines.txt";
-
-
-
+    private static final String FILE_ABCABC = Paths.get("src","test", "tdd", "util","dummyTestFolder","GrepTestFolder","file_abcabc.txt").toString();
+    private static final String FILE_JINYING_MULTIPLELINES = Paths.get("src","test", "tdd", "util","dummyTestFolder","GrepTestFolder","file_jinying_multiplelines.txt").toString();
+    private static final String FILE_UPPERCASE_MULTIPLELINES = Paths.get("src","test", "tdd", "util","dummyTestFolder","GrepTestFolder","file_uppercase_multiplelines.txt").toString();
+    private static final String FILE_TWO_PATH_STRING = Paths.get("src","test", "tdd", "util","dummyTestFolder","GrepTestFolder","file_noread_permission.txt").toString();
 
 
     @BeforeEach
@@ -103,7 +87,6 @@ public class GrepApplicationTest {
         os1.close();
         outputStream = new ByteArrayOutputStream();
         fileTwoPath.toFile().setReadable(false);
-
     }
 
     @AfterEach
@@ -132,7 +115,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = false;
         results = app.grepFromFiles(pattern, isCaseInsensitive, isCountLines, fileName);
-        assertEquals("abcabc" + StringUtils.STRING_NEWLINE, results);
+        assertEquals("abcabc" + STRING_NEWLINE, results);
     }
 
     @Test
@@ -204,7 +187,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = true;
         results = app.grepFromFiles(pattern, isCaseInsensitive, isCountLines, fileName);
-        assertEquals(5 + StringUtils.STRING_NEWLINE, results);
+        assertEquals(5 + STRING_NEWLINE, results);
     }
 
     @Test
@@ -252,7 +235,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = true;
         Boolean isCountLines = true;
         results = app.grepFromFiles(pattern, isCaseInsensitive, isCountLines, fileName);
-        assertEquals(IS_A_DIR, results);
+        assertEquals(": " + ERR_FILE_NOT_FOUND + STRING_NEWLINE, results);
     }
 
     @Test
@@ -294,7 +277,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = false;
         results = app.grepFromStdin(pattern, isCaseInsensitive, isCountLines, inputStream);
-        assertEquals(FILE_ONE_CONTENT + StringUtils.STRING_NEWLINE, results);
+        assertEquals(FILE_ONE_CONTENT + STRING_NEWLINE, results);
     }
 
     @Test
@@ -326,7 +309,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = false;
         results =  app.grepFromStdin(pattern, isCaseInsensitive, isCountLines, inputStream);
-        assertEquals(FILE_ONE_CONTENT + StringUtils.STRING_NEWLINE, results);
+        assertEquals(FILE_ONE_CONTENT + STRING_NEWLINE, results);
     }
 
     @Test
@@ -336,7 +319,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = true;
         Boolean isCountLines = false;
         results =  app.grepFromStdin(pattern, isCaseInsensitive, isCountLines, inputStream);
-        assertEquals(FILE_ONE_CONTENT + StringUtils.STRING_NEWLINE, results);
+        assertEquals(FILE_ONE_CONTENT + STRING_NEWLINE, results);
     }
 
     @Test
@@ -358,7 +341,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = true;
         results =  app.grepFromStdin(pattern, isCaseInsensitive, isCountLines, inputStream);
-        assertEquals(2 + StringUtils.STRING_NEWLINE, results);
+        assertEquals(2 + STRING_NEWLINE, results);
     }
 
     @Test
@@ -392,7 +375,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = false;
         results =  app.grepFromStdin(pattern, isCaseInsensitive, isCountLines, inputStream);
-        assertEquals(FILE_ONE_CONTENT + StringUtils.STRING_NEWLINE, results);
+        assertEquals(FILE_ONE_CONTENT + STRING_NEWLINE, results);
     }
 
     @Test
@@ -402,7 +385,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = false;
         results =  app.grepFromStdin(pattern, isCaseInsensitive, isCountLines, inputStream);
-        assertEquals(FILE_ONE_CONTENT + StringUtils.STRING_NEWLINE, results);
+        assertEquals(FILE_ONE_CONTENT + STRING_NEWLINE, results);
     }
 
     @Test
@@ -412,7 +395,7 @@ public class GrepApplicationTest {
         Boolean isCaseInsensitive = false;
         Boolean isCountLines = false;
         results =  app.grepFromStdin(pattern, isCaseInsensitive, isCountLines, inputStream);
-        assertEquals(FILE_ONE_CONTENT + StringUtils.STRING_NEWLINE, results);
+        assertEquals(FILE_ONE_CONTENT + STRING_NEWLINE, results);
     }
 
     @Test
@@ -423,16 +406,6 @@ public class GrepApplicationTest {
             app.run(args, inputStream, outputStream);
         });
         assertEquals(NO_INPUTSTREAM_NO_FILENAMES, exception.getMessage());
-    }
-
-    @Test
-    public void testRun_emptyPattern_shouldThrowException() throws FileNotFoundException {
-        String[] args = {""};
-        inputStream = new FileInputStream(fileOnePath.toString());
-        Exception exception = assertThrows(Exception.class, () -> {
-            app.run(args, inputStream, outputStream);
-        });
-        assertEquals(REGEX_CANNOT_BE_EMPTY, exception.getMessage());
     }
 
     @Test
