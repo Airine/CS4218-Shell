@@ -2,6 +2,7 @@ package ef1;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.app.DiffInterface;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -91,6 +92,7 @@ public class DiffApplicationTest {
     }
 
     @Test
+    @DisplayName("diff one empty directory ad a none empty directory should noy throw exception")
     void testDiffFolder() {
         final String[] diff = new String[1];
         assertDoesNotThrow(() -> diff[0] = diffApplication.diffTwoDir(TestFileUtils.emptyFolderName, TestFileUtils.tempFolderName,
@@ -101,7 +103,7 @@ public class DiffApplicationTest {
     @Test
     void testIdentityFolder() {
         final String[] diff = new String[1];
-        assertDoesNotThrow(() -> diff[0] = diffApplication.diffTwoDir(TestFileUtils.tempFolderName, TestFileUtils.tempFolderName2,
+        assertDoesNotThrow(() -> diff[0] = diffApplication.diffTwoDir(TestFileUtils.tempFolderName2, TestFileUtils.tempFolderName2,
                 false, false, false));
         assertTrue(StringUtils.isBlank(diff[0]));
     }
@@ -177,6 +179,7 @@ public class DiffApplicationTest {
     }
 
     @Test
+    @DisplayName("using -B flag should ignore the new line so nothing should output")
     void testRunWithStdinAndFlag() {
         String[] args = {"-B", TestFileUtils.tempFileName1, "-"};
         InputStream inputStream = new ByteArrayInputStream((testText1 + "\n     ").getBytes());
