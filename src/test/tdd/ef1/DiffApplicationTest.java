@@ -53,7 +53,8 @@ public class DiffApplicationTest { // NOPMD
 
     private static final String DIFFDIR1 = "diffDir1";
     private static final String DIFFDIR1_IDENTICAL = "diffDir1-identical"; // NOPMD
-    private static final String DIFFDIR2 = "diffDir1";
+    private static final String DIFFDIR1_DIFF = "diffDir1-diff";
+    private static final String DIFFDIR2 = "diffDir2";
     private static final String DIFFALPHA = "diffDir-alpha";
     private static final String DIFFBETA = "diffDir-beta";
 
@@ -127,7 +128,7 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffFilesWithSameContentUsingFlagS() {
         try {
             String result = diffApp.diffTwoFiles(DIFF1_FILE, DIFF1_IDENTICAL_FILE, true, false, false);
-            assertTrue(result.contains("Files " + DIFF1_FILE + " " + DIFF1_IDENTICAL_FILE + " are identical")); // NOPMD
+            assertEquals("Files " + DIFF1_FILE + " " + DIFF1_IDENTICAL_FILE + " are identical", result); // NOPMD
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -138,7 +139,7 @@ public class DiffApplicationTest { // NOPMD
         try {
             InputStream inputStream = new FileInputStream(new File(DIFF_TEST_DIR + StringUtils.fileSeparator() + DIFF1_FILE)); //NOPMD
             String result = diffApp.diffFileAndStdin(DIFF1_FILE, inputStream, true, false, false);
-            assertTrue(result.contains("Files " + DIFF1_FILE + " - are identical"));
+            assertEquals("Files " + DIFF1_FILE + " - are identical",result);
         } catch (IOException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -169,7 +170,7 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffFilesWithSameContentUsingFlagSB() {
         try {
             String result = diffApp.diffTwoFiles(DIFF1_FILE, DIFF1_BLANK_LINES_FILE, true, true, false);
-            assertTrue(result.contains("Files " + DIFF1_FILE + " " + DIFF1_BLANK_LINES_FILE + " are identical"));
+            assertEquals("Files " + DIFF1_FILE + " " + DIFF1_BLANK_LINES_FILE + " are identical",result);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -189,8 +190,12 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffDirContainFilesWithSameContentUsingFlagS() {
         try {
             String result = diffApp.diffTwoDir(DIFFDIR1, DIFFDIR1_IDENTICAL, true, false, false);
-            assertTrue(result.contains("Files " + DIFF1_FILE + " " + DIFF1_FILE + " are identical" + StringUtils.STRING_NEWLINE +
-                    "Files " + DIFF1_IDENTICAL_FILE + " " + DIFF1_IDENTICAL_FILE + " are identical"));
+            assertEquals("Files "  + DIFFDIR1 + StringUtils.fileSeparator() + DIFF1_IDENTICAL_FILE + " "
+                                            + DIFFDIR1_IDENTICAL + StringUtils.fileSeparator() + DIFF1_IDENTICAL_FILE
+                                            + " are identical" + StringUtils.STRING_NEWLINE + "Files "
+                                            + DIFFDIR1 + StringUtils.fileSeparator() + DIFF1_FILE + " "
+                                            + DIFFDIR1_IDENTICAL + StringUtils.fileSeparator() + DIFF1_FILE  + " are identical"
+                    ,result);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -231,7 +236,7 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffFilesWithDifferentContentUsingFlagQ() {
         try {
             String result = diffApp.diffTwoFiles(DIFF1_FILE, DIFF2_FILE, false, false, true);
-            assertTrue(result.contains("Files " + DIFF1_FILE + " " + DIFF2_FILE + " differ")); // NOPMD
+            assertEquals("Files " + DIFF1_FILE + " " + DIFF2_FILE + " differ", result); // NOPMD
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -242,7 +247,7 @@ public class DiffApplicationTest { // NOPMD
         try {
             InputStream inputStream = new FileInputStream(new File(DIFF_TEST_DIR + StringUtils.fileSeparator() + DIFF2_FILE)); //NOPMD
             String result = diffApp.diffFileAndStdin(DIFF1_FILE, inputStream, false, false, true);
-            assertTrue(result.contains("Files " + DIFF1_FILE + " " + DIFF2_FILE + " differ"));
+            assertEquals("Files " + DIFF1_FILE + " - differ", result);
         } catch (IOException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -252,7 +257,7 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffFilesWithDifferentContentUsingFlagBQ() {
         try {
             String result = diffApp.diffTwoFiles(DIFF2_FILE, DIFF1_BLANK_LINES_FILE, false, true, true);
-            assertTrue(result.contains("Files " + DIFF2_FILE + " " + DIFF1_BLANK_LINES_FILE + " differ"));
+            assertEquals("Files " + DIFF2_FILE + " " + DIFF1_BLANK_LINES_FILE + " differ",result);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -263,7 +268,7 @@ public class DiffApplicationTest { // NOPMD
         try {
             InputStream inputStream = new FileInputStream(new File(DIFF_TEST_DIR + StringUtils.fileSeparator() + DIFF1_BLANK_LINES_FILE)); //NOPMD
             String result = diffApp.diffFileAndStdin(DIFF2_FILE, inputStream, false, true, true);
-            assertTrue(result.contains("Files " + DIFF2_FILE + " " + DIFF1_BLANK_LINES_FILE + " differ"));
+            assertEquals("Files " + DIFF2_FILE + " - differ",result);
         } catch (IOException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -273,7 +278,7 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffFilesWithDifferentContentUsingFlagSBQ() {
         try {
             String result = diffApp.diffTwoFiles(DIFF2_FILE, DIFF1_BLANK_LINES_FILE, true, true, true);
-            assertTrue(result.contains("Files " + DIFF2_FILE + " " + DIFF1_BLANK_LINES_FILE + " differ"));
+            assertEquals("Files " + DIFF2_FILE + " " + DIFF1_BLANK_LINES_FILE + " differ",result);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -284,7 +289,7 @@ public class DiffApplicationTest { // NOPMD
         try {
             InputStream inputStream = new FileInputStream(new File(DIFF_TEST_DIR + StringUtils.fileSeparator() + DIFF1_BLANK_LINES_FILE)); //NOPMD
             String result = diffApp.diffFileAndStdin(DIFF2_FILE, inputStream, true, true, true);
-            assertTrue(result.contains("Files " + DIFF2_FILE + " " + DIFF1_BLANK_LINES_FILE + " differ"));
+            assertEquals("Files " + DIFF2_FILE + " - differ",result);
         } catch (IOException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -293,10 +298,16 @@ public class DiffApplicationTest { // NOPMD
     @Test
     public void testDiffDirContainFilesWithDifferentContent() {
         try {
-            String result = diffApp.diffTwoDir(DIFFDIR1, DIFFDIR2, false, false, false);
-            assertTrue(result.contains("Only in diffDir1: diff1-identical.txt" + StringUtils.STRING_NEWLINE +
-                    "Only in diffDir1: diff1.txt" + StringUtils.STRING_NEWLINE +
-                    "Only in diffDir2: diff2.txt"));
+            String result = diffApp.diffTwoDir(DIFFDIR1, DIFFDIR1_DIFF, false, false, false);
+            assertEquals(
+                    "diff diffDir1/diff1-identical.txt diffDir1-diff/diff1-identical.txt" + StringUtils.STRING_NEWLINE +
+                    "> test D" + StringUtils.STRING_NEWLINE +
+                    "> test E" + StringUtils.STRING_NEWLINE +
+                    "diff diffDir1/diff1.txt diffDir1-diff/diff1.txt" + StringUtils.STRING_NEWLINE +
+                    "< test B" + StringUtils.STRING_NEWLINE +
+                    "> test D" + StringUtils.STRING_NEWLINE +
+                    "> test E" + StringUtils.STRING_NEWLINE +
+                    "> test F", result);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -306,7 +317,10 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffDirContainFilesWithDiffAlpha() {
         try {
             String result = diffApp.diffTwoDir(DIFFALPHA, DIFFBETA, false, false, false);
-            assertTrue(true);
+            assertEquals("Only in diffDir-alpha: a.txt" + StringUtils.STRING_NEWLINE +
+                    "Only in diffDir-beta: bb.txt" + StringUtils.STRING_NEWLINE +
+                    "Only in diffDir-beta: c.txt" + StringUtils.STRING_NEWLINE +
+                    "Only in diffDir-alpha: d.txt", result);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
@@ -315,10 +329,13 @@ public class DiffApplicationTest { // NOPMD
     @Test
     public void testDiffDirContainFilesWithDifferentContentUsingFlagQ() {
         try {
-            String result = diffApp.diffTwoDir(DIFFDIR1, DIFFDIR2, false, false, true);
-            assertTrue(result.contains("Only in diffDir1: diff1-identical.txt" + StringUtils.STRING_NEWLINE +
-                    "Only in diffDir1: diff1.txt" + StringUtils.STRING_NEWLINE +
-                    "Only in diffDir2: diff2.txt"));
+            String result = diffApp.diffTwoDir(DIFFDIR1, DIFFDIR1_DIFF, false, false, true);
+            assertEquals("Files "  + DIFFDIR1 + StringUtils.fileSeparator() + DIFF1_IDENTICAL_FILE + " "
+                            + DIFFDIR1_DIFF + StringUtils.fileSeparator() + DIFF1_IDENTICAL_FILE
+                            + " differ" + StringUtils.STRING_NEWLINE + "Files "
+                            + DIFFDIR1 + StringUtils.fileSeparator() + DIFF1_FILE + " "
+                            + DIFFDIR1_DIFF + StringUtils.fileSeparator() + DIFF1_FILE  + " differ"
+                    ,result);
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }
