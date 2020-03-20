@@ -6,6 +6,7 @@ import sg.edu.nus.comp.cs4218.exception.DiffException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.parser.DiffArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
@@ -156,7 +157,7 @@ public class DiffApplication implements DiffInterface {
         int j = 0;
         File fileA;
         File fileB;
-        String sep = StringUtils.fileSeparator();
+        String sep = File.separator;
         String nameA, nameB;
         String absA, absB;
         String dirA, dirB;
