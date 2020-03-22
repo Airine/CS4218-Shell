@@ -74,7 +74,7 @@ public class GrepApplication implements GrepInterface {
         for (String f : fileNames) {
             BufferedReader reader = null;
             try {
-                if (f.equals("") || f.charAt(0) == ' '){
+                if ("".equals(f) || f.charAt(0) == ' '){
                     lineResults.add(f + ": " + ERR_FILE_NOT_FOUND);
                     countResults.add(f + ": " + ERR_FILE_NOT_FOUND);
                     continue;

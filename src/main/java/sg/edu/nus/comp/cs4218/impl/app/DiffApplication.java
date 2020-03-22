@@ -1,10 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.DiffInterface;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.DiffException;
-import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
-import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.exception.*;
 import sg.edu.nus.comp.cs4218.impl.parser.DiffArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
@@ -23,6 +20,14 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 public class DiffApplication implements DiffInterface {
 
 
+    /**
+     * Runs the Diff application.
+     *
+     * @param args   Array of arguments for the application
+     * @param stdin  An InputStream
+     * @param stdout An OutputStream
+     * @throws AbstractApplicationException An DiffException
+     */
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
         checkIfNullArgs(args, stdin, stdout);
@@ -47,13 +52,13 @@ public class DiffApplication implements DiffInterface {
         String nameA = files[0];
         String nameB = files[1];
         String result = "";
-        if (nameA.equals("-"))  {
-            if (nameB.equals("-")) {
+        if ("-".equals(nameA))  {
+            if ("-".equals(nameB)) {
                 throw new DiffException("Can not diff between stdin with stdin");
             } else {
                 result = diffFileAndStdin(nameB, stdin, isShowSame, isNoBlank, isSimple);
             }
-        } else if (nameB.equals("-")) {
+        } else if ("-".equals(nameB)) {
             result = diffFileAndStdin(nameA, stdin, isShowSame, isNoBlank, isSimple);
         } else {
             result = diffTwoString(nameA, nameB, isShowSame, isNoBlank, isSimple);
@@ -67,12 +72,22 @@ public class DiffApplication implements DiffInterface {
         }
     }
 
+    /**
+     * Run diff between two fileNames
+     * @param fileNameA file name of fileA, may be file or directory
+     * @param fileNameB file name of fileB, may be file or directory
+     * @param isShowSame the s flag
+     * @param isNoBlank the B flag
+     * @param isSimple the q flag
+     * @return the expected output result
+     * @throws DiffException the DiffException
+     */
     private String diffTwoString(String fileNameA, String fileNameB, Boolean isShowSame, Boolean isNoBlank, Boolean isSimple) throws DiffException {
-        File A = IOUtils.resolveFilePath(fileNameA).toFile();
-        File B = IOUtils.resolveFilePath(fileNameB).toFile();
-        if (A.isDirectory() && B.isDirectory()) {
+        File fileA = IOUtils.resolveFilePath(fileNameA).toFile();
+        File fileB = IOUtils.resolveFilePath(fileNameB).toFile();
+        if (fileA.isDirectory() && fileB.isDirectory()) {
             return diffTwoDir(fileNameA, fileNameB, isShowSame, isNoBlank, isSimple);
-        } else if (A.isFile() && B.isFile()) {
+        } else if (fileA.isFile() && fileB.isFile()) {
             return diffTwoFiles(fileNameA, fileNameB, isShowSame, isNoBlank, isSimple);
         } else {
             throw new DiffException("Can not diff between a file and a directory");
@@ -80,13 +95,15 @@ public class DiffApplication implements DiffInterface {
     }
 
     private void checkIfNullArgs(Object... args) throws DiffException {
-        for (Object arg : args)
+        for (Object arg : args) {
             if (arg == null) throw new DiffException(ERR_NULL_ARGS);
+        }
     }
 
     private void checkIfExistFiles(File... files) throws DiffException {
-        for (File file : files)
+        for (File file : files) {
             if (!file.exists()) throw new DiffException(ERR_FILE_NOT_FOUND);
+        }
     }
 
     private void checkIfValidFolder(File[] files) throws DiffException{
@@ -94,6 +111,16 @@ public class DiffApplication implements DiffInterface {
             throw new DiffException(ERR_IS_DIR);
     }
 
+    /**
+     * Get List of result from two InputStream
+     * @param inputA
+     * @param inputB
+     * @param isShowSame
+     * @param isNoBlank
+     * @param isSimple
+     * @return
+     * @throws IOException
+     */
     private List<String> getDiff(InputStream inputA, InputStream inputB, Boolean isShowSame, Boolean isNoBlank, Boolean isSimple) throws IOException {
         BufferedReader brA = new BufferedReader(new InputStreamReader(inputA));
         BufferedReader brB = new BufferedReader(new InputStreamReader(inputB));
@@ -181,9 +208,8 @@ public class DiffApplication implements DiffInterface {
 
             if (nameA.equals(nameB)){
 
-                try {
-                    InputStream inputStreamA = IOUtils.openInputStream(fileA);
-                    InputStream inputStreamB = IOUtils.openInputStream(fileB);
+                try (InputStream inputStreamA = IOUtils.openInputStream(fileA);
+                     InputStream inputStreamB = IOUtils.openInputStream(fileB)) {
                     List<String> tmp = getDiff(inputStreamA, inputStreamB, isShowSame, isNoBlank, isSimple);
                     if (tmp.size() != 0) {
                         if (isSimple) {
@@ -244,9 +270,8 @@ public class DiffApplication implements DiffInterface {
         File fileB = IOUtils.resolveFilePath(fileNameB).toFile();
         checkIfExistFiles(fileA, fileB);
         List<String> result = new ArrayList<>();
-        try {
-            InputStream inputStreamA = IOUtils.openInputStream(fileA);
-            InputStream inputStreamB = IOUtils.openInputStream(fileB);
+        try (InputStream inputStreamA = IOUtils.openInputStream(fileA);
+             InputStream inputStreamB = IOUtils.openInputStream(fileB)) {
             List<String> tmp = getDiff(inputStreamA, inputStreamB, isShowSame, isNoBlank, isSimple);
             if (tmp.size() > 0) {
                 if (isSimple) {
@@ -287,8 +312,7 @@ public class DiffApplication implements DiffInterface {
         File file = IOUtils.resolveFilePath(fileName).toFile();
         checkIfExistFiles(file);
         List<String> result = new ArrayList<>();
-        try {
-            InputStream inputStreamA = IOUtils.openInputStream(file);
+        try (InputStream inputStreamA = IOUtils.openInputStream(file)) {
             List<String> tmp = getDiff(inputStreamA, stdin, isShowSame, isNoBlank, isSimple);
             if (tmp.size() > 0) {
                 if (isSimple) {

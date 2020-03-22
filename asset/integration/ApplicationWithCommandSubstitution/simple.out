@@ -2,9 +2,8 @@ hello  world
 
 A C B D
 
-A   C
-B   D
-
+A	C
+B	D
 > A
 > B
 > C
@@ -14,6 +13,7 @@ A
 B
 
 < A
-> C
 < B
+> C
 > D
+

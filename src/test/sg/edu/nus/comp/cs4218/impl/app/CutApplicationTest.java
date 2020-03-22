@@ -195,10 +195,10 @@ class CutApplicationTest {
 
     @Test
     void testCutWithNotExistFileName() {
-        Throwable thrown = assertThrows(CutException.class, () -> {
+        Throwable thrown = assertThrows(Exception.class, () -> {
             app.cutFromFiles(false, false, false, 1, 8, folderName + CHAR_FILE_SEP + fileNameNotExist);
         });
-        assertEquals(thrown.getMessage(), cutPrefix + ERR_FILE_NOT_FOUND);
+        assertEquals(thrown.getMessage(), ERR_FILE_NOT_FOUND);
     }
 
     @Test
@@ -214,7 +214,7 @@ class CutApplicationTest {
         Throwable thrown = assertThrows(Exception.class, () -> {
             app.cutFromFiles(false, false, false, 1, 8, folderName + CHAR_FILE_SEP + subDirName);
         });
-        assertEquals(thrown.getMessage(), cutPrefix + ERR_IS_DIR);
+        assertEquals(thrown.getMessage(),  ERR_IS_DIR);
     }
 
     @Test
