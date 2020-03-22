@@ -150,7 +150,7 @@ public class PairwiseNonApplicationTest {
 
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; ls")
-        void testQuotingAndSemicolon(){
+        void testQuotingAndSemicolon1(){
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls";
             String expectResult = "result.txt"+STRING_NEWLINE+"test1.txt"+STRING_NEWLINE+"test2.txt"+STRING_NEWLINE;
             assertDoesNotThrow(()->{
@@ -161,7 +161,7 @@ public class PairwiseNonApplicationTest {
       
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; echo `paste test1.txt`")
-        void testQuotingAndSemicolon(){
+        void testQuotingAndSemicolon2(){
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; echo `paste test1.txt`";
             String expectResult = "hello world" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
