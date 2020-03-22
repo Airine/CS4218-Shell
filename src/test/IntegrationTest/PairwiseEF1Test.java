@@ -91,7 +91,7 @@ public class PairwiseEF1Test {
         @DisplayName("grep 'world' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
         void testGrepAndWc(){
             String commandString = "grep 'world' " + TEST_FILE1_PATH + "| wc -c";
-            String expectResult = "6" + STRING_NEWLINE;
+            String expectResult = "world" + STRING_NEWLINE + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -122,10 +122,10 @@ public class PairwiseEF1Test {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest/testFiles; grep 'wor' test1.txt")
+        @DisplayName("cd src/test/IntegrationTest/testFiles; wc -c test1.txt")
         void testWcAndCd(){
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; wc -c test1.txt";
-            String expectResult = "12 test1.txt";
+            String expectResult = String.format(" %7d test1.txt", 12) + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

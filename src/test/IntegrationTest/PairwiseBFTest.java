@@ -43,9 +43,9 @@ public class PairwiseBFTest {
     @Nested
     class positiveTest{
         @Test
-        @DisplayName("echo 'hello world' | paste")
+        @DisplayName("echo 'hello world' | paste -")
         void testEchoAndPaste(){
-            String commandString = "echo 'hello world' | paste";
+            String commandString = "echo 'hello world' | paste -";
             String expectResult = "hello world";
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
