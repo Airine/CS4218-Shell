@@ -45,7 +45,7 @@ public class PairwiseNonApplicationTest {
         @Test
         @DisplayName("ls src/test/IntegrationTest/testFiles/testFiles/test* | grep '1'")
         void testPipeAndGlobbing(){
-            String commandString = "ls -R " + RELATIVE_PATH + CHAR_FILE_SEP + "test*" + " | grep '1'";
+            String commandString = "ls " + RELATIVE_PATH + CHAR_FILE_SEP + "test*" + " | grep '1'";
             String expectResult = "test1.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
