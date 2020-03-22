@@ -175,7 +175,7 @@ public class ArgumentResolver {
         command.evaluate(System.in, outputStream);
 
         // replace newlines with spaces
-        return outputStream.toString().replace(STRING_NEWLINE, "");
+        return outputStream.toString().replace(STRING_NEWLINE, " ");
     }
 
     /**

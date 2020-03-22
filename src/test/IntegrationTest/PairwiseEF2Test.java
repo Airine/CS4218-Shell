@@ -43,10 +43,32 @@ public class PairwiseEF2Test {
     @Nested
     class positiveTest{
         @Test
-        @DisplayName("need help")
-        void testWcAndCp(){
-            String commandString = "";
-            String expectResult = "";
+        @DisplayName("cut -c 1 `ls src/test/IntegrationTest/testFiles/test*`")
+        void testCutAndLs(){
+            String commandString = "cut -c 1 `ls " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test*`";
+            String expectResult = "h" + STRING_NEWLINE + "w" + STRING_NEWLINE + "g" + STRING_NEWLINE + "w" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("cut -c 5 src/test/IntegrationTest/testFiles/test1.txt | sort")
+        void testCutAndSort(){
+            String commandString = "cut -c 5 " + TEST_FILE1_PATH + " | sort";
+            String expectResult = "d" + STRING_NEWLINE + "o" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("find src/test/IntegrationTest/testFiles -name 'test*.txt' | cut -c 1")
+        void testCutAndFind(){
+            String commandString = "find " + TEST_FILE_FOLDER_PATH + "-name 'test*.txt' | cut -c 1";
+            String expectResult = "test";
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
