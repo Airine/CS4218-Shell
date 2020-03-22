@@ -2,7 +2,9 @@ package sg.edu.nus.comp.cs4218.impl.util;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 import java.io.*;
@@ -20,9 +22,12 @@ class IOUtilsTest {
     private final static String NULL_TXT = "null/null.txt";
     private final static String NONE_TXT = "null/none.txt";
 
+    private String originCurrentDirectory;
+
     @BeforeEach
     void setUp() {
         try {
+            originCurrentDirectory = Environment.currentDirectory;
             FileSystemUtils.createFile(TEST_TXT);
             try (OutputStream fileOutputStream = openOutputStream(TEST_TXT);
                  Writer writer = new OutputStreamWriter(fileOutputStream)) {
@@ -137,6 +142,7 @@ class IOUtilsTest {
 
     @AfterEach
     void tearDown() {
+        Environment.currentDirectory = originCurrentDirectory;
         FileSystemUtils.deleteFileRecursive(new File(TEST_TXT));
         FileSystemUtils.deleteFileRecursive(new File(NULL_TXT));
         FileSystemUtils.deleteFileRecursive(new File(NONE_TXT));
@@ -163,6 +169,7 @@ class IOUtilsTest {
 
         @Override
         public void close() throws IOException {
+            super.close();
             throw new IOException("Not closable");
         }
     }
