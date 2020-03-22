@@ -30,6 +30,14 @@ public class PairwiseEF2Test {
     void setup(){
         outputStream = new ByteArrayOutputStream();
         originPath = Environment.currentDirectory;
+        File file = new File(TEST_FILERESULT_PATH);
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @AfterEach
@@ -38,25 +46,95 @@ public class PairwiseEF2Test {
             outputStream.close();
         });
         Environment.currentDirectory = originPath;
+
+        File file = new File(TEST_FILERESULT_PATH);
+        try{
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write("");
+            fileWriter.flush();
+            fileWriter.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        File file1 = new File(TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt");
+        if (file1.exists()){
+            file1.delete();
+        }
     }
 
     @Nested
     class positiveTest{
         @Test
-        @DisplayName("need help")
-        void testWcAndCp(){
-            String commandString = "";
-            String expectResult = "";
+        @DisplayName("cut -c 1 `ls src/test/IntegrationTest/testFiles/test*`")
+        void testCutAndLs(){
+            String commandString = "cut -c 1 `ls " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test*`";
+            String expectResult = "h" + STRING_NEWLINE + "w" + STRING_NEWLINE + "g" + STRING_NEWLINE + "w" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
             });
         }
+
+        @Test
+        @DisplayName("cut -c 5 src/test/IntegrationTest/testFiles/test1.txt | sort")
+        void testCutAndSort(){
+            String commandString = "cut -c 5 " + TEST_FILE1_PATH + " | sort";
+            String expectResult = "d" + STRING_NEWLINE + "o" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("find src/test/IntegrationTest/testFiles -name 'test*.txt' | cut -c 1")
+        void testCutAndFind(){
+            String commandString = "find " + TEST_FILE_FOLDER_PATH + "-name 'test*.txt' | cut -c 1";
+            String expectResult = "test";
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("ls src/test/IntegrationTest/testFiles/test* | sort")
+        void testLsAndSort(){
+            String commandString = "ls " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test* | sort";
+            String expectResult = TEST_FILE1_PATH + STRING_NEWLINE + TEST_FILE2_PATH + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("cd src/test/IntegrationTest; find ./ -name 'test' | sort")
+        void testSortAndFind(){
+            String commandString = "cd src/test/IntegrationTest; find ./ -name 'test' | sort";
+            String expectResult = "testFiles/test1.txt" + STRING_NEWLINE + "testFiles/test2.txt" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
     }
+
+
 
     @Nested
     class negativeTest{
-
+        @Test
+        @DisplayName("mv src/test/IntegrationTest/result.txt src/test/IntegrationTest/result1.txt; cut -c 1 src/test/IntegrationTest/result.txt")
+        void testMvAndCut(){
+            String commandString = "mv " + TEST_FILERESULT_PATH + " " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt; cut -c 1 " + TEST_FILERESULT_PATH;
+            String expectResult = "cut: " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt: No such file or directory" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
     }
 
 }

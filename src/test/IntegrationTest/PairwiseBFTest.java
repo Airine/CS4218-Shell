@@ -3,12 +3,14 @@ package IntegrationTest;
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
+import sg.edu.nus.comp.cs4218.exception.CdException;
+import sg.edu.nus.comp.cs4218.exception.SedException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
+import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 
 import java.io.*;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -30,6 +32,14 @@ public class PairwiseBFTest {
     void setup(){
         outputStream = new ByteArrayOutputStream();
         originPath = Environment.currentDirectory;
+        File file = new File(TEST_FILERESULT_PATH);
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @AfterEach
@@ -38,6 +48,16 @@ public class PairwiseBFTest {
             outputStream.close();
         });
         Environment.currentDirectory = originPath;
+        File file = new File(TEST_FILERESULT_PATH);
+        try{
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write("");
+            fileWriter.flush();
+            fileWriter.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     @Nested
@@ -78,7 +98,25 @@ public class PairwiseBFTest {
 
     @Nested
     class negativeTest{
+        @Test
+        @DisplayName("rm src/test/IntegrationTest/testFiles/result.txt; paste src/test/IntegrationTest/testFiles/result.txt")
+        void testRmAndPaste(){
+            String commandString = "rm " + TEST_FILERESULT_PATH + "; paste " + TEST_FILERESULT_PATH;
+            String expectResult = "paste: src/test/IntegrationTest/testFiles/result.txt: No such file or directory" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
 
+        @Test
+        @DisplayName("sed `echo 's///'` src/test/IntegrationTest/testFiles/test1.txt")
+        void testEchoAndSed(){
+            String commandString = "sed `echo 's///'` " + TEST_FILE1_PATH;
+            String expectResult = "paste: src/test/IntegrationTest/testFiles/result.txt: No such file or directory" + STRING_NEWLINE;
+            assertThrows(SedException.class,
+                    () -> shell.parseAndEvaluate(commandString, outputStream));
+        }
     }
 
 }
