@@ -46,6 +46,6 @@ public class PairwiseApplicationTest {
 
     @Nested
     class negativeTest{
-        
+
     }
 }

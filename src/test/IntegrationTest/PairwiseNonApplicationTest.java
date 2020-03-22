@@ -78,10 +78,10 @@ public class PairwiseNonApplicationTest {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest/testFiles; ls test* | grep '1'")
-        void testPipeAndGlobbingAndSemicolon(){
-            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls test* | grep '1'";
-            String expectResult = "test1.txt" + STRING_NEWLINE;
+        @DisplayName("cd src/test/IntegrationTest/testFiles; ls test*")
+        void testGlobbingAndSemicolon(){
+            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls test*";
+            String expectResult = "test1.txt test2.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -106,7 +106,7 @@ public class PairwiseNonApplicationTest {
         @DisplayName("echo `ls src/test/IntegrationTest/testFiles/test*`")
         void testGlobbingAndQuoting(){
             String commandString = "echo `ls " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test*`";
-            String expectResult = TEST_FILE1_PATH + " " +TEST_FILE2_PATH;
+            String expectResult = TEST_FILE1_PATH + " " + TEST_FILE2_PATH + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -140,10 +140,10 @@ public class PairwiseNonApplicationTest {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest/testFiles; `ls`")
+        @DisplayName("cd src/test/IntegrationTest/testFiles; echo `paste test1.txt`")
         void testQuotingAndSemicolon(){
-            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; `ls`";
-            String expectResult = "test1.txt test2.txt result.txt";
+            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; echo `paste test1.txt`";
+            String expectResult = "hello world" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
