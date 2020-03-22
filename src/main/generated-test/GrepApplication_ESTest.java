@@ -5,129 +5,29 @@
 
 package generated;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.evosuite.shaded.org.mockito.Mockito.*;
-import static org.evosuite.runtime.EvoAssertions.*;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintStream;
-import java.io.PushbackInputStream;
-import java.io.SequenceInputStream;
-import java.util.Enumeration;
 import org.evosuite.runtime.EvoRunner;
 import org.evosuite.runtime.EvoRunnerParameters;
 import org.evosuite.runtime.ViolatedAssumptionAnswer;
-import org.evosuite.runtime.mock.java.io.MockFile;
 import org.evosuite.runtime.mock.java.io.MockFileInputStream;
 import org.evosuite.runtime.mock.java.io.MockFileOutputStream;
 import org.evosuite.runtime.mock.java.io.MockPrintStream;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
 
-@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true) 
+import java.io.*;
+import java.util.Enumeration;
+
+import static org.evosuite.runtime.EvoAssertions.verifyException;
+import static org.evosuite.shaded.org.mockito.Mockito.doReturn;
+import static org.evosuite.shaded.org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+
+@RunWith(EvoRunner.class) @EvoRunnerParameters(mockJVMNonDeterminism = true, useVFS = true, useVNET = true, resetStaticState = true, separateClassLoader = true, useJEE = true)
 public class GrepApplication_ESTest extends GrepApplication_ESTest_scaffolding {
 
-  @Test(timeout = 4000)
-  public void test01()  throws Throwable  {
-      GrepApplication grepApplication0 = new GrepApplication();
-      assertNotNull(grepApplication0);
-      
-      String[] stringArray0 = new String[0];
-      PipedInputStream pipedInputStream0 = new PipedInputStream(105);
-      assertEquals(0, pipedInputStream0.available());
-      assertNotNull(pipedInputStream0);
-      
-      MockFile mockFile0 = new MockFile("This is a directory", "");
-      assertNotNull(mockFile0);
-      
-      File file0 = mockFile0.getCanonicalFile();
-      assertNotSame(mockFile0, file0);
-      assertNotSame(file0, mockFile0);
-      assertTrue(file0.equals((Object)mockFile0));
-      assertFalse(mockFile0.isDirectory());
-      assertFalse(mockFile0.exists());
-      assertEquals(0L, mockFile0.getFreeSpace());
-      assertFalse(mockFile0.canRead());
-      assertFalse(mockFile0.isHidden());
-      assertEquals(0L, mockFile0.getUsableSpace());
-      assertEquals("/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6", mockFile0.getParent());
-      assertEquals("This is a directory", mockFile0.getName());
-      assertEquals(0L, mockFile0.lastModified());
-      assertEquals("/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6/This is a directory", mockFile0.toString());
-      assertTrue(mockFile0.isAbsolute());
-      assertTrue(mockFile0.isFile());
-      assertFalse(mockFile0.canExecute());
-      assertEquals(0L, mockFile0.getTotalSpace());
-      assertEquals(0L, mockFile0.length());
-      assertFalse(mockFile0.canWrite());
-      assertEquals(0L, file0.lastModified());
-      assertTrue(file0.isFile());
-      assertEquals("This is a directory", file0.getName());
-      assertTrue(file0.isAbsolute());
-      assertEquals(0L, file0.getUsableSpace());
-      assertFalse(file0.isHidden());
-      assertEquals("/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6/This is a directory", file0.toString());
-      assertFalse(file0.canWrite());
-      assertEquals(0L, file0.length());
-      assertFalse(file0.isDirectory());
-      assertEquals(0L, file0.getFreeSpace());
-      assertEquals(0L, file0.getTotalSpace());
-      assertFalse(file0.canRead());
-      assertFalse(file0.canExecute());
-      assertEquals("/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6", file0.getParent());
-      assertFalse(file0.exists());
-      assertNotNull(file0);
-      
-      boolean boolean0 = mockFile0.createNewFile();
-      assertNotSame(mockFile0, file0);
-      assertTrue(boolean0);
-      assertTrue(mockFile0.equals((Object)file0));
-      assertFalse(mockFile0.isDirectory());
-      assertTrue(mockFile0.exists());
-      assertEquals(0L, mockFile0.getFreeSpace());
-      assertFalse(mockFile0.isHidden());
-      assertEquals(0L, mockFile0.getUsableSpace());
-      assertEquals("/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6", mockFile0.getParent());
-      assertEquals("This is a directory", mockFile0.getName());
-      assertTrue(mockFile0.canRead());
-      assertEquals("/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6/This is a directory", mockFile0.toString());
-      assertTrue(mockFile0.isAbsolute());
-      assertTrue(mockFile0.canWrite());
-      assertTrue(mockFile0.isFile());
-      assertEquals(1392409281320L, mockFile0.lastModified());
-      assertEquals(0L, mockFile0.getTotalSpace());
-      assertEquals(0L, mockFile0.length());
-      assertTrue(mockFile0.canExecute());
-      
-      MockFileOutputStream mockFileOutputStream0 = new MockFileOutputStream(file0);
-      assertTrue(mockFile0.equals((Object)file0));
-      assertTrue(file0.equals((Object)mockFile0));
-      assertNotNull(mockFileOutputStream0);
-      
-      Environment.currentDirectory = "Pattern should not be empty.";
-      // Undeclared exception!
-      try { 
-        grepApplication0.run(stringArray0, pipedInputStream0, mockFileOutputStream0);
-        fail("Expecting exception: ClassCastException");
-      
-      } catch(ClassCastException e) {
-         //
-         // org.evosuite.runtime.mock.java.lang.MockThrowable cannot be cast to sg.edu.nus.comp.cs4218.exception.GrepException
-         //
-         verifyException("sg.edu.nus.comp.cs4218.impl.app.GrepApplication", e);
-      }
-  }
 
   @Test(timeout = 4000)
   public void test02()  throws Throwable  {

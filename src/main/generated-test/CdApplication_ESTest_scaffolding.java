@@ -54,7 +54,7 @@ public class CdApplication_ESTest_scaffolding {
     threadStopper.startRecordingTime();
     org.evosuite.runtime.jvm.ShutdownHookHandler.getInstance().initHandler(); 
     Sandbox.goingToExecuteSUTCode();
-    setSystemProperties(); 
+    setSystemProperties();
     org.evosuite.runtime.GuiSupport.setHeadless(); 
     org.evosuite.runtime.Runtime.getInstance().resetRuntime(); 
     org.evosuite.runtime.agent.InstrumentingAgent.activate(); 
@@ -73,16 +73,16 @@ public class CdApplication_ESTest_scaffolding {
 
   public static void setSystemProperties() {
  
-    System.setProperties((java.util.Properties) defaultProperties.clone());
-    System.setProperty("file.encoding", "UTF-8");
-    System.setProperty("java.awt.headless", "true");
-    System.setProperty("java.io.tmpdir", "/var/folders/7y/31bgr_m103sgjq41bs6b7r_m0000gq/T/");
-    System.setProperty("user.country", "CN");
-//    System.setProperty("user.dir", "/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6");
-    System.setProperty("user.home", "/Users/dr.fat");
-    System.setProperty("user.language", "zh");
-    System.setProperty("user.name", "dr.fat");
-    System.setProperty("user.timezone", "Asia/Singapore");
+//    System.setProperties((java.util.Properties) defaultProperties.clone());
+//    System.setProperty("file.encoding", "UTF-8");
+//    System.setProperty("java.awt.headless", "true");
+//    System.setProperty("java.io.tmpdir", "/var/folders/7y/31bgr_m103sgjq41bs6b7r_m0000gq/T/");
+//    System.setProperty("user.country", "CN");
+////    System.setProperty("user.dir", "/Users/dr.fat/IdeaProjects/cs4218-project-ay1920-s2-2020-team6");
+//    System.setProperty("user.home", "/Users/dr.fat");
+//    System.setProperty("user.language", "zh");
+//    System.setProperty("user.name", "dr.fat");
+//    System.setProperty("user.timezone", "Asia/Singapore");
   }
 
   private static void initializeClasses() {
