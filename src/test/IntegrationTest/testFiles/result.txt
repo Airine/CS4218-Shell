@@ -1,1 +1,1 @@
-src\test\IntegrationTest\testFiles\test1.txt src\test\IntegrationTest\testFiles\test2.txt
+src/test/IntegrationTest/testFiles/test1.txtsrc/test/IntegrationTest/testFiles/test2.txt
