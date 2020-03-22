@@ -146,7 +146,7 @@ public class PairwiseEF1Test {
                 assertEquals(expectResult, outputStream.toString());
             });
         }
-
     }
+
 
 }

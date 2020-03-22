@@ -56,6 +56,7 @@ public class PairwiseEF2Test {
         }catch(IOException e){
             e.printStackTrace();
         }
+
         File file1 = new File(TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt");
         if (file1.exists()){
             file1.delete();
@@ -109,9 +110,9 @@ public class PairwiseEF2Test {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest; find ./ -name 'test' | sort")
+        @DisplayName("cd src/test/IntegrationTest; find testFiles -name 'test' | sort")
         void testSortAndFind(){
-            String commandString = "cd src/test/IntegrationTest; find ./ -name 'test' | sort";
+            String commandString = "cd src/test/IntegrationTest; find testFiles -name 'test' | sort";
             String expectResult = "testFiles/test1.txt" + STRING_NEWLINE + "testFiles/test2.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
