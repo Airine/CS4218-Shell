@@ -57,7 +57,7 @@ public final class RegexArgument {
     }
 
     public void merge(RegexArgument other) {
-        plaintext/*.append(" ")*/.append(other.plaintext);
+        plaintext.append(" ").append(other.plaintext);
         regex.append(other.regex);
         ifRegex = ifRegex || other.ifRegex;
     }
