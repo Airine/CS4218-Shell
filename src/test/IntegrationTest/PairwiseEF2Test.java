@@ -84,7 +84,33 @@ public class PairwiseEF2Test {
                 assertEquals(expectResult, outputStream.toString());
             });
         }
+
+        @Test
+        @DisplayName("ls src/test/IntegrationTest/testFiles/test* | sort")
+        void testLsAndSort(){
+            String commandString = "ls " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test* | sort";
+            String expectResult = TEST_FILE1_PATH + STRING_NEWLINE + TEST_FILE2_PATH + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("cd src/test/IntegrationTest; find ./ -name 'test' | sort")
+        void testSortAndFind(){
+            String commandString = "cd src/test/IntegrationTest; find ./ -name 'test' | sort";
+            String expectResult = "testFiles/test1.txt" + STRING_NEWLINE + "testFiles/test2.txt" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+
     }
+
+
 
     @Nested
     class negativeTest{
