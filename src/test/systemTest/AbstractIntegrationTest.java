@@ -1,4 +1,4 @@
-package sg.edu.nus.comp.cs4218.impl.integration;
+package systemTest;
 
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Environment;

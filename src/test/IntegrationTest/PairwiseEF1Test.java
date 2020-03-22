@@ -27,14 +27,14 @@ public class PairwiseEF1Test {
     ByteArrayOutputStream outputStream;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         outputStream = new ByteArrayOutputStream();
         originPath = Environment.currentDirectory;
     }
 
     @AfterEach
-    void reset(){
-        assertDoesNotThrow(()->{
+    void reset() {
+        assertDoesNotThrow(() -> {
             outputStream.close();
         });
         Environment.currentDirectory = originPath;
@@ -50,12 +50,12 @@ public class PairwiseEF1Test {
     }
 
     @Nested
-    class positiveTest{
+    class positiveTest {
         @Test
         @DisplayName("diff src/test/IntegrationTest/testFiles/test1.txt src/test/IntegrationTest/testFiles/test2.txt | grep 'w'")
         void testDiffAndGrep(){
-            String commandString = "diff " + TEST_FILE1_PATH + TEST_FILE2_PATH + "| grep 'hel'";
-            String expectResult = "< hello";
+            String commandString = "diff " + TEST_FILE1_PATH + " " + TEST_FILE2_PATH + "| grep 'hel'";
+            String expectResult = "< hello"+STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -65,8 +65,8 @@ public class PairwiseEF1Test {
         @Test
         @DisplayName("diff src/test/IntegrationTest/testFiles/test1.txt src/test/IntegrationTest/testFiles/test2.txt | wc")
         void testDiffAndWc(){
-            String commandString = "diff " + TEST_FILE1_PATH + TEST_FILE2_PATH + "| wc -l";
-            String expectResult = "2";
+            String commandString = "diff " + TEST_FILE1_PATH + " " + TEST_FILE2_PATH + "| wc -l";
+            String expectResult = String.format(" %7d", 2)+STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -75,32 +75,21 @@ public class PairwiseEF1Test {
 
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; diff test1.txt test2.txt")
-        void testDiffAndCd(){
+        void testDiffAndCd() {
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; diff test1.txt test2.txt";
             String expectResult = "< hello" + STRING_NEWLINE + "> goodbye" + STRING_NEWLINE;
-            assertDoesNotThrow(()->{
+            assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
             });
         }
 
-        @Test
-        @Disabled
-        @DisplayName("need help")
-        void testDiffAndCp(){
-            String commandString = "";
-            String expectResult = "";
-            assertDoesNotThrow(()->{
-                shell.parseAndEvaluate(commandString, outputStream);
-                assertEquals(expectResult, outputStream.toString());
-            });
-        }
 
         @Test
         @DisplayName("grep 'world' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
-        void testGrepAndWc(){
+        void testGrepAndWc() {
             String commandString = "grep 'world' " + TEST_FILE1_PATH + "| wc -c";
-            String expectResult = "6" + STRING_NEWLINE;
+            String expectResult = String.format(" %7d", "world".length()+STRING_NEWLINE.length()) + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -109,57 +98,35 @@ public class PairwiseEF1Test {
 
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; grep 'wor' test1.txt")
-        void testGrepAndCd(){
+        void testGrepAndCd() {
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; grep 'wor' test1.txt";
             String expectResult = "world" + STRING_NEWLINE;
-            assertDoesNotThrow(()->{
+            assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
             });
         }
 
-        @Test
-        @Disabled
-        @DisplayName("need help")
-        void testGrepAndCp(){
-            String commandString = "";
-            String expectResult = "";
-            assertDoesNotThrow(()->{
-                shell.parseAndEvaluate(commandString, outputStream);
-                assertEquals(expectResult, outputStream.toString());
-            });
-        }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest/testFiles; grep 'wor' test1.txt")
+        @DisplayName("cd src/test/IntegrationTest/testFiles; wc -c test1.txt")
         void testWcAndCd(){
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; wc -c test1.txt";
-            String expectResult = "12 test1.txt";
-            assertDoesNotThrow(()->{
+            String expectResult = String.format(" %7d test1.txt", 12) + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
             });
         }
 
-        @Test
-        @Disabled
-        @DisplayName("need help")
-        void testWcAndCp(){
-            String commandString = "";
-            String expectResult = "";
-            assertDoesNotThrow(()->{
-                shell.parseAndEvaluate(commandString, outputStream);
-                assertEquals(expectResult, outputStream.toString());
-            });
-        }
 
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; cp test1.txt result.txt")
-        void testCdAndCp(){
+        void testCdAndCp() {
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; cp test1.txt result.txt";
             String expectResult = "hello";
             File targetFile = new File(TEST_FILERESULT_PATH);
-            assertDoesNotThrow(()->{
+            assertDoesNotThrow(() -> {
                 BufferedReader reader = new BufferedReader(new FileReader(targetFile));
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, reader.readLine());
@@ -180,7 +147,6 @@ public class PairwiseEF1Test {
             });
         }
 
-        
-    }
+
 
 }

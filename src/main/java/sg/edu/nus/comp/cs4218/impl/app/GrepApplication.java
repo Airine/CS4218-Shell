@@ -81,11 +81,6 @@ public class GrepApplication implements GrepInterface {
                 }
                 String path = FileSystemUtils.getAbsolutePathName(f);
                 File file = new File(path);
-                if (!file.canRead()){
-                    lineResults.add(f + ": " + ERR_NO_PERM);
-                    countResults.add(f + ": " + ERR_NO_PERM);
-                    continue;
-                }
                 if (!file.exists()) {
                     lineResults.add(f + ": " + ERR_FILE_NOT_FOUND);
                     countResults.add(f + ": " + ERR_FILE_NOT_FOUND);
@@ -94,6 +89,11 @@ public class GrepApplication implements GrepInterface {
                 if (file.isDirectory()) { // ignore if it's a directory
                     lineResults.add(f + ": " + IS_DIRECTORY);
                     countResults.add(f + ": " + IS_DIRECTORY);
+                    continue;
+                }
+                if (!file.canRead()){
+                    lineResults.add(f + ": " + ERR_NO_PERM);
+                    countResults.add(f + ": " + ERR_NO_PERM);
                     continue;
                 }
                 reader = new BufferedReader(new FileReader(path));
