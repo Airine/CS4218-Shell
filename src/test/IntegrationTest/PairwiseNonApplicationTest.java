@@ -89,7 +89,7 @@ public class PairwiseNonApplicationTest {
         @DisplayName("cd src/test/IntegrationTest/testFiles; ls test*")
         void testGlobbingAndSemicolon(){
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls test*";
-            String expectResult = "test1.txt test2.txt" + STRING_NEWLINE;
+            String expectResult = "test1.txt"+STRING_NEWLINE+STRING_NEWLINE+"test2.txt"+STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

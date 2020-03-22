@@ -81,7 +81,7 @@ public class PairwiseApplicationTest {
         @DisplayName("sed 's/hello//' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
         void testSedAndWc() {
             String commandString = "sed 's/hello//' " + TEST_FILE1_PATH + " | wc -c";
-            String expectResult = "7" + STRING_NEWLINE;
+            String expectResult = String.format(" %7d", 7) + STRING_NEWLINE;
             assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

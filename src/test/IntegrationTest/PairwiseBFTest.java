@@ -102,7 +102,7 @@ public class PairwiseBFTest {
         @DisplayName("rm src/test/IntegrationTest/testFiles/result.txt; paste src/test/IntegrationTest/testFiles/result.txt")
         void testRmAndPaste(){
             String commandString = "rm " + TEST_FILERESULT_PATH + "; paste " + TEST_FILERESULT_PATH;
-            String expectResult = "paste: src/test/IntegrationTest/testFiles/result.txt: No such file or directory" + STRING_NEWLINE;
+            String expectResult = "paste: src/test/IntegrationTest/testFiles/result.txt No such file or directory" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

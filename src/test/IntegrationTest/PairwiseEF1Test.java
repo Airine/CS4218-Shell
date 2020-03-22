@@ -112,7 +112,7 @@ public class PairwiseEF1Test {
         @DisplayName("cd src/test/IntegrationTest/testFiles; wc -c test1.txt")
         void testWcAndCd() {
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; wc -c test1.txt";
-            String expectResult = String.format(" %7d test1.txt", 12) + STRING_NEWLINE;
+            String expectResult = String.format(" %7d test1.txt", 10+STRING_NEWLINE.length()) + STRING_NEWLINE;
             assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
