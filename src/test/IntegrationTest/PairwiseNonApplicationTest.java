@@ -106,7 +106,7 @@ public class PairwiseNonApplicationTest {
         @DisplayName("echo `ls src/test/IntegrationTest/testFiles/test*`")
         void testGlobbingAndQuoting(){
             String commandString = "echo `ls " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test*`";
-            String expectResult = TEST_FILE1_PATH + " " +TEST_FILE2_PATH;
+            String expectResult = TEST_FILE1_PATH + " " +TEST_FILE2_PATH + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
