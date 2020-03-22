@@ -109,9 +109,9 @@ public class PairwiseEF2Test {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest; find ./ -name 'test' | sort")
+        @DisplayName("cd src/test/IntegrationTest; find testFiles -name 'test' | sort")
         void testSortAndFind(){
-            String commandString = "cd src/test/IntegrationTest; find ./ -name 'test' | sort";
+            String commandString = "cd src/test/IntegrationTest; find testFiles -name 'test' | sort";
             String expectResult = "testFiles/test1.txt" + STRING_NEWLINE + "testFiles/test2.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);

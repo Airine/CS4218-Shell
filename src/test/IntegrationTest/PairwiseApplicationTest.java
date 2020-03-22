@@ -3,12 +3,12 @@ package IntegrationTest;
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
+import sg.edu.nus.comp.cs4218.exception.SedException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 import java.io.*;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
@@ -50,7 +50,49 @@ public class PairwiseApplicationTest {
 
     @Nested
     class positiveTest{
+        @Test
+        @DisplayName("echo `diff src/test/IntegrationTest/testFiles/test1.txt src/test/IntegrationTest/testFiles/test2.txt`")
+        void testEchoAndDirr() {
+            String commandString = "echo `diff " + TEST_FILE1_PATH + " " + TEST_FILE2_PATH + "`";
+            String expectResult = "< hello > goodbye" + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
 
+        @Test
+        @DisplayName("paste src/test/IntegrationTest/testFiles/test1.txt | grep 'wor'")
+        void testPasteAndGrep() {
+            String commandString = "paste " + TEST_FILE1_PATH + " | grep 'wor'";
+            String expectResult = "world" + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("sed 's/hello//' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
+        void testSedAndWc() {
+            String commandString = "sed 's/hello//' " + TEST_FILE1_PATH + " | wc -c";
+            String expectResult = "7" + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+
+        @Test
+        @DisplayName("sed 's/hello//' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
+        void testSedAndWc() {
+            String commandString = "sed 's/hello//' " + TEST_FILE1_PATH + " | wc -c";
+            String expectResult = "7" + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
     }
 
     @Nested
