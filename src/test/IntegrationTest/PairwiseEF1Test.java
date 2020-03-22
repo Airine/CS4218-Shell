@@ -127,8 +127,8 @@ public class PairwiseEF1Test {
             String expectResult = "hello";
             File targetFile = new File(TEST_FILERESULT_PATH);
             assertDoesNotThrow(() -> {
-                BufferedReader reader = new BufferedReader(new FileReader(targetFile));
                 shell.parseAndEvaluate(commandString, outputStream);
+                BufferedReader reader = new BufferedReader(new FileReader(targetFile));
                 assertEquals(expectResult, reader.readLine());
             });
         }

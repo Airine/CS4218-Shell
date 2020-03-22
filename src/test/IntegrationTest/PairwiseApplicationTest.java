@@ -26,35 +26,35 @@ public class PairwiseApplicationTest {
     ByteArrayOutputStream outputStream;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         outputStream = new ByteArrayOutputStream();
         originPath = Environment.currentDirectory;
     }
 
     @AfterEach
-    void reset(){
-        assertDoesNotThrow(()->{
+    void reset() {
+        assertDoesNotThrow(() -> {
             outputStream.close();
         });
         Environment.currentDirectory = originPath;
         File file = new File(TEST_FILERESULT_PATH);
-        try{
+        try {
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write("");
             fileWriter.flush();
             fileWriter.close();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         File file1 = new File(TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt");
-        if (file1.exists()){
+        if (file1.exists()) {
             file1.delete();
         }
     }
 
     @Nested
-    class positiveTest{
+    class positiveTest {
         @Test
         @DisplayName("echo `diff src/test/IntegrationTest/testFiles/test1.txt src/test/IntegrationTest/testFiles/test2.txt`")
         void testEchoAndDirr() {
@@ -105,9 +105,9 @@ public class PairwiseApplicationTest {
             String commandString = "cp `find " + TEST_FILE_FOLDER_PATH + " -name 'test1.txt'` " + TEST_FILERESULT_PATH;
             String expectResult = "h" + STRING_NEWLINE + "w" + STRING_NEWLINE;
             File targetFile = new File(TEST_FILERESULT_PATH);
-            assertDoesNotThrow(()->{
-                BufferedReader reader = new BufferedReader(new FileReader(targetFile));
+            assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
+                BufferedReader reader = new BufferedReader(new FileReader(targetFile));
                 assertEquals(expectResult, reader.readLine());
             });
         }
@@ -116,7 +116,7 @@ public class PairwiseApplicationTest {
     }
 
     @Nested
-    class negativeTest{
+    class negativeTest {
 
     }
 }
