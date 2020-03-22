@@ -111,12 +111,6 @@ public class DiffApplicationTest { // NOPMD
     }
 
     @Test
-    public void testFailsWithDirWithoutFiles() {
-        Exception expectedException = assertThrows(DiffException.class, () -> diffApp.diffTwoDir(dummyDIR, dummyDIR, false ,false, false));
-        assertTrue(expectedException.getMessage().contains(ERR_IS_DIR));
-    }
-
-    @Test
     public void testDiffFilesWithSameContent() {
         try {
             String result = diffApp.diffTwoFiles(DIFF1_FILE, DIFF1_IDENTICAL_FILE, false, false, false);

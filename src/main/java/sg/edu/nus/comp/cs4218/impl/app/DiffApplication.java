@@ -90,7 +90,7 @@ public class DiffApplication implements DiffInterface {
     }
 
     private void checkIfValidFolder(File[] files) throws DiffException{
-        if (files == null || files.length == 0)
+        if (files == null)
             throw new DiffException(ERR_IS_DIR);
     }
 
@@ -103,7 +103,7 @@ public class DiffApplication implements DiffInterface {
         String lineA, lineB;
         while((lineA = brA.readLine())!=null) {
             if (isNoBlank) {
-                if (lineA.equals("")){
+                if (StringUtils.isBlank(lineA)){
                     continue;
                 }
             }
@@ -111,7 +111,7 @@ public class DiffApplication implements DiffInterface {
         }
         while((lineB = brB.readLine())!=null){
             if (isNoBlank) {
-                if (lineB.equals("")){
+                if (StringUtils.isBlank(lineB)){
                     continue;
                 }
             }

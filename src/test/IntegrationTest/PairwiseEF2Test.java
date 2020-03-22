@@ -42,16 +42,7 @@ public class PairwiseEF2Test {
 
     @Nested
     class positiveTest{
-        @Test
-        @DisplayName("need help")
-        void testWcAndCp(){
-            String commandString = "";
-            String expectResult = "";
-            assertDoesNotThrow(()->{
-                shell.parseAndEvaluate(commandString, outputStream);
-                assertEquals(expectResult, outputStream.toString());
-            });
-        }
+
     }
 
     @Nested

@@ -92,7 +92,7 @@ public class DiffApplicationTest {
     }
 
     @Test
-    @DisplayName("diff one empty directory ad a none empty directory should noy throw exception")
+    @DisplayName("diff one empty directory ad a none empty directory should not throw exception")
     void testDiffFolder() {
         final String[] diff = new String[1];
         assertDoesNotThrow(() -> diff[0] = diffApplication.diffTwoDir(TestFileUtils.emptyFolderName, TestFileUtils.tempFolderName,

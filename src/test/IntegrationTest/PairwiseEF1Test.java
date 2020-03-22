@@ -75,17 +75,6 @@ public class PairwiseEF1Test {
             });
         }
 
-        @Test
-        @Disabled
-        @DisplayName("need help")
-        void testDiffAndCp() {
-            String commandString = "";
-            String expectResult = "";
-            assertDoesNotThrow(() -> {
-                shell.parseAndEvaluate(commandString, outputStream);
-                assertEquals(expectResult, outputStream.toString());
-            });
-        }
 
         @Test
         @DisplayName("grep 'world' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
@@ -109,17 +98,6 @@ public class PairwiseEF1Test {
             });
         }
 
-        @Test
-        @Disabled
-        @DisplayName("need help")
-        void testGrepAndCp() {
-            String commandString = "";
-            String expectResult = "";
-            assertDoesNotThrow(() -> {
-                shell.parseAndEvaluate(commandString, outputStream);
-                assertEquals(expectResult, outputStream.toString());
-            });
-        }
 
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; wc -c test1.txt")
@@ -132,17 +110,6 @@ public class PairwiseEF1Test {
             });
         }
 
-        @Test
-        @Disabled
-        @DisplayName("need help")
-        void testWcAndCp() {
-            String commandString = "";
-            String expectResult = "";
-            assertDoesNotThrow(() -> {
-                shell.parseAndEvaluate(commandString, outputStream);
-                assertEquals(expectResult, outputStream.toString());
-            });
-        }
 
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; cp test1.txt result.txt")
