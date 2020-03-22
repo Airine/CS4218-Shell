@@ -1,6 +1,7 @@
 package IntegrationTest;
 
 import org.junit.jupiter.api.*;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
@@ -19,6 +20,7 @@ public class PairwiseApplicationTest {
     private static final String TEST_FILE2_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test2.txt";
     private static final String TEST_FILERESULT_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result.txt";
 
+    private String originPath;
 
     Shell shell = new ShellImpl();
     ByteArrayOutputStream outputStream;
@@ -26,6 +28,7 @@ public class PairwiseApplicationTest {
     @BeforeEach
     void setup(){
         outputStream = new ByteArrayOutputStream();
+        originPath = Environment.currentDirectory;
     }
 
     @AfterEach
@@ -33,5 +36,16 @@ public class PairwiseApplicationTest {
         assertDoesNotThrow(()->{
             outputStream.close();
         });
+        Environment.currentDirectory = originPath;
+    }
+
+    @Nested
+    class positiveTest{
+
+    }
+
+    @Nested
+    class negativeTest{
+        
     }
 }
