@@ -90,8 +90,8 @@ public class PairwiseEF2Test {
         @Test
         @DisplayName("find src/test/IntegrationTest/testFiles -name 'test*.txt' | cut -c 1")
         void testCutAndFind(){
-            String commandString = "find " + TEST_FILE_FOLDER_PATH + "-name 'test*.txt' | cut -c 1";
-            String expectResult = "test";
+            String commandString = "find " + TEST_FILE_FOLDER_PATH + " -name 'test*.txt' | cut -c 1";
+            String expectResult = "s" + STRING_NEWLINE + "s" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -102,7 +102,7 @@ public class PairwiseEF2Test {
         @DisplayName("ls src/test/IntegrationTest/testFiles/test* | sort")
         void testLsAndSort(){
             String commandString = "ls " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test* | sort";
-            String expectResult = TEST_FILE1_PATH + STRING_NEWLINE + TEST_FILE2_PATH + STRING_NEWLINE;
+            String expectResult = STRING_NEWLINE + TEST_FILE1_PATH + STRING_NEWLINE + TEST_FILE2_PATH + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -110,9 +110,9 @@ public class PairwiseEF2Test {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest; find testFiles -name 'test' | sort")
+        @DisplayName("cd src/test/IntegrationTest; find testFiles -name 'test*' | sort")
         void testSortAndFind(){
-            String commandString = "cd src/test/IntegrationTest; find testFiles -name 'test' | sort";
+            String commandString = "cd src/test/IntegrationTest; find testFiles -name 'test*' | sort";
             String expectResult = "testFiles/test1.txt" + STRING_NEWLINE + "testFiles/test2.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
@@ -130,7 +130,7 @@ public class PairwiseEF2Test {
         @DisplayName("mv src/test/IntegrationTest/result.txt src/test/IntegrationTest/result1.txt; cut -c 1 src/test/IntegrationTest/result.txt")
         void testMvAndCut(){
             String commandString = "mv " + TEST_FILERESULT_PATH + " " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt; cut -c 1 " + TEST_FILERESULT_PATH;
-            String expectResult = "cut: " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt: No such file or directory" + STRING_NEWLINE;
+            String expectResult = "cut: No such file or directory" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

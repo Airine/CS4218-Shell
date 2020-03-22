@@ -41,19 +41,19 @@ public class CutApplication implements CutInterface {
         for (String file : fileName) {
             File node = IOUtils.resolveFilePath(file).toFile();
             if (!node.exists()) {
-                throw new CutException(ERR_FILE_NOT_FOUND);
+                throw new Exception(ERR_FILE_NOT_FOUND);
             }
             if (node.isDirectory()) {
-                throw new CutException(ERR_IS_DIR);
+                throw new Exception(ERR_IS_DIR);
             }
             if (!node.canRead()) {
-                throw new CutException(ERR_NO_PERM);
+                throw new Exception(ERR_NO_PERM);
             }
             try(InputStream input = IOUtils.openInputStream(file)) {
                 lines.addAll(IOUtils.getLinesFromInputStream(input));
                 IOUtils.closeInputStream(input);
             } catch (Exception e){
-                throw (CutException) new CutException(e.getMessage()).initCause(e);
+                throw new Exception(e.getMessage());
             }
         }
         cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
