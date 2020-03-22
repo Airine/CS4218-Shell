@@ -14,7 +14,6 @@ import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 public class PairwiseNonApplicationTest {
     private static final String RELATIVE_PATH = "src" + CHAR_FILE_SEP + "test" + CHAR_FILE_SEP + "IntegrationTest";
-//    private static final String CURRENT_PATH = System.getProperty("user.dir") + CHAR_FILE_SEP + RELATIVE_PATH;
     private static final String TEST_FILE_FOLDER_PATH = RELATIVE_PATH + CHAR_FILE_SEP + "testFiles";
     private static final String TEST_FILE1_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test1.txt";
     private static final String TEST_FILE2_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test2.txt";
@@ -66,7 +65,7 @@ public class PairwiseNonApplicationTest {
         @DisplayName("paste src/test/IntegrationTest/testFiles/test1.txt  | wc > src/test/IntegrationTest/testFiles/result.txt")
         void testPipeAndRedirection(){
             String commandString = "paste " + TEST_FILE1_PATH + " | wc -w > " + TEST_FILERESULT_PATH;
-            String expectResult = "       2";
+            String expectResult = String.format(" %7d", 2);
             File targetFile = new File(TEST_FILERESULT_PATH);
             assertDoesNotThrow(()->{
                 BufferedReader reader = new BufferedReader(new FileReader(targetFile));
@@ -101,8 +100,9 @@ public class PairwiseNonApplicationTest {
         @DisplayName("wc src/test/IntegrationTest/testFiles/test* > src/test/IntegrationTest/testFiles/result.txt")
         void testGlobbingAndRedirection(){
             String commandString = "wc " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test* > " + TEST_FILERESULT_PATH;
-            String expectResult = "       1       2      12 src" + CHAR_FILE_SEP + "test" + CHAR_FILE_SEP +
-                    "IntegrationTest" + CHAR_FILE_SEP + "testFiles" + CHAR_FILE_SEP + "test1.txt";
+            String expectResult = String.format(" %7d %7d %7d %s", 1, 2, 10+STRING_NEWLINE.length(), "src")
+                    + CHAR_FILE_SEP + "test" + CHAR_FILE_SEP + "IntegrationTest" + CHAR_FILE_SEP + "testFiles"
+                    + CHAR_FILE_SEP + "test1.txt";
             File targetFile = new File(TEST_FILERESULT_PATH);
             assertDoesNotThrow(()->{
                 BufferedReader reader = new BufferedReader(new FileReader(targetFile));
@@ -149,8 +149,19 @@ public class PairwiseNonApplicationTest {
         }
 
         @Test
+        @DisplayName("cd src/test/IntegrationTest/testFiles; ls")
+        void testQuotingAndSemicolon1(){
+            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls";
+            String expectResult = "result.txt"+STRING_NEWLINE+"test1.txt"+STRING_NEWLINE+"test2.txt"+STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+      
+        @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; echo `paste test1.txt`")
-        void testQuotingAndSemicolon(){
+        void testQuotingAndSemicolon2(){
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; echo `paste test1.txt`";
             String expectResult = "hello world" + STRING_NEWLINE;
             assertDoesNotThrow(()->{

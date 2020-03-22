@@ -198,7 +198,8 @@
             assertTrue(result.contains("folderRecursive:" + StringUtils.STRING_NEWLINE
                     + "firstFile.txt" + StringUtils.STRING_NEWLINE + "innerFolder"));
 
-            assertTrue(result.contains("folderRecursive/innerFolder:" + StringUtils.STRING_NEWLINE + "innerFile.txt"));
+            assertTrue(result.contains("folderRecursive" + StringUtils.CHAR_FILE_SEP + "innerFolder:"
+                    + StringUtils.STRING_NEWLINE + "innerFile.txt"));
         }
 
 
