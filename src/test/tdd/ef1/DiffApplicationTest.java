@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.DiffException;
 import sg.edu.nus.comp.cs4218.impl.app.DiffApplication;
+import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
 import java.io.*;
@@ -57,10 +58,17 @@ public class DiffApplicationTest { // NOPMD
     private static final String DIFFDIR2 = "diffDir2";
     private static final String DIFFALPHA = "diffDir-alpha";
     private static final String DIFFBETA = "diffDir-beta";
+    private static final String dummyDIR = "dummyDir";
 
     @BeforeAll
     static void setupAll() {
         Environment.currentDirectory = DIFF_TEST_DIR;
+        File testFolder = new File(FileSystemUtils.getAbsolutePathName(dummyDIR));
+        try {
+            testFolder.mkdirs();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @BeforeEach
@@ -76,6 +84,11 @@ public class DiffApplicationTest { // NOPMD
 
     @AfterAll
     static void reset() {
+        try {
+            FileSystemUtils.deleteFileRecursive(new File(FileSystemUtils.getAbsolutePathName(dummyDIR)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Environment.currentDirectory = ORIGINAL_DIR;
     }
 
@@ -99,7 +112,7 @@ public class DiffApplicationTest { // NOPMD
 
     @Test
     public void testFailsWithDirWithoutFiles() {
-        Exception expectedException = assertThrows(DiffException.class, () -> diffApp.diffTwoDir("dummyDir", "dummyDir", false ,false, false));
+        Exception expectedException = assertThrows(DiffException.class, () -> diffApp.diffTwoDir(dummyDIR, dummyDIR, false ,false, false));
         assertTrue(expectedException.getMessage().contains(ERR_IS_DIR));
     }
 
