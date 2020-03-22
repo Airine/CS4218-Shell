@@ -39,12 +39,12 @@ public class PairwiseEF1Test {
         });
         Environment.currentDirectory = originPath;
         File file = new File(TEST_FILERESULT_PATH);
-        try{
+        try {
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write("");
             fileWriter.flush();
             fileWriter.close();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -53,10 +53,10 @@ public class PairwiseEF1Test {
     class positiveTest {
         @Test
         @DisplayName("diff src/test/IntegrationTest/testFiles/test1.txt src/test/IntegrationTest/testFiles/test2.txt | grep 'w'")
-        void testDiffAndGrep(){
+        void testDiffAndGrep() {
             String commandString = "diff " + TEST_FILE1_PATH + " " + TEST_FILE2_PATH + "| grep 'hel'";
-            String expectResult = "< hello"+STRING_NEWLINE;
-            assertDoesNotThrow(()->{
+            String expectResult = "< hello" + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
             });
@@ -64,10 +64,10 @@ public class PairwiseEF1Test {
 
         @Test
         @DisplayName("diff src/test/IntegrationTest/testFiles/test1.txt src/test/IntegrationTest/testFiles/test2.txt | wc")
-        void testDiffAndWc(){
+        void testDiffAndWc() {
             String commandString = "diff " + TEST_FILE1_PATH + " " + TEST_FILE2_PATH + "| wc -l";
-            String expectResult = String.format(" %7d", 2)+STRING_NEWLINE;
-            assertDoesNotThrow(()->{
+            String expectResult = String.format(" %7d", 2) + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
             });
@@ -89,8 +89,8 @@ public class PairwiseEF1Test {
         @DisplayName("grep 'world' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
         void testGrepAndWc() {
             String commandString = "grep 'world' " + TEST_FILE1_PATH + "| wc -c";
-            String expectResult = String.format(" %7d", "world".length()+STRING_NEWLINE.length()) + STRING_NEWLINE;
-            assertDoesNotThrow(()->{
+            String expectResult = String.format(" %7d", "world".length() + STRING_NEWLINE.length()) + STRING_NEWLINE;
+            assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
             });
@@ -110,7 +110,7 @@ public class PairwiseEF1Test {
 
         @Test
         @DisplayName("cd src/test/IntegrationTest/testFiles; wc -c test1.txt")
-        void testWcAndCd(){
+        void testWcAndCd() {
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; wc -c test1.txt";
             String expectResult = String.format(" %7d test1.txt", 12) + STRING_NEWLINE;
             assertDoesNotThrow(() -> {
