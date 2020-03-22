@@ -35,7 +35,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
         try {
             parser.parse(args);
         } catch (InvalidArgsException e) {
-            throw new DiffException(e.getMessage());
+            throw new DiffException(e.getMessage());//NOPMD
         }
 
         Boolean isShowSame = parser.isReportIdentical();
@@ -69,7 +69,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
             stdout.write(result.getBytes());
             stdout.write(STRING_NEWLINE.getBytes());
         } catch (Exception e) {
-            throw new DiffException(e.getMessage());
+            throw new DiffException(e.getMessage());//NOPMD
         }
     }
 
@@ -123,7 +123,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
      * @return the expected output result
      * @throws IOException an IOException
      */
-    private List<String> getDiff(InputStream inputA, InputStream inputB, Boolean isShowSame, Boolean isNoBlank, Boolean isSimple) throws IOException {
+    private List<String> getDiff(InputStream inputA, InputStream inputB, Boolean isShowSame, Boolean isNoBlank, Boolean isSimple) throws IOException {//NOPMD
         BufferedReader brA = new BufferedReader(new InputStreamReader(inputA));
         BufferedReader brB = new BufferedReader(new InputStreamReader(inputB));
         List<String> linesA = new ArrayList<>();
@@ -179,7 +179,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
         return result;
     }
 
-    private List<String> getDiffDir(File[] filesA, File[] filesB, Boolean isShowSame, Boolean isNoBlank, Boolean isSimple) throws DiffException {
+    private List<String> getDiffDir(File[] filesA, File[] filesB, Boolean isShowSame, Boolean isNoBlank, Boolean isSimple) throws DiffException {//NOPMD
         List<String> result = new ArrayList<>();
         int indexA = 0;
         int indexB = 0;
@@ -212,20 +212,20 @@ public class DiffApplication implements DiffInterface {//NOPMD
                 try (InputStream inputStreamA = IOUtils.openInputStream(fileA);
                      InputStream inputStreamB = IOUtils.openInputStream(fileB)) {
                     List<String> tmp = getDiff(inputStreamA, inputStreamB, isShowSame, isNoBlank, isSimple);
-                    if (!tmp.isEmpty()) {
+                    if (tmp.isEmpty()) {
+                        if (isShowSame) {
+                            result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " are identical");//NOPMD
+                        }
+                    } else {
                         if (isSimple) {
                             result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " differ");
                         } else {
                             result.add("diff " + dirA + sep + nameA + " " + dirB + sep + nameB);
                             result.addAll(tmp);
                         }
-                    } else {
-                        if (isShowSame) {
-                            result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " are identical");
-                        }
                     }
                 } catch (ShellException | IOException e) {
-                    throw new DiffException(e.getMessage());
+                    throw new DiffException(e.getMessage());//NOPMD
                 }
                 indexA++;
                 indexB++;
@@ -246,7 +246,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
         return result;
     }
 
-    private void getRemain(File[] filesB, List<String> result, int index, String sep) {
+    private void getRemain(File[] filesB, List<String> result, int index, String sep) {//NOPMD
         File fileB;
         String absB;
         int idxB;
@@ -282,7 +282,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
                 }
             }
         } catch (ShellException | IOException e) {
-            throw new DiffException(e.getMessage());
+            throw new DiffException(e.getMessage());//NOPMD
         }
         if (isShowSame && result.isEmpty()) {
             result.add("Files " + fileNameA + " " + fileNameB + " are identical");
