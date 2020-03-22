@@ -45,7 +45,7 @@ public class PairwiseNonApplicationTest {
         @Test
         @DisplayName("ls src/test/IntegrationTest/testFiles/testFiles/test* | grep '1'")
         void testPipeAndGlobbing(){
-            String commandString = "ls " + RELATIVE_PATH + CHAR_FILE_SEP + "test*" + " | grep '1'";
+            String commandString = "ls -R " + RELATIVE_PATH + CHAR_FILE_SEP + "test*" + " | grep '1'";
             String expectResult = "test1.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
@@ -78,10 +78,10 @@ public class PairwiseNonApplicationTest {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest/testFiles; ls test* | grep '1'")
-        void testPipeAndGlobbingAndSemicolon(){
-            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls test* | grep '1'";
-            String expectResult = "test1.txt" + STRING_NEWLINE;
+        @DisplayName("cd src/test/IntegrationTest/testFiles; ls test*")
+        void testGlobbingAndSemicolon(){
+            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls test*";
+            String expectResult = "test1.txt test2.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -143,7 +143,7 @@ public class PairwiseNonApplicationTest {
         @DisplayName("cd src/test/IntegrationTest/testFiles; echo `paste test1.txt`")
         void testQuotingAndSemicolon(){
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; echo `paste test1.txt`";
-            String expectResult = "hello world";
+            String expectResult = "hello world" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

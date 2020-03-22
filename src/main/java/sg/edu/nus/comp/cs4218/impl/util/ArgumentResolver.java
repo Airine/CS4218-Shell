@@ -91,7 +91,7 @@ public class ArgumentResolver {
                         // append the first token to the previous parsedArg
                         // e.g. arg: abc`1 2 3`xyz`4 5 6` (contents in `` is after command sub)
                         // expected: [abc1, 2, 3xyz4, 5, 6]
-                        if (!subOutputSegment.isEmpty()) {
+                        while (!subOutputSegment.isEmpty()) {
                             RegexArgument firstOutputArg = subOutputSegment.remove(0);
                             appendParsedArgIntoSegment(parsedArgsSegment, firstOutputArg);
                         }
