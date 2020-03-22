@@ -38,6 +38,16 @@ public class PairwiseBFTest {
             outputStream.close();
         });
         Environment.currentDirectory = originPath;
+        File file = new File(TEST_FILERESULT_PATH);
+        try{
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write("");
+            fileWriter.flush();
+            fileWriter.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     @Nested
