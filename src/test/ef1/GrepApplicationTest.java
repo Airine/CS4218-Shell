@@ -225,7 +225,7 @@ class GrepApplicationTest {
         Throwable thrown = assertThrows(GrepException.class, () -> {
             grepApp.grepFromStdin(pattern, isCaseInsensitive, isCountLines, null);
         });
-        assertEquals(ERR_PREFIX + ERR_FILE_NOT_FOUND, thrown.getMessage());
+        assertEquals(ERR_PREFIX + NULL_POINTER, thrown.getMessage());
     }
 
 

@@ -150,7 +150,7 @@ public class QuotingTest {
                 String[] parsedArgsList = invocation.getArgument(1); // parsedArgsList (Globbing is done here)
                 String actual = app + " " + String.join(" ", parsedArgsList);
 
-                String expected = "echo \'\\t*| <>; hello";
+                String expected = "echo \'\\t*| <>; hello ";
                 assertEquals(expected, actual);
 
                 return null;
@@ -177,7 +177,7 @@ public class QuotingTest {
                 String[] parsedArgsList = invocation.getArgument(1); // parsedArgsList (Globbing is done here)
                 String actual = app + " " + String.join(" ", parsedArgsList);
 
-                String expected = "echo 'This is izone fiesta'";
+                String expected = "echo 'This is izone fiesta '";
                 assertEquals(expected, actual);
 
                 return null;

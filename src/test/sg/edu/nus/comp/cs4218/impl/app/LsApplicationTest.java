@@ -2,11 +2,13 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.LsInterface;
 import sg.edu.nus.comp.cs4218.exception.LsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 
 import java.io.*;
@@ -27,6 +29,11 @@ class LsApplicationTest {
     @BeforeEach
     void setCurrentDirectory() {
         //noinspection NonAtomicOperationOnVolatileField
+        try {
+            FileSystemUtils.createFile(TEST_TXT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Environment.currentDirectory += CHAR_FILE_SEP + "asset" + CHAR_FILE_SEP + "app" + CHAR_FILE_SEP + "ls";
         outputStream = new ByteArrayOutputStream();
     }
@@ -35,6 +42,11 @@ class LsApplicationTest {
     @AfterEach
     void resetCurrentDirectory() {
         Environment.currentDirectory = cwd;
+        try {
+            FileSystemUtils.deleteFileRecursive(new File(TEST_TXT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

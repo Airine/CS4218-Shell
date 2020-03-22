@@ -6,6 +6,7 @@ import sg.edu.nus.comp.cs4218.exception.DiffException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.parser.DiffArgsParser;
+import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
@@ -89,7 +90,7 @@ public class DiffApplication implements DiffInterface {
     }
 
     private void checkIfValidFolder(File[] files) throws DiffException{
-        if (files == null || files.length == 0)
+        if (files == null)
             throw new DiffException(ERR_IS_DIR);
     }
 
@@ -102,7 +103,7 @@ public class DiffApplication implements DiffInterface {
         String lineA, lineB;
         while((lineA = brA.readLine())!=null) {
             if (isNoBlank) {
-                if (lineA.equals("")){
+                if (StringUtils.isBlank(lineA)){
                     continue;
                 }
             }
@@ -110,7 +111,7 @@ public class DiffApplication implements DiffInterface {
         }
         while((lineB = brB.readLine())!=null){
             if (isNoBlank) {
-                if (lineB.equals("")){
+                if (StringUtils.isBlank(lineB)){
                     continue;
                 }
             }
@@ -156,7 +157,7 @@ public class DiffApplication implements DiffInterface {
         int j = 0;
         File fileA;
         File fileB;
-        String sep = StringUtils.fileSeparator();
+        String sep = File.separator;
         String nameA, nameB;
         String absA, absB;
         String dirA, dirB;

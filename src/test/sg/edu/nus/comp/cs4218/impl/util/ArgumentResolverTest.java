@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -45,7 +46,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"`echo 'ddd'`\"");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("ddd"), parsedArgsList);
+            assertEquals(Arrays.asList("ddd "), parsedArgsList);
         });
     }
 
@@ -82,7 +83,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"'fff `echo \"ggg\"`'\"");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("'fff ggg'"), parsedArgsList);
+            assertEquals(Arrays.asList("'fff ggg '"), parsedArgsList);
         });
     }
 
@@ -110,7 +111,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"mmm `echo '\"nnn'`");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("mmm \"nnn"), parsedArgsList);
+            assertEquals(Arrays.asList("mmm \"nnn "), parsedArgsList);
         });
     }
 }

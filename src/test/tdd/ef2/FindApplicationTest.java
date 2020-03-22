@@ -226,7 +226,7 @@ public class FindApplicationTest {
     @Test
     // Test Case: 3 Args Incorrect Order 4; FILENAME -name FOLDER
     void testRun3ArgsIncorrectOrder4OutputToStream() throws AbstractApplicationException {
-        String[] args = {fileNameC, suffix, srcDir};
+        String[] args = {fileNameC, suffix, "src"};
         String expected = findPrefix + fileNameC + ": " + ERR_FILE_NOT_FOUND + System.lineSeparator();
         app.run(args, inputStream, outputStream);
         assertEquals(expected, outputStream.toString());
