@@ -17,7 +17,7 @@ public class PairwiseApplicationTest {
     private static final String TEST_FILE_FOLDER_PATH = RELATIVE_PATH + CHAR_FILE_SEP + "testFiles";
     private static final String TEST_FILE1_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test1.txt";
     private static final String TEST_FILE2_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test2.txt";
-    private static final String TEST_FILE3_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test3.txt";
+    private static final String TEST_FILERESULT_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result.txt";
 
 
     Shell shell = new ShellImpl();
