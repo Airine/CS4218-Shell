@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
-public class DiffApplication implements DiffInterface {
+public class DiffApplication implements DiffInterface {//NOPMD
 
 
     /**
@@ -44,10 +44,11 @@ public class DiffApplication implements DiffInterface {
 
         String[] files = parser.getDiffFile().toArray(new String[0]);
 
-        if (files.length > 2)
+        if (files.length > 2) {
             throw new DiffException(ERR_TOO_MANY_ARGS);
-        else if (files.length < 2)
+        } else if (files.length < 2) {
             throw new DiffException(ERR_NO_ARGS);
+        }
 
         String nameA = files[0];
         String nameB = files[1];
@@ -96,19 +97,20 @@ public class DiffApplication implements DiffInterface {
 
     private void checkIfNullArgs(Object... args) throws DiffException {
         for (Object arg : args) {
-            if (arg == null) throw new DiffException(ERR_NULL_ARGS);
+            if (arg == null) {throw new DiffException(ERR_NULL_ARGS);}
         }
     }
 
     private void checkIfExistFiles(File... files) throws DiffException {
         for (File file : files) {
-            if (!file.exists()) throw new DiffException(ERR_FILE_NOT_FOUND);
+            if (!file.exists()) {throw new DiffException(ERR_FILE_NOT_FOUND);}
         }
     }
 
     private void checkIfValidFolder(File[] files) throws DiffException{
-        if (files == null)
+        if (files == null) {
             throw new DiffException(ERR_IS_DIR);
+        }
     }
 
     /**
@@ -129,18 +131,14 @@ public class DiffApplication implements DiffInterface {
         List<String> result = new ArrayList<>();
         String lineA, lineB;
         while((lineA = brA.readLine())!=null) {
-            if (isNoBlank) {
-                if (StringUtils.isBlank(lineA)){
-                    continue;
-                }
+            if (isNoBlank && StringUtils.isBlank(lineA)) {
+                continue;
             }
             linesA.add(lineA);
         }
         while((lineB = brB.readLine())!=null){
-            if (isNoBlank) {
-                if (StringUtils.isBlank(lineB)){
-                    continue;
-                }
+            if (isNoBlank && StringUtils.isBlank(lineB)) {
+                continue;
             }
             linesB.add(lineB);
         }
@@ -151,10 +149,11 @@ public class DiffApplication implements DiffInterface {
         int[][] matrix = new int[lengthA+1][lengthB+1];
         for (int i = 0; i < lengthA; i++) {
             for (int j = 0; j < lengthB; j ++) {
-                if (linesA.get(i).equals(linesB.get(j)))
-                    matrix[i+1][j+1] = matrix[i][j] + 1;
-                else
-                    matrix[i+1][j+1] = Math.max(matrix[i][j+1], matrix[i+1][j]);
+                if (linesA.get(i).equals(linesB.get(j))) {
+                    matrix[i + 1][j + 1] = matrix[i][j] + 1;
+                } else {
+                    matrix[i + 1][j + 1] = Math.max(matrix[i][j + 1], matrix[i + 1][j]);
+                }
             }
         }
         int current = 1;
@@ -168,12 +167,14 @@ public class DiffApplication implements DiffInterface {
             }
         }
         for (int i = 0; i < lengthA; i++) {
-            if (!commonA[i])
-                result.add("< "+linesA.get(i));
+            if (!commonA[i]) {
+                result.add("< " + linesA.get(i));
+            }
         }
         for (int i = 0; i < lengthB; i++) {
-            if (!commonB[i])
-                result.add("> "+linesB.get(i));
+            if (!commonB[i]) {
+                result.add("> " + linesB.get(i));
+            }
         }
         return result;
     }
@@ -283,10 +284,8 @@ public class DiffApplication implements DiffInterface {
         } catch (ShellException | IOException e) {
             throw new DiffException(e.getMessage());
         }
-        if (isShowSame) {
-            if (result.size() == 0) {
-                result.add("Files " + fileNameA + " " + fileNameB + " are identical");
-            }
+        if (isShowSame && result.size() == 0) {
+            result.add("Files " + fileNameA + " " + fileNameB + " are identical");
         }
         return String.join(STRING_NEWLINE, result);
     }
@@ -324,10 +323,8 @@ public class DiffApplication implements DiffInterface {
         } catch (ShellException | IOException e) {
             e.printStackTrace();
         }
-        if (isShowSame) {
-            if (result.size() == 0) {
-                result.add("Files " +fileName+" - are identical");
-            }
+        if (isShowSame && result.size() == 0) {
+            result.add("Files " +fileName+" - are identical");
         }
         return String.join(STRING_NEWLINE, result);
     }
