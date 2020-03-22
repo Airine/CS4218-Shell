@@ -56,6 +56,7 @@ public class PairwiseEF2Test {
         }catch(IOException e){
             e.printStackTrace();
         }
+
         File file1 = new File(TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt");
         if (file1.exists()){
             file1.delete();
