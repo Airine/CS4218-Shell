@@ -30,6 +30,14 @@ public class PairwiseEF2Test {
     void setup(){
         outputStream = new ByteArrayOutputStream();
         originPath = Environment.currentDirectory;
+        File file = new File(TEST_FILERESULT_PATH);
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @AfterEach
@@ -47,6 +55,10 @@ public class PairwiseEF2Test {
             fileWriter.close();
         }catch(IOException e){
             e.printStackTrace();
+        }
+        File file1 = new File(TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt");
+        if (file1.exists()){
+            file1.delete();
         }
     }
 
@@ -113,7 +125,16 @@ public class PairwiseEF2Test {
 
     @Nested
     class negativeTest{
-
+        @Test
+        @DisplayName("mv src/test/IntegrationTest/result.txt src/test/IntegrationTest/result1.txt; cut -c 1 src/test/IntegrationTest/result.txt")
+        void testMvAndCut(){
+            String commandString = "mv " + TEST_FILERESULT_PATH + " " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt; cut -c 1 " + TEST_FILERESULT_PATH;
+            String expectResult = "cut: " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result1.txt: No such file or directory" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
     }
 
 }

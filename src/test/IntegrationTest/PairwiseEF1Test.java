@@ -135,8 +135,18 @@ public class PairwiseEF1Test {
     }
 
     @Nested
-    class negativeTest {
+    class negativeTest{
+        @Test
+        @DisplayName("cd src/test/IntegrationTest; wc test1.txt")
+        void testCdAndWc(){
+            String commandString = "cd src/test/IntegrationTest; wc test1.txt";
+            String expectResult = "wc: No such file or directory" + STRING_NEWLINE;
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
 
-    }
+
 
 }
