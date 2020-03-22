@@ -57,7 +57,7 @@ public class PairwiseNonApplicationTest {
         @DisplayName("paste src/test/IntegrationTest/testFiles/test1.txt  | wc > src/test/IntegrationTest/testFiles/result.txt")
         void testPipeAndRedirection(){
             String commandString = "paste " + TEST_FILE1_PATH + " | wc -w > " + TEST_FILERESULT_PATH;
-            String expectResult = "       2";
+            String expectResult = String.format(" %7d", 2);
             File targetFile = new File(TEST_FILERESULT_PATH);
             assertDoesNotThrow(()->{
                 BufferedReader reader = new BufferedReader(new FileReader(targetFile));
@@ -92,8 +92,9 @@ public class PairwiseNonApplicationTest {
         @DisplayName("wc src/test/IntegrationTest/testFiles/test* > src/test/IntegrationTest/testFiles/result.txt")
         void testGlobbingAndRedirection(){
             String commandString = "wc " + TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test* > " + TEST_FILERESULT_PATH;
-            String expectResult = "       1       2      12 src" + CHAR_FILE_SEP + "test" + CHAR_FILE_SEP +
-                    "IntegrationTest" + CHAR_FILE_SEP + "testFiles" + CHAR_FILE_SEP + "test1.txt";
+            String expectResult = String.format(" %7d %7d %7d %s", 1, 2, 10+STRING_NEWLINE.length(), "src")
+                    + CHAR_FILE_SEP + "test" + CHAR_FILE_SEP + "IntegrationTest" + CHAR_FILE_SEP + "testFiles"
+                    + CHAR_FILE_SEP + "test1.txt";
             File targetFile = new File(TEST_FILERESULT_PATH);
             assertDoesNotThrow(()->{
                 BufferedReader reader = new BufferedReader(new FileReader(targetFile));
@@ -140,10 +141,10 @@ public class PairwiseNonApplicationTest {
         }
 
         @Test
-        @DisplayName("cd src/test/IntegrationTest/testFiles; `ls`")
+        @DisplayName("cd src/test/IntegrationTest/testFiles; ls")
         void testQuotingAndSemicolon(){
-            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; `ls`";
-            String expectResult = "test1.txt test2.txt result.txt";
+            String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; ls";
+            String expectResult = "result.txt"+STRING_NEWLINE+"test1.txt"+STRING_NEWLINE+"test2.txt"+STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

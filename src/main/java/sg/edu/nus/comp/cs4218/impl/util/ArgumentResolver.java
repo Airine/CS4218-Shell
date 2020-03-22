@@ -114,7 +114,7 @@ public class ArgumentResolver {
                     unmatchedQuotes.pop();
 
                     // make sure parsedArgsSegment is not empty
-//                    appendParsedArgIntoSegment(parsedArgsSegment, makeRegexArgument());
+                    appendParsedArgIntoSegment(parsedArgsSegment, makeRegexArgument());
                 } else if (unmatchedQuotes.peek() == CHAR_BACK_QUOTE) {
                     // ongoing back quote: add chr to subCommand
                     subCommand.append(chr);
