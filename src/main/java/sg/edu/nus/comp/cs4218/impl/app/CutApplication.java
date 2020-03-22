@@ -53,7 +53,7 @@ public class CutApplication implements CutInterface {
                 lines.addAll(IOUtils.getLinesFromInputStream(input));
                 IOUtils.closeInputStream(input);
             } catch (Exception e){
-                throw new Exception(e.getMessage());
+                throw new Exception(ERR_IO_EXCEPTION);
             }
         }
         cutInputString(isCharPo, isBytePo, isRange, startIdx, endIdx, lines);
