@@ -103,7 +103,7 @@ public class PairwiseApplicationTest {
         @DisplayName("cp `find src/test/IntegrationTest/testFiles -name 'test1.txt'` src/test/IntegrationTest/testFiles/result.txt")
         void testCpAndFind() {
             String commandString = "cp `find " + TEST_FILE_FOLDER_PATH + " -name 'test1.txt'` " + TEST_FILERESULT_PATH;
-            String expectResult = "h" + STRING_NEWLINE + "w" + STRING_NEWLINE;
+            String expectResult = "hello";
             File targetFile = new File(TEST_FILERESULT_PATH);
             assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
