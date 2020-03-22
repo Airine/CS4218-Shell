@@ -1,6 +1,7 @@
 package IntegrationTest;
 
 import org.junit.jupiter.api.*;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
@@ -17,7 +18,9 @@ public class PairwiseEF2Test {
     private static final String TEST_FILE_FOLDER_PATH = RELATIVE_PATH + CHAR_FILE_SEP + "testFiles";
     private static final String TEST_FILE1_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test1.txt";
     private static final String TEST_FILE2_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test2.txt";
-    private static final String TEST_FILE3_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "test3.txt";
+    private static final String TEST_FILERESULT_PATH = TEST_FILE_FOLDER_PATH + CHAR_FILE_SEP + "result.txt";
+
+    private String originPath;
 
 
     Shell shell = new ShellImpl();
@@ -26,6 +29,7 @@ public class PairwiseEF2Test {
     @BeforeEach
     void setup(){
         outputStream = new ByteArrayOutputStream();
+        originPath = Environment.currentDirectory;
     }
 
     @AfterEach
@@ -33,5 +37,26 @@ public class PairwiseEF2Test {
         assertDoesNotThrow(()->{
             outputStream.close();
         });
+        Environment.currentDirectory = originPath;
     }
+
+    @Nested
+    class positiveTest{
+        @Test
+        @DisplayName("need help")
+        void testWcAndCp(){
+            String commandString = "";
+            String expectResult = "";
+            assertDoesNotThrow(()->{
+                shell.parseAndEvaluate(commandString, outputStream);
+                assertEquals(expectResult, outputStream.toString());
+            });
+        }
+    }
+
+    @Nested
+    class negativeTest{
+
+    }
+
 }

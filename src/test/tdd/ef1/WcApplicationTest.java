@@ -20,7 +20,19 @@ class WcApplicationTest {
     private final String LINES_FLAG = "-l";
     private final String WORDS_FLAG = "-w";
     private final String BYTES_FLAG = "-c";
-
+    private final String FW1_CONTENT =  "hello world" + System.lineSeparator() +
+                                        "sample file" + System.lineSeparator() +
+                                        "birds hello" + System.lineSeparator() +
+                                        "j testing" + System.lineSeparator() +
+                                        "TestiNG SAmplE output";
+    private final int FW1_BYTES = FW1_CONTENT.getBytes().length;
+    private final String FW2_CONTENT =  "afkjadslfj world" + System.lineSeparator() +
+                                        "slightly different output" + System.lineSeparator() +
+                                        "test" + System.lineSeparator() +
+                                        "this is a tesT" + System.lineSeparator() +
+                                        "TESTING is fun";
+    private final int FW2_BYTES = FW2_CONTENT.getBytes().length;
+    private final int TOTAL_BYTES = FW1_BYTES + FW2_BYTES;
     @BeforeEach
     void setUp() {
         wcApplication = new WcApplication();
@@ -47,11 +59,7 @@ class WcApplicationTest {
                 file1 = new File(FILENAME1);
                 file1.createNewFile();
                 FileWriter fw1 = new FileWriter(FILENAME1);
-                fw1.write("hello world" + System.lineSeparator() +
-                        "sample file" + System.lineSeparator() +
-                        "birds hello" + System.lineSeparator() +
-                        "j testing" + System.lineSeparator() +
-                        "TestiNG SAmplE output");
+                fw1.write(FW1_CONTENT);
                 fw1.close();
             } catch (IOException e) {
                 System.out.println("File1 failed to be created.");
@@ -61,11 +69,7 @@ class WcApplicationTest {
                 file2 = new File(FILENAME2);
                 file2.createNewFile();
                 FileWriter fw2 = new FileWriter(FILENAME2);
-                fw2.write("afkjadslfj world" + System.lineSeparator() +
-                        "slightly different output" + System.lineSeparator() +
-                        "test" + System.lineSeparator() +
-                        "this is a tesT" + System.lineSeparator() +
-                        "TESTING is fun");
+                fw2.write(FW2_CONTENT);
                 fw2.close();
             } catch (IOException e) {
                 System.out.println("File2 failed to be created.");
@@ -103,7 +107,7 @@ class WcApplicationTest {
         @Test
         @DisplayName("should count only bytes")
         void countFromFiles_countBytes() throws AbstractApplicationException {
-            String expected = "71 file1.txt";
+            String expected = FW1_BYTES + " file1.txt";
             wcApplication.run(new String[]{BYTES_FLAG, FILENAME1}, inputStream, outputStream);
             assertEquals(expected, outputStream.toString().trim());
         }
@@ -111,7 +115,7 @@ class WcApplicationTest {
         @Test
         @DisplayName("should count lines and bytes")
         void countFromFiles_countLinesAndBytes() throws AbstractApplicationException {
-            String expected = "4      71 file1.txt";
+            String expected = "4      " + FW1_BYTES + " file1.txt";
             wcApplication.run(new String[]{LINES_FLAG, BYTES_FLAG, FILENAME1}, inputStream, outputStream);
             assertEquals(expected, outputStream.toString().trim());
         }
@@ -119,7 +123,7 @@ class WcApplicationTest {
         @Test
         @DisplayName("should count lines, bytes, and words with all args")
         void countFromFiles_allArgs() throws AbstractApplicationException {
-            String expected = "4      11      71 file1.txt";
+            String expected = "4      11      " + FW1_BYTES + " file1.txt";
             wcApplication.run(new String[]{WORDS_FLAG, LINES_FLAG, BYTES_FLAG, FILENAME1}, inputStream, outputStream);
             assertEquals(expected, outputStream.toString().trim());
         }
@@ -127,9 +131,9 @@ class WcApplicationTest {
         @Test
         @DisplayName("should count lines, bytes, and words from multiple files")
         void countFromFiles_multiFiles() throws AbstractApplicationException {
-            String expected = "4      11      71 file1.txt" + System.lineSeparator() +
-                    "       4      13      81 file2.txt" + System.lineSeparator() +
-                    "       8      24     152 total";
+            String expected =   "4      11      " + FW1_BYTES + " file1.txt" + System.lineSeparator() +
+                                "       4      13      " + FW2_BYTES + " file2.txt" + System.lineSeparator() +
+                                "       8      24     " + TOTAL_BYTES + " total";
             wcApplication.run(new String[]{WORDS_FLAG, LINES_FLAG, BYTES_FLAG, FILENAME1, FILENAME2}, inputStream, outputStream);
             assertEquals(expected, outputStream.toString().trim());
         }

@@ -84,6 +84,9 @@ public class ApplicationRunner {
             case APP_CUT:
                 application = new CutApplication();
                 break;
+            case APP_DIFF:
+                application = new DiffApplication();
+                break;
             default:
                 throw new ShellException(app + ": " + ERR_INVALID_APP);
         }
