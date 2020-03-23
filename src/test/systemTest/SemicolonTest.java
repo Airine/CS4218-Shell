@@ -12,7 +12,7 @@ import java.io.IOException;
 public class SemicolonTest extends AbstractIntegrationTest {
 
 
-    private final String integrationDir = FileSystemUtils.joinPath("asset", "integration", "semicolon");
+    private final String integrationDir = FileSystemUtils.joinPath("asset", "system-test", "semicolon");
 
     @Override
     String getIntegrationDir() {

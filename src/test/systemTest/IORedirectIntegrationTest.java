@@ -12,7 +12,7 @@ import java.io.*;
 
 public class IORedirectIntegrationTest extends AbstractIntegrationTest {
 
-    private final String integrationDir = FileSystemUtils.joinPath("asset", "integration", "redirect");
+    private final String integrationDir = FileSystemUtils.joinPath("asset", "system-test", "redirect");
 
     @Override
     String getIntegrationDir() {
