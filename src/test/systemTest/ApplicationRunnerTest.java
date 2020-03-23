@@ -7,7 +7,7 @@ import java.io.OutputStream;
 
 public class ApplicationRunnerTest extends AbstractIntegrationTest {
 
-    private final String appRunnerDir = FileSystemUtils.joinPath("asset", "integration", "appRunner");
+    private final String appRunnerDir = FileSystemUtils.joinPath("asset", "system-test", "appRunner");
 
     @Override
     String getIntegrationDir() {
