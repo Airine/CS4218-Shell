@@ -3,8 +3,8 @@ name: Bug Report
 about: Use this template for bug report in hackathon
 title: "[TEAM X/A]: [APPLICATION NAME + BUG NAME]"
 labels: bug
-assignees: airine
-milestone: hackathon
+assignees: Airine
+milestone: Hackathon
 ---
 
 # [TEAM X/A]: [APPLICATION NAME + BUG NAME]
