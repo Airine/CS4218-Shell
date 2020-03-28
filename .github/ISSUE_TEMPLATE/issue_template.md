@@ -6,11 +6,6 @@ labels: bug
 assignees: airine
 ---
 
-Checklist for a bug report:
-- [ ] description of the problem in one sentence
-- [ ] reference to the part of specification that is violated
-- [ ] reference to the failing code 
-
 # [TEAM X/A]: [APPLICATION NAME + BUG NAME]
 
 ## Description
@@ -35,3 +30,9 @@ public void testHasCommand() {
 }
 ```
 Location: `/path/to/testFile`
+
+
+### Checklist for a bug report:
+- [ ] description of the problem in one sentence
+- [ ] reference to the part of specification that is violated
+- [ ] reference to the failing code 
