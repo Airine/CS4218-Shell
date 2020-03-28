@@ -4,6 +4,7 @@ about: Use this template for bug report in hackathon
 title: "[TEAM X/A]: [APPLICATION NAME + BUG NAME]"
 labels: bug
 assignees: airine
+milestone: hackathon
 ---
 
 # [TEAM X/A]: [APPLICATION NAME + BUG NAME]
