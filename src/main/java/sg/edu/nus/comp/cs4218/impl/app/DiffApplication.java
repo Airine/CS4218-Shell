@@ -191,6 +191,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
         String dirA, dirB;
         int idxA, idxB;
         int idx2A, idx2B;
+        boolean isDirA, isDirB;
         while (indexA < filesA.length && indexB < filesB.length) {
             fileA = filesA[indexA];
             fileB = filesB[indexB];
@@ -200,32 +201,47 @@ public class DiffApplication implements DiffInterface {//NOPMD
             nameA = absA.substring(idxA+1);
             idx2A = absA.substring(0,idxA).lastIndexOf(sep);
             dirA = absA.substring(idx2A+1, idxA);
+            isDirA = fileA.isDirectory();
 
             absB = fileB.getAbsolutePath();
             idxB = absB.lastIndexOf(sep);
             nameB = absB.substring(idxB+1);
             idx2B = absB.substring(0,idxB).lastIndexOf(sep);
             dirB = absB.substring(idx2B+1, idxB);
+            isDirB = fileB.isDirectory();
 
             if (nameA.equals(nameB)){
-
-                try (InputStream inputStreamA = IOUtils.openInputStream(fileA);
-                     InputStream inputStreamB = IOUtils.openInputStream(fileB)) {
-                    List<String> tmp = getDiff(inputStreamA, inputStreamB, isShowSame, isNoBlank, isSimple);
-                    if (tmp.isEmpty()) {
-                        if (isShowSame) {
-                            result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " are identical");//NOPMD
-                        }
+                // if fileA and fileB both are directories
+                if (isDirA && isDirB) {
+                    result.add(diffTwoDir(absA, absB, isShowSame, isNoBlank, isSimple));
+                } else if (isDirA || isDirB) { // if one of them is directory, assumption needed
+                    // Not care about empty or not
+                    if (isDirA) {
+                        result.add("File "  + dirA + sep + nameA + "is a directory while file "
+                                            + dirB + sep + nameB + " is a regular file");
                     } else {
-                        if (isSimple) {
-                            result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " differ");
-                        } else {
-                            result.add("diff " + dirA + sep + nameA + " " + dirB + sep + nameB);
-                            result.addAll(tmp);
-                        }
+                        result.add("File "  + dirA + sep + nameA + " is a regular file "
+                                + dirB + sep + nameB + " is a directory while file");
                     }
-                } catch (ShellException | IOException e) {
-                    throw new DiffException(e.getMessage());//NOPMD
+                } else {
+                    try (InputStream inputStreamA = IOUtils.openInputStream(fileA);
+                         InputStream inputStreamB = IOUtils.openInputStream(fileB)) {
+                        List<String> tmp = getDiff(inputStreamA, inputStreamB, isShowSame, isNoBlank, isSimple);
+                        if (tmp.isEmpty()) {
+                            if (isShowSame) {
+                                result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " are identical");//NOPMD
+                            }
+                        } else {
+                            if (isSimple) {
+                                result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " differ");
+                            } else {
+                                result.add("diff " + dirA + sep + nameA + " " + dirB + sep + nameB);
+                                result.addAll(tmp);
+                            }
+                        }
+                    } catch (ShellException | IOException e) {
+                        throw new DiffException(e.getMessage());//NOPMD
+                    }
                 }
                 indexA++;
                 indexB++;
