@@ -223,7 +223,7 @@ public class LsApplication implements LsInterface {
      * @return the Path object of this path
      */
     private Path resolvePath(String directory) {
-        if (directory.charAt(0) == CHAR_FILE_SEP || directory.charAt(1) == ':') {
+        if (directory.charAt(0) == CHAR_FILE_SEP || (directory.length() > 1 && directory.charAt(1) == ':')) {
             // This is an absolute path
             return Paths.get(directory).normalize();
         }
