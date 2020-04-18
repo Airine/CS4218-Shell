@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,7 +31,6 @@ public class MvApplication implements MvInterface {
     }
 
 
-
     @Override
     public String mvFilesToFolder(String destFolder, String... fileName) throws Exception {
         String destFilePath = null;
@@ -42,22 +42,24 @@ public class MvApplication implements MvInterface {
                     throw new MvException(destFolder + " is the sub dir of " + destFolder + " or they are the same file.");
                 }
                 File destFile = new File(destFilePath);
-                if(isOverride && destFile.exists()){
+                if (isOverride && destFile.exists()) {
                     destFile.delete();
                 }
                 Files.move(Paths.get(FileSystemUtils.getAbsolutePathName(oneFileName)),
                         Paths.get(destFilePath));
             }
-        }catch (FileAlreadyExistsException e){
-            throw (MvException)new MvException("A file with the same name already exists in "
+        } catch (FileAlreadyExistsException e) {
+            throw (MvException) new MvException("A file with the same name already exists in "
                     + "directory '" + destFolder + "' and cannot be replaced.").initCause(e);
+        } catch (AccessDeniedException e) {
+            throw new MvException(ErrorConstants.ERR_NO_PERM + ":" + e.getFile());
         }
         return destFilePath;
     }
 
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws MvException {
-        if(args==null){
+        if (args == null) {
             throw new MvException(ErrorConstants.ERR_NULL_ARGS);
         }
         MvArgsParser mvArgsParser = new MvArgsParser();
@@ -82,7 +84,7 @@ public class MvApplication implements MvInterface {
             }
         } catch (Exception e) {
             try {
-                if(stdout==null){
+                if (stdout == null) {
                     throw (MvException) new MvException("OutputStream not provided").initCause(e);
                 }
                 stdout.write(e.getMessage().getBytes());

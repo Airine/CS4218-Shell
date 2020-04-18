@@ -35,14 +35,27 @@ public final class FileSystemUtils {
     }
 
 
-    public static void deleteFileRecursive(File file) {
+    /**
+     * This test will force remove all the file/folder under input file directory by ignore all permission
+     *
+     * @param file The directory that need to remove
+     */
+    public static void deleteFileRecursive(File file) throws Exception {
         if (file.exists()) {
             if (file.isDirectory()) {
-                for (File f : Optional.of(file.listFiles()).orElse(new File[]{})) {
-                    deleteFileRecursive(f);
+                File[] files = file.listFiles();
+                if (files != null) {
+                    for (File f : files) {
+                        deleteFileRecursive(f);
+                    }
+
                 }
             }
-            file.delete(); //NOPMD do not need the return value
+            if (!file.delete()) {
+                if (file.setWritable(true) && file.setReadable(true) && !file.delete()) {
+                    throw new Exception("delete file failed!:" + file.getAbsolutePath());
+                }
+            }
         }
     }
 

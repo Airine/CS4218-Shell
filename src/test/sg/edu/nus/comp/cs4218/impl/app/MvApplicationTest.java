@@ -1,10 +1,9 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.app.MvInterface;
 import sg.edu.nus.comp.cs4218.exception.MvException;
+import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
 import java.io.File;
@@ -15,11 +14,29 @@ import static org.junit.jupiter.api.Assertions.*;
 class MvApplicationTest {
 
     private final MvInterface mvInterface = new MvApplication();
+    private String notReadFile;
+    private String notReadFolder;
+
+    private String notWriteFile;
+    private String notWriteFolder;
 
     @BeforeEach
     void setUp() {
         try {
             TestFileUtils.createSomeFiles();
+            File notReadFolder = TestFileUtils.createFileUnderRootDir("notReadFolder" + File.separator);
+            File notReadFile = TestFileUtils.createFileUnderRootDir("notReadFile");
+            File notWriteFolder = TestFileUtils.createFileUnderRootDir("notWriteFolder" + File.separator);
+            File notWriteFile = TestFileUtils.createFileUnderRootDir("notWriteFile");
+            notReadFile.setReadable(false);
+            notReadFolder.setReadable(false);
+            this.notReadFile = notReadFile.getAbsolutePath();
+            this.notReadFolder = notReadFolder.getAbsolutePath();
+
+            notWriteFile.setWritable(false);
+            notWriteFolder.setWritable(false);
+            this.notWriteFile = notWriteFile.getAbsolutePath();
+            this.notWriteFolder = notWriteFolder.getAbsolutePath();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,6 +46,32 @@ class MvApplicationTest {
     void tearDown() {
         TestFileUtils.rmCreatedFiles();
     }
+
+    /**
+     * test case for milestone 3
+     */
+
+    @Test
+    @Disabled
+    @DisplayName("move to a folder that do not have a read permission")
+    void mvNotReadPermitFile() {
+        assertDoesNotThrow(() -> mvInterface.mvFilesToFolder(notReadFolder, notReadFile));
+
+        String targetPath = FileSystemUtils.joinPath(notReadFolder, new File(notReadFile).getName());
+        assertFalse(new File(notReadFile).exists());
+        assertTrue(new File(targetPath).exists());
+    }
+
+    @Test
+    @DisplayName("move to a folder that do not have a write permission")
+    void mvNotWritePermitFile() {
+        Throwable t = assertThrows(MvException.class,
+                () -> mvInterface.mvFilesToFolder(notWriteFolder, notWriteFile)
+        );
+        assertTrue(t.getMessage().contains(ErrorConstants.ERR_NO_PERM));
+        assertTrue(new File(notWriteFile).exists());
+    }
+
 
     @Test
     void testMvFileToFolder() {

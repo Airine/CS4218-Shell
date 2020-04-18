@@ -143,10 +143,14 @@ class IOUtilsTest {
     @AfterEach
     void tearDown() {
         Environment.currentDirectory = originCurrentDirectory;
-        FileSystemUtils.deleteFileRecursive(new File(TEST_TXT));
-        FileSystemUtils.deleteFileRecursive(new File(NULL_TXT));
-        FileSystemUtils.deleteFileRecursive(new File(NONE_TXT));
-        FileSystemUtils.deleteFileRecursive(new File("asset" + CHAR_FILE_SEP + TEST_TXT));
+        try {
+            FileSystemUtils.deleteFileRecursive(new File("asset" + CHAR_FILE_SEP + TEST_TXT));
+            FileSystemUtils.deleteFileRecursive(new File(TEST_TXT));
+            FileSystemUtils.deleteFileRecursive(new File(NULL_TXT));
+            FileSystemUtils.deleteFileRecursive(new File(NONE_TXT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static class UnClosableInputStream extends FileInputStream {

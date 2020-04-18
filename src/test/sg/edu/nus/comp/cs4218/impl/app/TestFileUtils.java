@@ -6,7 +6,7 @@ import java.io.File;
 
 final public class TestFileUtils {
 
-    private static String currTestDir = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath( "temp"));
+    private static String currTestDir = FileSystemUtils.getAbsolutePathName(FileSystemUtils.joinPath("temp"));
     public static String tempFileName1 = FileSystemUtils.joinPath(currTestDir, "test1.txt");
     public static String tempFileName2 = FileSystemUtils.joinPath(currTestDir, "test2.txt");
 
@@ -47,9 +47,34 @@ final public class TestFileUtils {
         FileSystemUtils.createFile(tempFileInFolder2);
     }
 
+    public static File createFileUnderRootDir(String filePath) throws Exception {
+        File testFolder = new File(FileSystemUtils.getAbsolutePathName(currTestDir));
+        if (!testFolder.exists()) {
+            testFolder.mkdirs();
+        }
+        String targetPath = FileSystemUtils.joinPath(currTestDir, filePath);
+        if (filePath.endsWith(File.separator)) {
+            File folder = new File(targetPath);
+            if (folder.exists()) {
+                if (folder.isFile()) {
+                    throw new Exception("create folder fail, target is a exist file");
+                }
+            } else {
+                folder.mkdirs();
+            }
+        } else {
+            FileSystemUtils.createFile(targetPath);
+        }
+        return new File(targetPath);
+    }
 
     public static void rmCreatedFiles() {
-        FileSystemUtils.deleteFileRecursive(new File(FileSystemUtils.getAbsolutePathName(currTestDir)));
+
+        try {
+            FileSystemUtils.deleteFileRecursive(new File(FileSystemUtils.getAbsolutePathName(currTestDir)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
