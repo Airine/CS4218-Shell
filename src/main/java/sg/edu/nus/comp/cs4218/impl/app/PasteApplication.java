@@ -43,7 +43,7 @@ public class PasteApplication implements PasteInterface {
         }
         if ((countStdin > 0 && countFile > 0) || countStdin > 1) {
             results = mergeFileAndStdin(stdin, args);
-        } else if (countFile == args.length) {
+        } else if (countFile == args.length && countFile > 0) {
             results = mergeFile(args);
         } else {
             results = mergeStdin(stdin);

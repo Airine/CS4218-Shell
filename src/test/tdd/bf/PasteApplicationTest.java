@@ -497,11 +497,11 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdinWithEmptyArgs_throwPasteException() {
-        String expected = PASTE + ERR_NULL_ARGS;
+        String expected = PASTE + ERR_NO_ISTREAM;
         String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{}, null, System.out))
                 .getMessage();
         assertEquals(expected, thrown);
-
+        expected = PASTE + ERR_NULL_ARGS;
         thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{null}, null, System.out))
                 .getMessage();
         assertEquals(expected, thrown);
