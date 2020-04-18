@@ -26,6 +26,13 @@ public class MvApplication implements MvInterface {
     public String mvSrcFileToDestFile(String srcFile, String destFile) throws MvException {
         String destFilePath = FileSystemUtils.getAbsolutePathName(destFile);
         try {
+            // show check the file tree permit it be moved
+            if (FileSystemUtils.isSubDir(srcFile, destFile)) {
+                throw new MvException(srcFile + " is the sub dir of " + destFile + " or they are the same file.");
+            }
+            if (FileSystemUtils.isFileInFolder(srcFile, destFile)) {
+                throw new MvException("can not move, may source file is equal parent of dest file");
+            }
             if (isOverride && new File(destFilePath).exists()) {
                 new File(destFile).delete();
             }
@@ -50,6 +57,10 @@ public class MvApplication implements MvInterface {
             for (String oneFileName : fileName) {
                 destFilePath = FileSystemUtils.joinPath(FileSystemUtils.getAbsolutePathName(destFolder),
                         new File(FileSystemUtils.getAbsolutePathName(oneFileName)).getName());
+                // show check the file tree permit it be moved
+                if (FileSystemUtils.isFileInFolder(oneFileName, destFolder)) {
+                    throw new MvException("can not move, may source file is equal parent of dest file");
+                }
                 if (FileSystemUtils.isSubDir(oneFileName, destFolder)) {
                     throw new MvException(destFolder + " is the sub dir of " + destFolder + " or they are the same file.");
                 }

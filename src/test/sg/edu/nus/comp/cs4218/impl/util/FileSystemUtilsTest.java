@@ -55,4 +55,20 @@ class FileSystemUtilsTest {
     void isSubDirTestChildDirFalse() {
         assertFalse(FileSystemUtils.isSubDir("home/test", "home"));
     }
+
+    @Test
+    void isFileInFolder() {
+        assertTrue(FileSystemUtils.isFileInFolder("home", "."));
+        assertTrue(FileSystemUtils.isFileInFolder("home", "./"));
+        assertTrue(FileSystemUtils.isFileInFolder("home", "./"));
+        assertTrue(FileSystemUtils.isFileInFolder("asset/test", "asset/app./../"));
+    }
+
+    @Test
+    @DisplayName("this is negative test")
+    void isFileInFolderFalse() {
+        assertTrue(FileSystemUtils.isFileInFolder("./home", "."));
+        assertFalse(FileSystemUtils.isFileInFolder("home/test", "./"));
+    }
+
 }

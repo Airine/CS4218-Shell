@@ -1,13 +1,14 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.*;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.MvInterface;
 import sg.edu.nus.comp.cs4218.exception.MvException;
 import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
-import java.io.File;
-import java.io.IOException;
+import javax.sound.sampled.AudioInputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,6 +73,39 @@ class MvApplicationTest {
         assertTrue(new File(notWriteFile).exists());
     }
 
+    @Test
+    void mvFileToItself() {
+        String[] args = {TestFileUtils.tempFileName1, TestFileUtils.tempFileName1};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertTrue(new File(TestFileUtils.tempFileName1).exists());
+        assertFalse(os.toString().isEmpty());
+    }
+
+    @Test
+    void mvFileToItselfByCurrDir() {
+        String[] args = {"not_real_file", "."};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertFalse(os.toString().isEmpty());
+    }
+
+    @Test
+    void mvFileToItselfByCurrDir2() {
+        String[] args = {"not_real_file", "./"};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertFalse(os.toString().isEmpty());
+    }
+
+    @Test
+    void mvFileToItselfByCurrDir3() {
+        String[] args = {TestFileUtils.tempFileName1, "temp"};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertTrue(new File(TestFileUtils.tempFileName1).exists());
+        assertFalse(os.toString().isEmpty());
+    }
 
     @Test
     void testMvFileToFolder() {
