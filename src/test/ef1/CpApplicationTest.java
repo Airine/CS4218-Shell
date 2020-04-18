@@ -7,7 +7,9 @@ import sg.edu.nus.comp.cs4218.impl.app.CpApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,12 +86,23 @@ class CpApplicationTest {
 
     @Test
     @DisplayName("copy a folder to an exist file should throw exception")
-    public void runCpFolderToFile() {
+    public void runCpFolderToExistFile() {
         String[] args = {TestFileUtils.emptyFolderName, TestFileUtils.tempFileName1};
         assertDoesNotThrow(() -> cpInterface.run(args, System.in, System.out));
         assertTrue(new File(TestFileUtils.emptyFolderName).isDirectory());
         assertTrue(new File(TestFileUtils.tempFileName1).isFile());
     }
+
+    @Test
+    @DisplayName("copy a non existing file should throw exception")
+    public void runCpNonExistFolderToFile() {
+        String[] args = {"no_exist", TestFileUtils.tempFileName1};
+        OutputStream outputStream = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> cpInterface.run(args, System.in, outputStream));
+        assertTrue(new File(TestFileUtils.tempFileName1).isFile());
+        assertFalse(outputStream.toString().isEmpty());
+    }
+
 
     @Test
     public void runCpFolderToFolder() {
@@ -99,6 +112,35 @@ class CpApplicationTest {
         assertDoesNotThrow(() -> cpInterface.run(args, System.in, System.out));
         assertTrue(new File(destFolderPath).exists());
         assertTrue(new File(destFolderPath).isDirectory());
+    }
+
+    @Test
+    @DisplayName("similar to cp temp/ temp/")
+    public void copyFolderToItself() {
+        String[] args = {TestFileUtils.tempFolderName, TestFileUtils.tempFolderName};
+        OutputStream outputStream = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> cpInterface.run(args, System.in, outputStream));
+        assertTrue(new File(TestFileUtils.tempFolderName).exists());
+        assertFalse(outputStream.toString().isEmpty());
+    }
+
+    @Test
+    @DisplayName("similar to cp temp/test1 temp/test1")
+    public void copyFileToItself() {
+        String[] args = {TestFileUtils.tempFileName1, TestFileUtils.tempFileName1};
+        OutputStream outputStream = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> cpInterface.run(args, System.in, outputStream));
+        assertTrue(new File(TestFileUtils.tempFileName1).exists());
+        assertFalse(outputStream.toString().isEmpty());
+    }
+
+    @Test
+    @DisplayName("similar to cp temp/test1 temp")
+    public void copyFileToItselfByDir() {
+        String[] args = {TestFileUtils.tempFileName1, "temp"};
+        OutputStream outputStream = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> cpInterface.run(args, System.in, outputStream));
+        assertTrue(new File(TestFileUtils.tempFileName1).exists());
     }
 
 }

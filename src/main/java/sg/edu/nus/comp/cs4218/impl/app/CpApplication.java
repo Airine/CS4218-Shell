@@ -6,12 +6,10 @@ import sg.edu.nus.comp.cs4218.impl.parser.CpArgsParser;
 import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 
 public class CpApplication implements CpInterface {
@@ -19,10 +17,19 @@ public class CpApplication implements CpInterface {
     public String cpSrcFileToDestFile(String srcFile, String destFile) throws CpException {
         String destFilePath = FileSystemUtils.getAbsolutePathName(destFile);
         try {
+            if (FileSystemUtils.isFileInFolder(srcFile, destFile)) {
+                throw new CpException("they are the same file:" + srcFile + " and " + destFile);
+            }
+            // show check the file tree permit it be moved
+            if (FileSystemUtils.isSubDir(srcFile, destFile)) {
+                throw new CpException(srcFile + " is the sub dir of " + destFile + " or they are the same file.");
+            }
             Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
                     Paths.get(destFilePath));
         } catch (FileAlreadyExistsException e) {
             throw new CpException("target file has existed:" + e.getMessage());
+        } catch (NoSuchFileException e) {
+            throw new CpException("file not found" + e.getMessage());
         } catch (IOException e) {
             throw new CpException("IO exception" + e.getMessage());
         }
@@ -37,6 +44,10 @@ public class CpApplication implements CpInterface {
                     FileSystemUtils.getAbsolutePathName(destFolder),
                     new File(FileSystemUtils.getAbsolutePathName(oneFileName))
                             .getName());
+
+            if (FileSystemUtils.isFileInFolder(oneFileName, destFolder)) {
+                throw new CpException("target and source are same file:" + oneFileName);
+            }
             if (FileSystemUtils.isSubDir(oneFileName, destFolder)) {
                 throw new CpException(destFolder + " is the sub dir of " + destFolder + " or they are the same file.");
             }
