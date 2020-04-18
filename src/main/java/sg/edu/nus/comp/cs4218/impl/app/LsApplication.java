@@ -206,14 +206,9 @@ public class LsApplication implements LsInterface {
      * @param directories input directories needed to be
      * @return List of java.nio.Path objects
      */
-    private List<Path> resolvePaths(String... directories) throws LsException {
+    private List<Path> resolvePaths(String... directories) {
         List<Path> paths = new ArrayList<>();
         for (int i = 0; i < directories.length; i++) {
-            for (int j=0; j < directories[i].length(); j++){
-                if (directories[i].charAt(j) == '*'){
-                    throw new LsException(ERR_FILE_NOT_FOUND);
-                }
-            }
             paths.add(resolvePath(directories[i]));
         }
 
