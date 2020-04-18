@@ -36,6 +36,20 @@ public final class FileSystemUtils {
 
 
     /**
+     * Judge if file is in folder
+     *
+     * @param file
+     * @param folder
+     * @return
+     */
+    public static boolean isFileInFolder(String file, String folder) {
+        String fileName = getAbsolutePathName(file);
+        String fileInFolderName = joinPath(getAbsolutePathName(folder), new File(fileName).getName());
+        return fileName.equals(fileInFolderName);
+    }
+
+
+    /**
      * This test will force remove all the file/folder under input file directory by ignore all permission
      *
      * @param file The directory that need to remove
