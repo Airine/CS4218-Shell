@@ -57,9 +57,15 @@ public final class FileSystemUtils {
 
     public static String joinPath(String... fileFolderName) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(fileFolderName[0]);
-        for (int i = 1; i < fileFolderName.length; i++) {
-            stringBuilder.append(File.separator).append(fileFolderName[i]);
+        for (int i = 0; i < fileFolderName.length - 1; i++) {
+            if (fileFolderName[i].endsWith(File.separator)) {
+                stringBuilder.append(fileFolderName[i]);
+            } else {
+                stringBuilder.append(fileFolderName[i]).append(File.separator);
+            }
+        }
+        if (fileFolderName.length > 0) {
+            stringBuilder.append(fileFolderName[fileFolderName.length - 1]);
         }
         return stringBuilder.toString();
     }
