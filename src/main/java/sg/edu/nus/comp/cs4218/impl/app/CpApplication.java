@@ -10,24 +10,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class CpApplication implements CpInterface {
     @Override
-    public String cpSrcFileToDestFile(String srcFile, String destFile) throws Exception {
+    public String cpSrcFileToDestFile(String srcFile, String destFile) throws CpException {
         String destFilePath = FileSystemUtils.getAbsolutePathName(destFile);
-        File oriFile = new File(destFilePath);
-        if (oriFile.exists()) {
-            oriFile.delete();
+        try {
+            Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
+                    Paths.get(destFilePath));
+        } catch (FileAlreadyExistsException e) {
+            throw new CpException("target file has existed:" + e.getMessage());
+        } catch (IOException e) {
+            throw new CpException("IO exception" + e.getMessage());
         }
-        Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
-                Paths.get(destFilePath));
         return destFilePath;
     }
 
     @Override
-    public String cpFilesToFolder(String destFolder, String... fileName) throws Exception {
+    public String cpFilesToFolder(String destFolder, String... fileName) throws CpException {
         String destFilePath;
         for (String oneFileName : fileName) {
             destFilePath = FileSystemUtils.joinPath(
@@ -35,15 +38,16 @@ public class CpApplication implements CpInterface {
                     new File(FileSystemUtils.getAbsolutePathName(oneFileName))
                             .getName());
             if (FileSystemUtils.isSubDir(oneFileName, destFolder)) {
-                throw new Exception(destFolder + " is the sub dir of " + destFolder + " or they are the same file.");
+                throw new CpException(destFolder + " is the sub dir of " + destFolder + " or they are the same file.");
             }
-            File oriFile = new File(destFilePath);
-            // by default we will delete the file if it exists
-            if (oriFile.exists()) {
-                oriFile.delete();
+            try {
+                Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(oneFileName)),
+                        Paths.get(destFilePath));
+            } catch (FileAlreadyExistsException e) {
+                throw new CpException("target file has existed:" + e.getMessage());
+            } catch (IOException e) {
+                throw new CpException("IO exception" + e.getMessage());
             }
-            Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(oneFileName)),
-                    Paths.get(destFilePath));
         }
         return destFolder;
     }
@@ -71,7 +75,7 @@ public class CpApplication implements CpInterface {
             }
         } catch (Exception e) {
             try {
-                if(stdout==null){
+                if (stdout == null) {
                     throw (CpException) new CpException("OutputStream not provided").initCause(e);
                 }
                 stdout.write(e.getMessage().getBytes());

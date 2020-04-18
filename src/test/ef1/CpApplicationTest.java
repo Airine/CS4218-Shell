@@ -2,6 +2,7 @@ package ef1;
 
 import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.app.CpInterface;
+import sg.edu.nus.comp.cs4218.exception.CpException;
 import sg.edu.nus.comp.cs4218.impl.app.CpApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
@@ -82,12 +83,12 @@ class CpApplicationTest {
     }
 
     @Test
-    @DisplayName("copy a folder to an exist file should override this file to folder")
+    @DisplayName("copy a folder to an exist file should throw exception")
     public void runCpFolderToFile() {
         String[] args = {TestFileUtils.emptyFolderName, TestFileUtils.tempFileName1};
         assertDoesNotThrow(() -> cpInterface.run(args, System.in, System.out));
         assertTrue(new File(TestFileUtils.emptyFolderName).isDirectory());
-        assertTrue(new File(TestFileUtils.tempFileName1).isDirectory());
+        assertTrue(new File(TestFileUtils.tempFileName1).isFile());
     }
 
     @Test
