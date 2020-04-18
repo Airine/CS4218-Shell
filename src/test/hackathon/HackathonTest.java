@@ -272,6 +272,8 @@ class HackathonTest {
      * and diff test2.txt - should have different outputs
      */
     @Test
+    @Disabled
+    @DisplayName("Assumption added")
     void diffFileWithStdin() throws AbstractApplicationException, ShellException {
         String cmdStr1 = "paste hackFiles/diffTest/test1.txt | diff - hackFiles/diffTest/test2.txt";
         String cmdStr2 = "paste hackFiles/diffTest/test1.txt | diff hackFiles/diffTest/test2.txt -";
