@@ -188,7 +188,7 @@ public class DiffApplicationTest { // NOPMD
     public void testDiffDirContainFilesWithSameContent() {
         try {
             String result = diffApp.diffTwoDir(DIFFDIR1, DIFFDIR1_IDENTICAL, false, false, false);
-            assertEquals(STRING_NEWLINE, result); // No message represents a successful diff
+            assertEquals("", result); // No message represents a successful diff
         } catch (DiffException e) {
             fail("should not fail: " + e.getMessage());
         }

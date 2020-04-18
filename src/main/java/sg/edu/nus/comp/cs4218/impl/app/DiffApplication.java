@@ -229,7 +229,25 @@ public class DiffApplication implements DiffInterface {//NOPMD
                                 + dirB + sep + nameB + " is a directory while file");
                     }
                 } else {
-                    result.add(diffTwoFiles(absA, absB, isShowSame, isNoBlank, isSimple));
+//                    result.add(diffTwoFiles(absA, absB, isShowSame, isNoBlank, isSimple));
+                    try (InputStream inputStreamA = IOUtils.openInputStream(fileA);
+                         InputStream inputStreamB = IOUtils.openInputStream(fileB)) {
+                        List<String> tmp = getDiff(inputStreamA, inputStreamB, isShowSame, isNoBlank, isSimple);
+                        if (tmp.isEmpty()) {
+                            if (isShowSame) {
+                                result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " are identical");//NOPMD
+                            }
+                        } else {
+                            if (isSimple) {
+                                result.add("Files " + dirA + sep + nameA + " " + dirB + sep + nameB + " differ");
+                            } else {
+                                result.add("diff " + dirA + sep + nameA + " " + dirB + sep + nameB);
+                                result.addAll(tmp);
+                            }
+                        }
+                    } catch (ShellException | IOException e) {
+                        throw new DiffException(e.getMessage());//NOPMD
+                    }
                 }
                 indexA++;
                 indexB++;
