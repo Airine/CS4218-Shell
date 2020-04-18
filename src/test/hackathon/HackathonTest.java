@@ -278,10 +278,11 @@ class HackathonTest {
      * diff: order of the files is not preserved.
      * In this example, test1.txt is taken in as stdin. So diff - test2.txt
      * and diff test2.txt - should have different outputs
+     *
+     * Adapted according to our assumption: While diff between stdin with file,
+     * no matter what arg order is given, the order is always diff file -
      */
     @Test
-    @Disabled
-    @DisplayName("Invalid")
     void diffFileWithStdin() throws AbstractApplicationException, ShellException {
         String cmdStr1 = "paste hackFiles/diffTest/test1.txt | diff - hackFiles/diffTest/test2.txt";
         String cmdStr2 = "paste hackFiles/diffTest/test1.txt | diff hackFiles/diffTest/test2.txt -";
@@ -290,7 +291,7 @@ class HackathonTest {
         outputStream = new ByteArrayOutputStream();
         shell.parseAndEvaluate(cmdStr2, outputStream);
         String result2 = outputStream.toString();
-        assertNotEquals(result1, result2);
+        assertEquals(result1, result2);
     }
 
     /**
