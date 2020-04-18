@@ -5,19 +5,12 @@ import org.junit.jupiter.api.*;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.CdException;
 import sg.edu.nus.comp.cs4218.exception.CpException;
 import sg.edu.nus.comp.cs4218.exception.CutException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
-import sg.edu.nus.comp.cs4218.exception.WcException;
-import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.*;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
-import sg.edu.nus.comp.cs4218.impl.app.NewIOStream;
 import sg.edu.nus.comp.cs4218.impl.app.RmApplication;
-import sg.edu.nus.comp.cs4218.impl.app.TestFileUtils;
-import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
@@ -30,6 +23,8 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class HackathonTest {
     private static final String ORIGINAL_DIR = Environment.currentDirectory;
@@ -307,17 +302,15 @@ class HackathonTest {
     @Test
     void lsFolderWithinFolder() {
         Environment.currentDirectory = TEST_PATH.toString();
-        String command = "ls -R ls ls" + StringUtils.fileSeparator() + "ls2";
+        String command = "ls -R ls ls" + CHAR_FILE_SEP + "ls2";
         assertDoesNotThrow(() -> shell.parseAndEvaluate(command, outputStream));
         String expected =
-                "ls:\n" +
-                "1.txt\n" +
-                "ls2\n" +
-                "\n" +
-                "ls" + StringUtils.fileSeparator() + "ls2:\n" +
-                "1.txt\n" +
-                "\n" +
-                "ls" + StringUtils.fileSeparator() + "ls2:\n" +
+                "ls:" + STRING_NEWLINE +
+                "1.txt" + STRING_NEWLINE +
+                "ls2" + STRING_NEWLINE + STRING_NEWLINE +
+                "ls" + CHAR_FILE_SEP + "ls2:" + STRING_NEWLINE +
+                "1.txt" + STRING_NEWLINE + STRING_NEWLINE +
+                "ls" + CHAR_FILE_SEP + "ls2:" + STRING_NEWLINE +
                 "1.txt";
         assertEquals(expected, outputStream.toString().trim());
     }
