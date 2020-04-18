@@ -37,6 +37,9 @@ public class CdApplication implements CdInterface {
         if (args == null) {
             throw new CdException(ERR_NULL_ARGS);
         }
+        if (args.length == 0){
+            return;
+        }
         if (args.length > 1){
             throw new CdException(ERR_TOO_MANY_ARGS);
         }

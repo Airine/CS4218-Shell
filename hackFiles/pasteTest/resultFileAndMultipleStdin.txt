@@ -1,0 +1,17 @@
+tree	tree	apples	tree
+damaging	damaging	yawn	damaging
+salve	salve	five	salve
+rude	rude	allow	rude
+cow	cow	tree	cow
+productive	productive	taboo	productive
+difficult	difficult	meek	difficult
+reflect	reflect	kitten	reflect
+crash	crashed	crashed	crashes	crashing	crash	crashed	crashed	crashes	crashing	abate	crash	crashed	crashed	crashes	crashing
+enjoy	enjoy	voyage	enjoy
+		reward	
+		succinct	
+		hurry	
+		telling	
+		witty	
+		pastoral	
+		cautious	

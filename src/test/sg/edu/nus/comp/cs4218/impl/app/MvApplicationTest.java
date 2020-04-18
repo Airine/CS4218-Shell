@@ -1,13 +1,14 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import org.junit.jupiter.api.*;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.MvInterface;
 import sg.edu.nus.comp.cs4218.exception.MvException;
 import sg.edu.nus.comp.cs4218.impl.util.ErrorConstants;
 import sg.edu.nus.comp.cs4218.impl.util.FileSystemUtils;
 
-import java.io.File;
-import java.io.IOException;
+import javax.sound.sampled.AudioInputStream;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,6 +73,39 @@ class MvApplicationTest {
         assertTrue(new File(notWriteFile).exists());
     }
 
+    @Test
+    void mvFileToItself() {
+        String[] args = {TestFileUtils.tempFileName1, TestFileUtils.tempFileName1};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertTrue(new File(TestFileUtils.tempFileName1).exists());
+        assertFalse(os.toString().isEmpty());
+    }
+
+    @Test
+    void mvFileToItselfByCurrDir() {
+        String[] args = {"not_real_file", "."};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertFalse(os.toString().isEmpty());
+    }
+
+    @Test
+    void mvFileToItselfByCurrDir2() {
+        String[] args = {"not_real_file", "./"};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertFalse(os.toString().isEmpty());
+    }
+
+    @Test
+    void mvFileToItselfByCurrDir3() {
+        String[] args = {TestFileUtils.tempFileName1, "temp"};
+        OutputStream os = new ByteArrayOutputStream();
+        assertDoesNotThrow(() -> mvInterface.run(args, new ByteArrayInputStream(new byte[]{}), os));
+        assertTrue(new File(TestFileUtils.tempFileName1).exists());
+        assertFalse(os.toString().isEmpty());
+    }
 
     @Test
     void testMvFileToFolder() {
@@ -93,24 +127,30 @@ class MvApplicationTest {
     @Test
     void testMvNotExistFileToFile() {
         String destFilePath = FileSystemUtils.joinPath(TestFileUtils.emptyFolderName, "new-file");
-        Throwable throwable = assertThrows(Exception.class, () -> mvInterface.mvSrcFileToDestFile("not-exist", destFilePath));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        Throwable throwable = assertThrows(MvException.class, () -> mvInterface.mvSrcFileToDestFile("not-exist", destFilePath));
+        assertTrue(throwable.getMessage().contains("not-exist"));
     }
 
     @Test
     void testMvNotExistFileToFolder() {
-        Throwable throwable = assertThrows(Exception.class, () -> mvInterface.mvFilesToFolder(TestFileUtils.emptyFolderName, "not-exist"));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        Throwable throwable = assertThrows(MvException.class,
+                () -> mvInterface.mvFilesToFolder(TestFileUtils.emptyFolderName, "not-exist"));
+        assertTrue(throwable.getMessage().contains("not-exist"));
     }
 
     @Test
     void testMvToNotExistFolder() {
         String destFolder = FileSystemUtils.joinPath(TestFileUtils.emptyFolderName, "no_exist_folder");
-        Throwable throwable = assertThrows(Exception.class,
+        Throwable throwable = assertThrows(MvException.class,
                 () -> mvInterface.mvFilesToFolder(destFolder, TestFileUtils.tempFileName1));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        assertTrue(throwable.getMessage().contains("no_exist_folder"));
     }
 
+    /*****************************************
+     *
+     * test method run()
+     *
+     */
     @Test
     void runMvNotArgument() {
         String[] args = {};
@@ -178,6 +218,10 @@ class MvApplicationTest {
         assertFalse(new File(TestFileUtils.tempFileName1).exists());
     }
 
+    /**
+     * default behaviour is to override the existing file,
+     * thus will remove the target existing file by source file
+     */
     @Test
     void runMvFolderToExistFile() {
         String destPathName = FileSystemUtils.joinPath(TestFileUtils.tempFileName2);
@@ -186,7 +230,7 @@ class MvApplicationTest {
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName1, TestFileUtils.tempFileName1)) {
             assertTrue(ioStream.inputStream.read() < 0);
             assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.outputStream));
-            assertTrue(ioStream.inputStream.read() > 0);
+            assertTrue(ioStream.inputStream.read() < 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -194,9 +238,9 @@ class MvApplicationTest {
 
 
     @Test
+    @DisplayName("should not override any file but exception should be throw")
     void runMvFolderToExistFileWithFlags() {
-        String destPathName = FileSystemUtils.joinPath(TestFileUtils.tempFileName2);
-        String[] args = {"-n", TestFileUtils.emptyFolderName, destPathName};
+        String[] args = {"-n", TestFileUtils.emptyFolderName, TestFileUtils.tempFileName2};
 
         assertDoesNotThrow(() -> mvInterface.run(args, System.in, System.out));
         assertTrue(new File(TestFileUtils.emptyFolderName).exists());

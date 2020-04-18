@@ -42,7 +42,7 @@ public class LsApplication implements LsInterface {
             paths = resolvePaths(folderName);
         }
 
-        return buildResult(paths, isFoldersOnly, isRecursive);
+        return buildResult(paths, isFoldersOnly, isRecursive).trim();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class LsApplication implements LsInterface {
             }
         }
 
-        return result.toString().trim();
+        return result.toString();
     }
 
     /**
@@ -206,9 +206,14 @@ public class LsApplication implements LsInterface {
      * @param directories input directories needed to be
      * @return List of java.nio.Path objects
      */
-    private List<Path> resolvePaths(String... directories) {
+    private List<Path> resolvePaths(String... directories) throws LsException {
         List<Path> paths = new ArrayList<>();
         for (int i = 0; i < directories.length; i++) {
+            for (int j=0; j < directories[i].length(); j++){
+                if (directories[i].charAt(j) == '*'){
+                    throw new LsException(ERR_FILE_NOT_FOUND);
+                }
+            }
             paths.add(resolvePath(directories[i]));
         }
 
@@ -223,7 +228,7 @@ public class LsApplication implements LsInterface {
      * @return the Path object of this path
      */
     private Path resolvePath(String directory) {
-        if (directory.charAt(0) == CHAR_FILE_SEP || directory.charAt(1) == ':') {
+        if (directory.charAt(0) == CHAR_FILE_SEP || (directory.length() > 1 && directory.charAt(1) == ':')) {
             // This is an absolute path
             return Paths.get(directory).normalize();
         }
