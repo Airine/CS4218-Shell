@@ -114,3 +114,4 @@ target/
 *.iml
 .idea/
 .DS_Store
+all.txt
