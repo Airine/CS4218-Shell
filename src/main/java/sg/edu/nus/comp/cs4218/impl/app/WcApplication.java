@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.WcInterface;
+import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.exception.WcException;
 import sg.edu.nus.comp.cs4218.impl.app.args.WcArguments;
 import sg.edu.nus.comp.cs4218.impl.util.IOUtils;
@@ -33,6 +34,12 @@ public class WcApplication implements WcInterface {
     public void run(String[] args, InputStream stdin, OutputStream stdout)
             throws WcException {
         // Format: wc [-clw] [FILES]
+        if (args == null) {
+            throw new WcException(ERR_NULL_ARGS);
+        }
+        if (args.length == 0) {
+            throw new WcException(ERR_NO_ARGS);
+        }
         if (stdout == null) {
             throw new WcException(ERR_NULL_STREAMS);
         }
