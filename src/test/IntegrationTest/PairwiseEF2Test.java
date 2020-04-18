@@ -113,7 +113,7 @@ public class PairwiseEF2Test {
         @DisplayName("cd src/test/IntegrationTest; find testFiles -name 'test*' | sort")
         void testSortAndFind(){
             String commandString = "cd src/test/IntegrationTest; find testFiles -name 'test*' | sort";
-            String expectResult = "testFiles/test1.txt" + STRING_NEWLINE + "testFiles/test2.txt" + STRING_NEWLINE;
+            String expectResult = "testFiles"+CHAR_FILE_SEP+"test1.txt" + STRING_NEWLINE + "testFiles"+CHAR_FILE_SEP+"test2.txt" + STRING_NEWLINE;
             assertDoesNotThrow(()->{
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());

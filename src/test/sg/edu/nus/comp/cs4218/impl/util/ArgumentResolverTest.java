@@ -46,7 +46,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"`echo 'ddd'`\"");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("ddd "), parsedArgsList);
+            assertEquals(Arrays.asList("ddd"), parsedArgsList);
         });
     }
 
@@ -83,7 +83,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"'fff `echo \"ggg\"`'\"");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("'fff ggg '"), parsedArgsList);
+            assertEquals(Arrays.asList("'fff ggg'"), parsedArgsList);
         });
     }
 
@@ -111,7 +111,7 @@ class ArgumentResolverTest {
         List<String> input = Arrays.asList("\"mmm `echo '\"nnn'`");
         assertDoesNotThrow(()->{
             List<String> parsedArgsList = argumentResolver.parseArguments(input);
-            assertEquals(Arrays.asList("mmm \"nnn "), parsedArgsList);
+            assertEquals(Arrays.asList("mmm \"nnn"), parsedArgsList);
         });
     }
 }
