@@ -25,12 +25,10 @@ public class ShellImpl implements Shell {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Shell shell = new ShellImpl();
         try {
-            String currentDirectory = Environment.currentDirectory;
-            int lastSlash = currentDirectory.lastIndexOf('/'); // TODO: Tempt solution, may not work on Windows
             String commandString;
             while (true) {
                 try {
-                    System.out.print(currentDirectory.substring(lastSlash + 1) + "> ");
+                    System.out.print("(TEAM 6) $ ");
                     commandString = reader.readLine();
                     if(commandString==null){
                         break;

@@ -68,7 +68,6 @@ public class GrepApplication implements GrepInterface {
      * @param fileNames         a String Array of file names supplied by user
      */
     private void grepResultsFromFiles(String pattern, Boolean isCaseInsensitive, StringJoiner lineResults, StringJoiner countResults, String... fileNames) throws Exception {//NOPMD
-//       todo this method is too long, try to split it in future
         int count;
         boolean isSingleFile = (fileNames.length == 1);
         for (String f : fileNames) {

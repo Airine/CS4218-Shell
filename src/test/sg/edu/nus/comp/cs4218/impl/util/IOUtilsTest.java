@@ -140,6 +140,20 @@ class IOUtilsTest {
         });
     }
 
+    @Test
+    void getFileType() {
+        assertTrue(isBinaryFile(new File("hackFiles/diffTest/image1.png")));
+    }
+
+    @Test
+    void compareTwoBinFile() {
+        File file1 = new File("hackFiles/diffTest/image1.png");
+        File file2 = new File("hackFiles/diffTest/image2.png");
+        File file3 = new File("hackFiles/diffTest/image3.png");
+        assertFalse(isTwoBinaryFileEquals(file1, file2));
+        assertTrue(isTwoBinaryFileEquals(file3, file2));
+    }
+
     @AfterEach
     void tearDown() {
         Environment.currentDirectory = originCurrentDirectory;

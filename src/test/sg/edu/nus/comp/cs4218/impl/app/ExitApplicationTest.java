@@ -58,12 +58,10 @@ class ExitApplicationTest {
     private static class NoExitSecurityManager extends SecurityManager {
         @Override
         public void checkPermission(Permission perm) {
-            //TODO
         }
 
         @Override
         public void checkPermission(Permission perm, Object context) {
-            //TODO
         }
 
         @Override

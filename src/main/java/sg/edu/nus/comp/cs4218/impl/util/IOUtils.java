@@ -5,11 +5,15 @@ import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 import java.io.*;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.nio.file.Files.probeContentType;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_CLOSING_STREAMS;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_FILE_NOT_FOUND;
 
@@ -127,5 +131,59 @@ public final class IOUtils {
             }
         }
         return output;
+    }
+
+    private static String getFileChecksum(MessageDigest digest, File file) throws IOException
+    {
+        //Get file input stream for reading the file content
+        FileInputStream fis = new FileInputStream(file);
+
+        //Create byte array to read data in chunks
+        byte[] byteArray = new byte[1024];
+        int bytesCount = 0;
+
+        //Read file data and update in message digest
+        while ((bytesCount = fis.read(byteArray)) != -1) {
+            digest.update(byteArray, 0, bytesCount);
+        };
+
+        //close the stream; We don't need it now.
+        fis.close();
+
+        //Get the hash's bytes
+        byte[] bytes = digest.digest();
+
+        //This bytes[] has bytes in decimal format;
+        //Convert it to hexadecimal format
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+        }
+
+        //return complete hash
+        return sb.toString();
+    }
+
+    public static boolean isBinaryFile(File file) {
+        String fileType = null;
+        try {
+            URLConnection connection = file.toURI().toURL().openConnection();
+            fileType = connection.getContentType();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileType == null || !fileType.contains("text");
+    }
+
+    public static boolean isTwoBinaryFileEquals(File fileA, File fileB) {
+        try {
+            MessageDigest shaDigest = MessageDigest.getInstance("SHA-1");
+            String checksumA = getFileChecksum(shaDigest, fileA);
+            String checksumB = getFileChecksum(shaDigest, fileB);
+            return checksumA.equals(checksumB);
+        } catch (NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
