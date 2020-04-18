@@ -530,7 +530,7 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdout_throwPasteException() {
-        String expected = PASTE + ERR_NULL_ARGS;
+        String expected = PASTE + ERR_NO_OSTREAM;
         String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{}, System.in, null))
                 .getMessage();
         assertEquals(expected, thrown);
@@ -538,7 +538,7 @@ class PasteApplicationTest {
 
     @Test
     public void testRun_nullStdoutWithNullStdin_throwPasteException() {
-        String expected = PASTE + ERR_NULL_ARGS;
+        String expected = PASTE + ERR_NO_OSTREAM;
         String thrown = assertThrows(PasteException.class, () -> pasteApp.run(new String[]{}, null, null))
                 .getMessage();
         assertEquals(expected, thrown);
