@@ -13,10 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
 
 public class MvApplication implements MvInterface {
 
@@ -25,8 +22,12 @@ public class MvApplication implements MvInterface {
     @Override
     public String mvSrcFileToDestFile(String srcFile, String destFile) throws Exception {
         String destFilePath = FileSystemUtils.getAbsolutePathName(destFile);
-        Files.move(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
-                Paths.get(destFilePath));
+        try {
+            Files.move(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
+                    Paths.get(destFilePath));
+        } catch (NoSuchFileException e) {
+            throw new MvException(ErrorConstants.ERR_FILE_NOT_FOUND + ":" + e.getMessage());
+        }
         return destFilePath;
     }
 

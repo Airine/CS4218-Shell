@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
 
+@Disabled
 class HackathonTest {
     private static final String ORIGINAL_DIR = Environment.currentDirectory;
     private static final Path TEST_PATH =
