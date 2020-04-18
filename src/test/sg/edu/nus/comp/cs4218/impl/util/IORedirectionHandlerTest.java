@@ -141,17 +141,6 @@ class IORedirectionHandlerTest {
     }
 
     @Test
-    void testSeveralFileSegment() {
-        List<String> args = Arrays.asList("<", "\"" + TestFileUtils.tempFileName1 + "\"\"" + TestFileUtils.tempFileName2 + "\"");
-        ArgumentResolver resolver = new ArgumentResolver();
-        handler = new IORedirectionHandler(args, System.in, System.out, resolver);
-        Throwable thrown = assertThrows(ShellException.class, () -> {
-            handler.extractRedirOptions();
-        });
-        assertEquals("shell: No such file or directory", thrown.getMessage());
-    }
-
-    @Test
     void testMultipleInputStream() {
         List<String> args = Arrays.asList("<", TestFileUtils.tempFileName1, "<", TestFileUtils.tempFileName2);
         ArgumentResolver resolver = new ArgumentResolver();
