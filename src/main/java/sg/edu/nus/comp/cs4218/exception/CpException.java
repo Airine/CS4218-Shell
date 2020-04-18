@@ -5,6 +5,6 @@ public class CpException extends AbstractApplicationException {
     private static final long serialVersionUID = -4730922172179294678L;
 
     public CpException(String message) {
-        super("cd: " + message);
+        super("cp: " + message);
     }
 }
