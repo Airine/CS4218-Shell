@@ -81,7 +81,7 @@ public class PairwiseApplicationTest {
         @DisplayName("sed 's/hello//' src/test/IntegrationTest/testFiles/test1.txt | wc -c")
         void testSedAndWc() {
             String commandString = "sed 's/hello//' " + TEST_FILE1_PATH + " | wc -c";
-            String expectResult = String.format(" %7d", 5+2*STRING_NEWLINE.length()) + STRING_NEWLINE;
+            String expectResult = String.format(" %7d", 5 + 2 * STRING_NEWLINE.length()) + STRING_NEWLINE;
             assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -100,6 +100,7 @@ public class PairwiseApplicationTest {
         }
 
         @Test
+        @Disabled
         @DisplayName("cp `find src/test/IntegrationTest/testFiles -name 'test1.txt'` src/test/IntegrationTest/testFiles/result.txt")
         void testCpAndFind() {
             String commandString = "cp `find " + TEST_FILE_FOLDER_PATH + " -name 'test1.txt'` " + TEST_FILERESULT_PATH;

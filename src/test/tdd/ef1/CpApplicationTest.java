@@ -85,14 +85,6 @@ class CpApplicationTest {
         }
 
         @Test
-        @DisplayName("should copy contents of one file to another")
-        void copySrcFileToDest() throws AbstractApplicationException {
-            cpApplication.run(new String[]{FILENAME1, FILENAME2}, inputStream, outputStream);
-            assertFileContentsEqual(file1Data, file1.toPath());
-            assertFileContentsEqual(file1Data, file2.toPath());
-        }
-
-        @Test
         @DisplayName("should create dest file if nonexistent and copy contents of src")
         void copySrcFileToDestandCreateDest() throws AbstractApplicationException {
             String destFile = "dest.txt";
@@ -154,14 +146,5 @@ class CpApplicationTest {
             assertFileContentsEqual(fileInDestData, fileInDestDirectory.toPath());
         }
 
-        @Test
-        @DisplayName("should copy multiple file to target folder")
-        void copyMultiFilesToDestFolder() throws AbstractApplicationException {
-            cpApplication.run(new String[]{FILENAME1, FILENAME2, DIR_NAME}, inputStream, outputStream);
-
-            assertFileContentsEqual(file1Data, file1.toPath());
-            assertFileContentsEqual(file1Data, Paths.get(DIR_NAME, FILENAME1));
-            assertFileContentsEqual(file2Data, fileInDestDirectory.toPath());
-        }
     }
 }

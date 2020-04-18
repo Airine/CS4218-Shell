@@ -122,7 +122,7 @@ class MvApplicationTest {
                     throw new IOException();
                 }
             };
-            String[] args = {src, dest};
+            String[] args = {"-n", src, dest};
             mvApplication.run(args, inputStream, baos);
             fail("Exception expected");
         } catch (MvException e) {
