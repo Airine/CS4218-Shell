@@ -63,6 +63,7 @@ class MvApplicationTest {
         assertTrue(new File(targetPath).exists());
     }
 
+    @Disabled
     @Test
     @DisplayName("move to a folder that do not have a write permission")
     void mvNotWritePermitFile() {
