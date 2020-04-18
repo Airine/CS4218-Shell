@@ -25,7 +25,7 @@ public class PasteApplication implements PasteInterface {
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws PasteException {
         // Format: paste [FILE]...
-        if (args == null || args.length == 0) {
+        if (args == null) {
             throw new PasteException(ERR_NULL_ARGS);
         }
         if (stdout == null) {
