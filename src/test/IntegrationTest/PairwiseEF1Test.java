@@ -65,7 +65,7 @@ public class PairwiseEF1Test {
         @DisplayName("diff src/test/IntegrationTest/testFiles/test1.txt src/test/IntegrationTest/testFiles/test2.txt | wc")
         void testDiffAndWc() {
             String commandString = "diff " + TEST_FILE1_PATH + " " + TEST_FILE2_PATH + "| wc -l";
-            String expectResult = String.format(" %7d", 2) + STRING_NEWLINE;
+            String expectResult = String.format(" %7d", 1) + STRING_NEWLINE;
             assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
@@ -76,7 +76,7 @@ public class PairwiseEF1Test {
         @DisplayName("cd src/test/IntegrationTest/testFiles; diff test1.txt test2.txt")
         void testDiffAndCd() {
             String commandString = "cd " + TEST_FILE_FOLDER_PATH + "; diff test1.txt test2.txt";
-            String expectResult = "< hello" + STRING_NEWLINE + "> goodbye" + STRING_NEWLINE;
+            String expectResult = "< hello" + STRING_NEWLINE + "> goodbye";
             assertDoesNotThrow(() -> {
                 shell.parseAndEvaluate(commandString, outputStream);
                 assertEquals(expectResult, outputStream.toString());
