@@ -42,7 +42,7 @@ public class LsApplication implements LsInterface {
             paths = resolvePaths(folderName);
         }
 
-        return buildResult(paths, isFoldersOnly, isRecursive);
+        return buildResult(paths, isFoldersOnly, isRecursive).trim();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class LsApplication implements LsInterface {
             }
         }
 
-        return result.toString().trim();
+        return result.toString();
     }
 
     /**
