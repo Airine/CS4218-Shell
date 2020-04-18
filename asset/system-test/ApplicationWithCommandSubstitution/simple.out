@@ -1,4 +1,4 @@
-hello  world
+hello world
 
 A C B D
 
@@ -16,4 +16,4 @@ B
 < B
 > C
 > D
-
+test1.txt: A
