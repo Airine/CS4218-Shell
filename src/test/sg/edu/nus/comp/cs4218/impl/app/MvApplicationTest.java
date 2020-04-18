@@ -93,24 +93,30 @@ class MvApplicationTest {
     @Test
     void testMvNotExistFileToFile() {
         String destFilePath = FileSystemUtils.joinPath(TestFileUtils.emptyFolderName, "new-file");
-        Throwable throwable = assertThrows(Exception.class, () -> mvInterface.mvSrcFileToDestFile("not-exist", destFilePath));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        Throwable throwable = assertThrows(MvException.class, () -> mvInterface.mvSrcFileToDestFile("not-exist", destFilePath));
+        assertTrue(throwable.getMessage().contains("not-exist"));
     }
 
     @Test
     void testMvNotExistFileToFolder() {
-        Throwable throwable = assertThrows(Exception.class, () -> mvInterface.mvFilesToFolder(TestFileUtils.emptyFolderName, "not-exist"));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        Throwable throwable = assertThrows(MvException.class,
+                () -> mvInterface.mvFilesToFolder(TestFileUtils.emptyFolderName, "not-exist"));
+        assertTrue(throwable.getMessage().contains("not-exist"));
     }
 
     @Test
     void testMvToNotExistFolder() {
         String destFolder = FileSystemUtils.joinPath(TestFileUtils.emptyFolderName, "no_exist_folder");
-        Throwable throwable = assertThrows(Exception.class,
+        Throwable throwable = assertThrows(MvException.class,
                 () -> mvInterface.mvFilesToFolder(destFolder, TestFileUtils.tempFileName1));
-        assertNotEquals(NullPointerException.class, throwable.getClass());
+        assertTrue(throwable.getMessage().contains("no_exist_folder"));
     }
 
+    /*****************************************
+     *
+     * test method run()
+     *
+     */
     @Test
     void runMvNotArgument() {
         String[] args = {};
@@ -178,6 +184,10 @@ class MvApplicationTest {
         assertFalse(new File(TestFileUtils.tempFileName1).exists());
     }
 
+    /**
+     * default behaviour is to override the existing file,
+     * thus will remove the target existing file by source file
+     */
     @Test
     void runMvFolderToExistFile() {
         String destPathName = FileSystemUtils.joinPath(TestFileUtils.tempFileName2);
@@ -186,7 +196,7 @@ class MvApplicationTest {
         try (NewIOStream ioStream = new NewIOStream(TestFileUtils.tempFileName1, TestFileUtils.tempFileName1)) {
             assertTrue(ioStream.inputStream.read() < 0);
             assertDoesNotThrow(() -> mvInterface.run(args, System.in, ioStream.outputStream));
-            assertTrue(ioStream.inputStream.read() > 0);
+            assertTrue(ioStream.inputStream.read() < 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -194,9 +204,9 @@ class MvApplicationTest {
 
 
     @Test
+    @DisplayName("should not override any file but exception should be throw")
     void runMvFolderToExistFileWithFlags() {
-        String destPathName = FileSystemUtils.joinPath(TestFileUtils.tempFileName2);
-        String[] args = {"-n", TestFileUtils.emptyFolderName, destPathName};
+        String[] args = {"-n", TestFileUtils.emptyFolderName, TestFileUtils.tempFileName2};
 
         assertDoesNotThrow(() -> mvInterface.run(args, System.in, System.out));
         assertTrue(new File(TestFileUtils.emptyFolderName).exists());

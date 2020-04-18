@@ -458,6 +458,11 @@ class HackathonTest {
     /**
      * Bug 18: mv fails to replace valid file <a> over valid file <b> with -n flag (according
      * to assumptions). Does not replace without -n flag either. Should replace with no error.
+     *
+     * Fix: the assumption we made is wrong,
+     * By default, it will overwrite an existing file.
+     * With the "-n" flag, it will not overwrite any existing file.
+     * If remove the flag "-n" this test will past.
      */
     @Test
     void mvReplaceValidFile() {

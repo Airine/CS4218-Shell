@@ -17,23 +17,34 @@ import java.nio.file.*;
 
 public class MvApplication implements MvInterface {
 
+    /**
+     * default behaviour is override the existing file
+     */
     private boolean isOverride = true;
 
     @Override
-    public String mvSrcFileToDestFile(String srcFile, String destFile) throws Exception {
+    public String mvSrcFileToDestFile(String srcFile, String destFile) throws MvException {
         String destFilePath = FileSystemUtils.getAbsolutePathName(destFile);
         try {
+            if (isOverride && new File(destFilePath).exists()) {
+                new File(destFile).delete();
+            }
             Files.move(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
                     Paths.get(destFilePath));
         } catch (NoSuchFileException e) {
             throw new MvException(ErrorConstants.ERR_FILE_NOT_FOUND + ":" + e.getMessage());
+        } catch (FileAlreadyExistsException e) {
+            throw new MvException("target file has existed:" + e.getMessage());
+
+        } catch (IOException e) {
+            throw new MvException(e.getMessage());
         }
         return destFilePath;
     }
 
 
     @Override
-    public String mvFilesToFolder(String destFolder, String... fileName) throws Exception {
+    public String mvFilesToFolder(String destFolder, String... fileName) throws MvException {
         String destFilePath = null;
         try {
             for (String oneFileName : fileName) {
@@ -54,6 +65,10 @@ public class MvApplication implements MvInterface {
                     + "directory '" + destFolder + "' and cannot be replaced.").initCause(e);
         } catch (AccessDeniedException e) {
             throw new MvException(ErrorConstants.ERR_NO_PERM + ":" + e.getFile());
+        } catch (NoSuchFileException e) {
+            throw new MvException(ErrorConstants.ERR_FILE_NOT_FOUND + ":" + e.getMessage());
+        } catch (IOException e) {
+            throw new MvException(e.getMessage());
         }
         return destFilePath;
     }
@@ -71,14 +86,14 @@ public class MvApplication implements MvInterface {
                 throw new InvalidArgsException(ErrorConstants.ERR_MISSING_ARG);
             }
             String destPath = mvArgsParser.getDestFilePathName();
+            isOverride = mvArgsParser.isOverwrite();
             if (new File(FileSystemUtils.getAbsolutePathName(destPath)).isDirectory()) {
-                isOverride = mvArgsParser.isOverwrite();
                 mvFilesToFolder(destPath, toMoveFiles);
             } else {
                 if (toMoveFiles.length != 1) {
                     throw new InvalidArgsException(ErrorConstants.ERR_MISSING_ARG);
                 }
-                if (!mvArgsParser.isOverwrite() && new File(destPath).exists()) {
+                if (!isOverride && new File(destPath).exists()) {
                     throw new MvException("Destination file '" + destPath + "' already exists and cannot be replaced.");
                 }
                 mvSrcFileToDestFile(toMoveFiles[0], destPath);
@@ -92,6 +107,8 @@ public class MvApplication implements MvInterface {
             } catch (IOException ex) {
                 throw (MvException) new MvException("Could not write to output stream").initCause(ex);
             }
+        } finally {
+            isOverride = true;
         }
 
     }
