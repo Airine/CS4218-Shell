@@ -23,6 +23,8 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.*;
 import static sg.edu.nus.comp.cs4218.impl.util.ErrorConstants.ERR_NO_PERM;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.CHAR_FILE_SEP;
+import static sg.edu.nus.comp.cs4218.impl.util.StringUtils.STRING_NEWLINE;
 
 class HackathonTest {
     private static final String ORIGINAL_DIR = Environment.currentDirectory;
@@ -300,17 +302,15 @@ class HackathonTest {
     @Test
     void lsFolderWithinFolder() {
         Environment.currentDirectory = TEST_PATH.toString();
-        String command = "ls -R ls ls" + StringUtils.fileSeparator() + "ls2";
+        String command = "ls -R ls ls" + CHAR_FILE_SEP + "ls2";
         assertDoesNotThrow(() -> shell.parseAndEvaluate(command, outputStream));
         String expected =
-                "ls:\n" +
-                "1.txt\n" +
-                "ls2\n" +
-                "\n" +
-                "ls" + StringUtils.fileSeparator() + "ls2:\n" +
-                "1.txt\n" +
-                "\n" +
-                "ls" + StringUtils.fileSeparator() + "ls2:\n" +
+                "ls:" + STRING_NEWLINE +
+                "1.txt" + STRING_NEWLINE +
+                "ls2" + STRING_NEWLINE + STRING_NEWLINE +
+                "ls" + CHAR_FILE_SEP + "ls2:" + STRING_NEWLINE +
+                "1.txt" + STRING_NEWLINE + STRING_NEWLINE +
+                "ls" + CHAR_FILE_SEP + "ls2:" + STRING_NEWLINE +
                 "1.txt";
         assertEquals(expected, outputStream.toString().trim());
     }
