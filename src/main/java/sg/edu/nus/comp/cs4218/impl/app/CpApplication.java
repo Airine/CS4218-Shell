@@ -29,7 +29,7 @@ public class CpApplication implements CpInterface {
         } catch (FileAlreadyExistsException e) {
             throw new CpException("target file has existed:" + e.getMessage());
         } catch (NoSuchFileException e) {
-            throw new CpException("file not found" + e.getMessage());
+            throw new CpException(ErrorConstants.ERR_FILE_NOT_FOUND + "," + e.getMessage());
         } catch (IOException e) {
             throw new CpException("IO exception" + e.getMessage());
         }
@@ -56,6 +56,8 @@ public class CpApplication implements CpInterface {
                         Paths.get(destFilePath));
             } catch (FileAlreadyExistsException e) {
                 throw new CpException("target file has existed:" + e.getMessage());
+            } catch (NoSuchFileException e) {
+                throw new CpException(ErrorConstants.ERR_FILE_NOT_FOUND + "," + e.getMessage());
             } catch (IOException e) {
                 throw new CpException("IO exception" + e.getMessage());
             }
