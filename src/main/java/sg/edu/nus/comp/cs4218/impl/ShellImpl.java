@@ -9,10 +9,7 @@ import sg.edu.nus.comp.cs4218.impl.util.ApplicationRunner;
 import sg.edu.nus.comp.cs4218.impl.util.CommandBuilder;
 import sg.edu.nus.comp.cs4218.impl.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 
 public class ShellImpl implements Shell {
 
@@ -28,7 +25,7 @@ public class ShellImpl implements Shell {
             String commandString;
             while (true) {
                 try {
-                    System.out.print("(TEAM 6) $ ");
+                    System.out.print(new File(Environment.currentDirectory).getName()+ "> ");
                     commandString = reader.readLine();
                     if(commandString==null){
                         break;
