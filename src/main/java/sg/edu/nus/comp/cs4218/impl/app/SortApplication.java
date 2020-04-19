@@ -36,9 +36,6 @@ public class SortApplication implements SortInterface {
         if (args == null) {
             throw new SortException(ERR_NULL_ARGS);
         }
-        if (args.length == 0) {
-            throw new SortException(ERR_NO_ARGS);
-        }
         if (stdout == null) {
             throw new SortException(ERR_NULL_STREAMS);
         }
