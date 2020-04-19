@@ -53,7 +53,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
         String nameA = files[0];
         String nameB = files[1];
         String result = "";
-        if ("-".equals(nameA))  {
+        if ("-".equals(nameA)) {
             if ("-".equals(nameB)) {
                 throw new DiffException("Can not diff between stdin with stdin");
             } else {
@@ -74,11 +74,12 @@ public class DiffApplication implements DiffInterface {//NOPMD
 
     /**
      * Run diff between two fileNames
-     * @param fileNameA file name of fileA, may be file or directory
-     * @param fileNameB file name of fileB, may be file or directory
+     *
+     * @param fileNameA  file name of fileA, may be file or directory
+     * @param fileNameB  file name of fileB, may be file or directory
      * @param isShowSame the s flag
-     * @param isNoBlank the B flag
-     * @param isSimple the q flag
+     * @param isNoBlank  the B flag
+     * @param isSimple   the q flag
      * @return the expected output result
      * @throws DiffException the DiffException
      */
@@ -97,17 +98,21 @@ public class DiffApplication implements DiffInterface {//NOPMD
 
     private void checkIfNullArgs(Object... args) throws DiffException {
         for (Object arg : args) {
-            if (arg == null) {throw new DiffException(ERR_NULL_ARGS);}
+            if (arg == null) {
+                throw new DiffException(ERR_NULL_ARGS);
+            }
         }
     }
 
     private void checkIfExistFiles(File... files) throws DiffException {
         for (File file : files) {
-            if (!file.exists()) {throw new DiffException(ERR_FILE_NOT_FOUND);}
+            if (!file.exists()) {
+                throw new DiffException(ERR_FILE_NOT_FOUND);
+            }
         }
     }
 
-    private void checkIfValidFolder(File... files) throws DiffException{
+    private void checkIfValidFolder(File... files) throws DiffException {
         if (files == null) {
             throw new DiffException(ERR_IS_DIR);
         }
@@ -115,40 +120,42 @@ public class DiffApplication implements DiffInterface {//NOPMD
 
     /**
      * Get List of result from two InputStream
-     * @param inputA the inputStreamA
-     * @param inputB the inputStreamB
+     *
+     * @param inputA     the inputStreamA
+     * @param inputB     the inputStreamB
      * @param isShowSame the s flag
-     * @param isNoBlank the B flag
-     * @param isSimple the q flag
+     * @param isNoBlank  the B flag
+     * @param isSimple   the q flag
      * @return the expected output result
      * @throws IOException an IOException
      */
     private List<String> getDiff(InputStream inputA, InputStream inputB, Boolean isShowSame, Boolean isNoBlank, Boolean isSimple) throws IOException {//NOPMD
-        BufferedReader brA = new BufferedReader(new InputStreamReader(inputA));
-        BufferedReader brB = new BufferedReader(new InputStreamReader(inputB));
         List<String> linesA = new ArrayList<>();
         List<String> linesB = new ArrayList<>();
         List<String> result = new ArrayList<>();
         String lineA, lineB;
-        while((lineA = brA.readLine())!=null) {
-            if (isNoBlank && StringUtils.isBlank(lineA)) {
-                continue;
+        try (BufferedReader brA = new BufferedReader(new InputStreamReader(inputA));
+             BufferedReader brB = new BufferedReader(new InputStreamReader(inputB))) {
+            while ((lineA = brA.readLine()) != null) {
+                if (isNoBlank && StringUtils.isBlank(lineA)) {
+                    continue;
+                }
+                linesA.add(lineA);
             }
-            linesA.add(lineA);
-        }
-        while((lineB = brB.readLine())!=null){
-            if (isNoBlank && StringUtils.isBlank(lineB)) {
-                continue;
+            while ((lineB = brB.readLine()) != null) {
+                if (isNoBlank && StringUtils.isBlank(lineB)) {
+                    continue;
+                }
+                linesB.add(lineB);
             }
-            linesB.add(lineB);
         }
         int lengthA = linesA.size();
         int lengthB = linesB.size();
         boolean[] commonA = new boolean[lengthA];
         boolean[] commonB = new boolean[lengthB];
-        int[][] matrix = new int[lengthA+1][lengthB+1];
+        int[][] matrix = new int[lengthA + 1][lengthB + 1];
         for (int i = 0; i < lengthA; i++) {
-            for (int j = 0; j < lengthB; j ++) {
+            for (int j = 0; j < lengthB; j++) {
                 if (linesA.get(i).equals(linesB.get(j))) {
                     matrix[i + 1][j + 1] = matrix[i][j] + 1;
                 } else {
@@ -159,9 +166,9 @@ public class DiffApplication implements DiffInterface {//NOPMD
         int current = 1;
         for (int i = 1; i < matrix.length; i++) {
             for (int j = 1; j < matrix[i].length; j++) {
-                if (matrix[i][j] == current && linesA.get(i-1).equals(linesB.get(j-1))) {
-                    commonA[i-1] = true;
-                    commonB[j-1] = true;
+                if (matrix[i][j] == current && linesA.get(i - 1).equals(linesB.get(j - 1))) {
+                    commonA[i - 1] = true;
+                    commonB[j - 1] = true;
                     current += 1;
                 }
             }
@@ -198,34 +205,34 @@ public class DiffApplication implements DiffInterface {//NOPMD
 
             absA = fileA.getAbsolutePath();
             idxA = absA.lastIndexOf(sep);
-            nameA = absA.substring(idxA+1);
-            idx2A = absA.substring(0,idxA).lastIndexOf(sep);
-            dirA = absA.substring(idx2A+1, idxA);
+            nameA = absA.substring(idxA + 1);
+            idx2A = absA.substring(0, idxA).lastIndexOf(sep);
+            dirA = absA.substring(idx2A + 1, idxA);
             isDirA = fileA.isDirectory();
 
             absB = fileB.getAbsolutePath();
             idxB = absB.lastIndexOf(sep);
-            nameB = absB.substring(idxB+1);
-            idx2B = absB.substring(0,idxB).lastIndexOf(sep);
-            dirB = absB.substring(idx2B+1, idxB);
+            nameB = absB.substring(idxB + 1);
+            idx2B = absB.substring(0, idxB).lastIndexOf(sep);
+            dirB = absB.substring(idx2B + 1, idxB);
             isDirB = fileB.isDirectory();
 
-            if (nameA.equals(nameB)){
+            if (nameA.equals(nameB)) {
                 // if fileA and fileB both are directories
                 if (isDirA && isDirB) {
-                    String tempt_res = diffTwoDir(absA, absB, isShowSame, isNoBlank, isSimple);
-                    if (tempt_res.length() > 0) {
-                        result.add(tempt_res);
-                    } else {
+                    String temptRes = diffTwoDir(absA, absB, isShowSame, isNoBlank, isSimple);
+                    if (temptRes.length() > 0) {
+                        result.add(temptRes);
+                    } else {//NOPMD
                         result.add("Common subdirectories: " + dirA + sep + nameA + " and " + dirB + sep + nameB);
                     }
                 } else if (isDirA || isDirB) { // if one of them is directory, assumption added
                     //Not care about empty or not, assumption added
-                    if (isDirA) {
-                        result.add("File "  + dirA + sep + nameA + "is a directory while file "
-                                            + dirB + sep + nameB + " is a regular file");
+                    if (isDirA) {//NOPMD
+                        result.add("File " + dirA + sep + nameA + "is a directory while file "//NOPMD
+                                + dirB + sep + nameB + " is a regular file");
                     } else {
-                        result.add("File "  + dirA + sep + nameA + " is a regular file "
+                        result.add("File " + dirA + sep + nameA + " is a regular file "
                                 + dirB + sep + nameB + " is a directory while file");
                     }
                 } else {
@@ -275,13 +282,13 @@ public class DiffApplication implements DiffInterface {//NOPMD
         String nameB;
         int idx2B;
         String dirB;
-        for (; index < filesB.length; index++){
+        for (; index < filesB.length; index++) {
             fileB = filesB[index];
             absB = fileB.getAbsolutePath();
             idxB = absB.lastIndexOf(sep);
-            nameB = absB.substring(idxB+1);
-            idx2B = absB.substring(0,idxB).lastIndexOf(sep);
-            dirB = absB.substring(idx2B+1, idxB);
+            nameB = absB.substring(idxB + 1);
+            idx2B = absB.substring(0, idxB).lastIndexOf(sep);
+            dirB = absB.substring(idx2B + 1, idxB);
             result.add("Only in " + dirB + ": " + nameB);
         }
     }
@@ -296,14 +303,15 @@ public class DiffApplication implements DiffInterface {//NOPMD
         checkIfExistFiles(fileA, fileB);
         List<String> result = new ArrayList<>();
         if (binA && binB) {
-            if (!IOUtils.isTwoBinaryFileEquals(fileA, fileB))
+            if (!IOUtils.isTwoBinaryFileEquals(fileA, fileB)) {
                 result.add("Binary files " + fileNameA + " and " + fileNameB + " differ");
+            }
         } else if (binA || binB) {
             if (binA) {
-                result.add("File "  + fileNameA + "is a directory file while"
+                result.add("File " + fileNameA + "is a directory file while"
                         + fileNameB + " is a regular file");
             } else {
-                result.add("File "  + fileNameA + " is a regular file while "
+                result.add("File " + fileNameA + " is a regular file while "
                         + fileNameB + " is a directory file");
             }
         } else {
@@ -356,7 +364,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
             List<String> tmp = getDiff(inputStreamA, stdin, isShowSame, isNoBlank, isSimple);
             if (!tmp.isEmpty()) {
                 if (isSimple) {
-                    result.add("Files " +fileName+" - differ");
+                    result.add("Files " + fileName + " - differ");
                 } else {
                     result.addAll(tmp);
                 }
@@ -365,7 +373,7 @@ public class DiffApplication implements DiffInterface {//NOPMD
             e.printStackTrace();
         }
         if (isShowSame && result.isEmpty()) {
-            result.add("Files " +fileName+" - are identical");
+            result.add("Files " + fileName + " - are identical");
         }
         return String.join(STRING_NEWLINE, result);
     }

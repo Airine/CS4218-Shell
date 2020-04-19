@@ -74,7 +74,7 @@ public class PasteApplication implements PasteInterface {
                 output.append(line).append(STRING_NEWLINE);
             }
             if (output.length() > STRING_NEWLINE.length()) {
-                output.delete(output.length()-STRING_NEWLINE.length(),output.length());
+                output.delete(output.length() - STRING_NEWLINE.length(), output.length());
             }
             if (stdin != System.in) {
                 reader.close();
@@ -111,7 +111,7 @@ public class PasteApplication implements PasteInterface {
                     output.append(line).append(STRING_NEWLINE);
                 }
                 if (output.length() > STRING_NEWLINE.length()) {
-                    output.delete(output.length()-STRING_NEWLINE.length(),output.length());
+                    output.delete(output.length() - STRING_NEWLINE.length(), output.length());
                 }
                 readers[0].close();
                 return output.toString();
@@ -140,7 +140,6 @@ public class PasteApplication implements PasteInterface {
         if (fileName == null || fileName.length == 0) {
             throw new PasteException(ERR_NULL_ARGS);
         }
-        BufferedReader stdinReader = new BufferedReader(new InputStreamReader(stdin));
 //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //        byte[] buffer = new byte[1024];
 //        int n = 0;
@@ -155,7 +154,7 @@ public class PasteApplication implements PasteInterface {
 
         StringBuilder output = new StringBuilder();
         BufferedReader[] readers = new BufferedReader[fileName.length];
-        try {
+        try (BufferedReader stdinReader = new BufferedReader(new InputStreamReader(stdin))) {
             for (int i = 0; i < fileName.length; i++) {
                 if ("-".equals(fileName[i])) {
 //                    InputStream is = new ByteArrayInputStream(baos.toByteArray());
@@ -180,9 +179,9 @@ public class PasteApplication implements PasteInterface {
 
 
     /**
-     * @param fileNumber    number of files to merge
-     * @param readers       BufferReader list of all files
-     * @param output        result of merge
+     * @param fileNumber number of files to merge
+     * @param readers    BufferReader list of all files
+     * @param output     result of merge
      * @throws IOException
      */
     private void mergeAlgorithm(int fileNumber, BufferedReader[] readers, StringBuilder output) throws IOException {
@@ -198,7 +197,7 @@ public class PasteApplication implements PasteInterface {
                 } else {
                     builder.append(line);
                 }
-                if (i < fileNumber-1) {
+                if (i < fileNumber - 1) {
                     builder.append(CHAR_TAB);
                 }
             }
@@ -207,7 +206,7 @@ public class PasteApplication implements PasteInterface {
             }
         } while (unfinished > 0);
         if (output.length() > STRING_NEWLINE.length()) {
-            output.delete(output.length()-STRING_NEWLINE.length(),output.length());
+            output.delete(output.length() - STRING_NEWLINE.length(), output.length());
         }
     }
 

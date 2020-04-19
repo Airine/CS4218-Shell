@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import sg.edu.nus.comp.cs4218.app.MvInterface;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.CpException;
 import sg.edu.nus.comp.cs4218.exception.InvalidArgsException;
 import sg.edu.nus.comp.cs4218.exception.MvException;
 import sg.edu.nus.comp.cs4218.impl.parser.MvArgsParser;
@@ -39,12 +40,12 @@ public class MvApplication implements MvInterface {
             Files.move(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
                     Paths.get(destFilePath));
         } catch (NoSuchFileException e) {
-            throw new MvException(ErrorConstants.ERR_FILE_NOT_FOUND + ":" + e.getMessage());
+            throw (MvException) new MvException(ErrorConstants.ERR_FILE_NOT_FOUND + ":" + e.getMessage()).initCause(e);
         } catch (FileAlreadyExistsException e) {
-            throw new MvException("target file has existed:" + e.getMessage());
+            throw (MvException) new MvException("target file has existed:" + e.getMessage()).initCause(e);
 
         } catch (IOException e) {
-            throw new MvException(e.getMessage());
+            throw (MvException) new MvException(e.getMessage()).initCause(e);
         }
         return destFilePath;
     }
@@ -75,11 +76,11 @@ public class MvApplication implements MvInterface {
             throw (MvException) new MvException("A file with the same name already exists in "
                     + "directory '" + destFolder + "' and cannot be replaced.").initCause(e);
         } catch (AccessDeniedException e) {
-            throw new MvException(ErrorConstants.ERR_NO_PERM + ":" + e.getFile());
+            throw (MvException) new MvException(ErrorConstants.ERR_NO_PERM + ":" + e.getFile()).initCause(e);
         } catch (NoSuchFileException e) {
-            throw new MvException(ErrorConstants.ERR_FILE_NOT_FOUND + ":" + e.getMessage());
+            throw (MvException) new MvException(ErrorConstants.ERR_FILE_NOT_FOUND + ":" + e.getMessage()).initCause(e);
         } catch (IOException e) {
-            throw new MvException(e.getMessage());
+            throw (MvException) new MvException(e.getMessage()).initCause(e);
         }
         return destFilePath;
     }

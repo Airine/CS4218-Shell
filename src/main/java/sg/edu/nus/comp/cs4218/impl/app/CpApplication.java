@@ -27,11 +27,11 @@ public class CpApplication implements CpInterface {
             Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(srcFile)),
                     Paths.get(destFilePath));
         } catch (FileAlreadyExistsException e) {
-            throw new CpException("target file has existed:" + e.getMessage());
+            throw (CpException) new CpException("target file has existed:" + e.getMessage()).initCause(e);
         } catch (NoSuchFileException e) {
-            throw new CpException(ErrorConstants.ERR_FILE_NOT_FOUND + "," + e.getMessage());
+            throw (CpException) new CpException(ErrorConstants.ERR_FILE_NOT_FOUND + "," + e.getMessage()).initCause(e);
         } catch (IOException e) {
-            throw new CpException("IO exception" + e.getMessage());
+            throw (CpException) new CpException("IO exception" + e.getMessage()).initCause(e);
         }
         return destFilePath;
     }
@@ -55,11 +55,11 @@ public class CpApplication implements CpInterface {
                 Files.copy(Paths.get(FileSystemUtils.getAbsolutePathName(oneFileName)),
                         Paths.get(destFilePath));
             } catch (FileAlreadyExistsException e) {
-                throw new CpException("target file has existed:" + e.getMessage());
+                throw (CpException) new CpException("target file has existed:" + e.getMessage()).initCause(e);
             } catch (NoSuchFileException e) {
-                throw new CpException(ErrorConstants.ERR_FILE_NOT_FOUND + "," + e.getMessage());
+                throw (CpException) new CpException(ErrorConstants.ERR_FILE_NOT_FOUND + "," + e.getMessage()).initCause(e);
             } catch (IOException e) {
-                throw new CpException("IO exception" + e.getMessage());
+                throw (CpException) new CpException("IO exception" + e.getMessage()).initCause(e);
             }
         }
         return destFolder;

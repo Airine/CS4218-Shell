@@ -133,35 +133,32 @@ public final class IOUtils {
         return output;
     }
 
-    private static String getFileChecksum(MessageDigest digest, File file) throws IOException
-    {
+    private static String getFileChecksum(MessageDigest digest, File file) throws IOException {
         //Get file input stream for reading the file content
-        FileInputStream fis = new FileInputStream(file);
 
-        //Create byte array to read data in chunks
-        byte[] byteArray = new byte[1024];
-        int bytesCount = 0;
+        try (FileInputStream fis = new FileInputStream(file)) {
+            //Create byte array to read data in chunks
+            byte[] byteArray = new byte[1024];
+            int bytesCount = 0;
 
-        //Read file data and update in message digest
-        while ((bytesCount = fis.read(byteArray)) != -1) {
-            digest.update(byteArray, 0, bytesCount);
-        };
-
-        //close the stream; We don't need it now.
-        fis.close();
+            //Read file data and update in message digest
+            while ((bytesCount = fis.read(byteArray)) != -1) {
+                digest.update(byteArray, 0, bytesCount);
+            }
+        }
 
         //Get the hash's bytes
         byte[] bytes = digest.digest();
 
         //This bytes[] has bytes in decimal format;
         //Convert it to hexadecimal format
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (byte aByte : bytes) {
-            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+            stringBuilder.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
         }
 
         //return complete hash
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     public static boolean isBinaryFile(File file) {

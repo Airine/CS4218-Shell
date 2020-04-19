@@ -58,19 +58,18 @@ public final class FileSystemUtils {
         if (file.exists()) {
             if (file.isDirectory()) {
                 File[] files = file.listFiles();
-                if (files != null) {
+                if (files != null) {//NOPMD
                     for (File f : files) {
                         deleteFileRecursive(f);
                     }
 
                 }
             }
-            if (!file.delete()) {
-                if (file.setWritable(true) && file.setReadable(true) && !file.delete()) {
-                    throw new Exception("delete file failed!:" + file.getAbsolutePath());
-                }
+            if (!file.delete() && file.setWritable(true) && file.setReadable(true) && !file.delete()) {
+                throw new Exception("delete file failed!:" + file.getAbsolutePath());
             }
         }
+
     }
 
     public static String getAbsolutePathName(String name) {
