@@ -5,9 +5,11 @@ name: Java CI with Maven
 
 on:
   push:
-    [master]
+    branches:
+      - master
   pull-request:
-    [master]
+    branches:
+      - master
 
 jobs:
   test-macos:
