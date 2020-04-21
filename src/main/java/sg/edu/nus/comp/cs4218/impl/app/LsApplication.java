@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -209,12 +210,11 @@ public class LsApplication implements LsInterface {
     private List<Path> resolvePaths(String... directories) throws LsException {
         List<Path> paths = new ArrayList<>();
         for (int i = 0; i < directories.length; i++) {
-            for (int j=0; j < directories[i].length(); j++){
-                if (directories[i].charAt(j) == '*'){
-                    throw new LsException(ERR_FILE_NOT_FOUND);
-                }
+            try {
+                paths.add(resolvePath(directories[i]));
+            } catch (InvalidPathException e) {
+                throw new LsException(ERR_FILE_NOT_FOUND);//NOPMD
             }
-            paths.add(resolvePath(directories[i]));
         }
 
         return paths;
