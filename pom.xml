@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>sg.edu.nus.comp.cs4218</groupId>
-    <artifactId>CS4218-Shell-2020</artifactId>
-    <version>1.0.1</version>
+    <artifactId>The-Shell</artifactId>
+    <version>final</version>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
