@@ -126,6 +126,7 @@ class IOUtilsTest {
     }
 
     @Test
+    @Disabled
     void getLinesFromTestFile() {
         List<String> result = new ArrayList<>(Arrays.asList("hello", "world"));
         assertDoesNotThrow(() -> {
