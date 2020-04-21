@@ -213,7 +213,7 @@ public class LsApplication implements LsInterface {
             try {
                 paths.add(resolvePath(directories[i]));
             } catch (InvalidPathException e) {
-                throw new LsException(ERR_FILE_NOT_FOUND);
+                throw new LsException(ERR_FILE_NOT_FOUND);//NOPMD
             }
         }
 
