@@ -50,6 +50,6 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./target/CS4218-Shell-2020-1.0.jar
-        asset_name: The Shell
+        asset_name: the_shell.jar
         tag: ${{ github.ref }}
         overwrite: true

@@ -414,6 +414,7 @@ public class RmApplicationTest {
     }
 
     @Test
+    @Disabled
     public void testRemove_onReadOnlyDir_shouldPrintErrorMsg() {
         expectedMsg = EXCEPTION_MESSAGE_HEADER
                 + FilePermissionTestUtil.READ_ONLY_DIR_PATH
@@ -430,6 +431,7 @@ public class RmApplicationTest {
     }
 
     @Test
+    @Disabled
     public void testRemove_onExecuteOnlyDir_shouldPrintErrorMsg() {
         expectedMsg = EXCEPTION_MESSAGE_HEADER
                 + FilePermissionTestUtil.EXECUTE_ONLY_DIR_PATH

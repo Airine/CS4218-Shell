@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.util;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -7,6 +8,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 class FileSystemUtilsTest {
 
 
